@@ -8,7 +8,13 @@ Download files from `src` folder and then require them in your PHP code:
 
 ```php
 require_once 'VTelegram.php';
-require_once 'VTelegramInlBoard.php'; // if needed
+```
+
+Or require everything with autoloader (you can put it in any folder, just don't forget to define path to VTelegram files), e. g.:
+
+```php
+define('VTELEGRAM_REQUIRE_DIR', __DIR__ . '/VTelegram');
+require_once 'autoload.php';
 ```
 
 ## Documentation
