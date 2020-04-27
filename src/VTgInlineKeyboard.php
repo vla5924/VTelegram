@@ -3,6 +3,7 @@
 /**
  * @brief Inline keyboards for messages reply markup generators
  * @details Class provides a set of functions for convenient generating reply_markup content for messages sent via Telegram Bot API
+ * @todo Generators for other keyboards and templates
  */
 class VTgInlineKeyboard
 {

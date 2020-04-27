@@ -2,6 +2,7 @@
 
 /**
  * @brief Class provides an interface for interaction with Telegram Bot API
+ * @todo Wrappers for all methods of Telegram Bot API, including media and inline
  */
 class VTelegram
 {
@@ -170,10 +171,10 @@ class VTelegram
      * @details Wrapper for callMethod() for editing an "inline-mode" message sent via the bot
      * @param string $inlineMessageId Identifier of message sent via the bot to edit
      * @param string $text Message new body
-     * @param string $replyMarkup Reply markup (with inline keyboard) of needed
+     * @param array $extraParameters Extra or special (not defaulted) paremeters if needed
      * @return array JSON-decoded array with result of request from Telegram
      */
-    public function editInlineMessage(string $inlineMessageId, string $text, string $replyMarkup = ""): array
+    public function editInlineMessage(string $inlineMessageId, string $text, array $extraParameters = []): array
     {
         $parameters = [
             'inline_message_id' => $inlineMessageId,
@@ -182,8 +183,8 @@ class VTelegram
         ];
         if (isset($this->defaultParameters['parse_mode']))
             $parameters['parse_mode'] = $this->defaultParameters['parse_mode'] ?? null;
-        if ($replyMarkup)
-            $parameters["reply_markup"] = $replyMarkup;
+        if (!empty($extraParameters))
+            $parameters = array_merge($parameters, $extraParameters);
         return $this->callMethod('editMessageText', $parameters);
     }
 
