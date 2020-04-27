@@ -6,18 +6,18 @@ require_once VTELEGRAM_REQUIRE_DIR . '/VTgTypes/VTgMessageEntity.php';
 
 class VTgMessage
 {
-    public $id;
-    public $from = null;
-    public $date;
-    public $chat;
-    public $forwardFrom = null;
-    public $forwardDate = null;
-    public $replyTo = null;
-    public $text = "";
-    public $entities = null;
+    public int $id;
+    public VTgUser $from = null;
+    public DateTime $date;
+    public VTgChat $chat;
+    public VTgUser $forwardFrom = null;
+    public DateTime $forwardDate = null;
+    public VTgMessage $replyTo = null;
+    public string $text = "";
+    public array $entities = null;
     public $audio = null;
     public $document = null;
-    public $photo = [];
+    public array $photo = [];
     public $sticker = null;
     public $video = null;
     public $voice = null;
@@ -25,7 +25,7 @@ class VTgMessage
     public $contact = null;
     public $location = null;
     public $venue = null;
-    public $service = 0;
+    public int $service = 0;
     public $serviceData = null;
 
     const SERVICE__UNDEFINED = 0;

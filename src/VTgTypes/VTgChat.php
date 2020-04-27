@@ -4,9 +4,9 @@ require_once VTELEGRAM_REQUIRE_DIR . '/VTgTypes/VTgUser.php';
 
 class VTgChat extends VTgUser
 {
-    public $type = 0;
-    public $title = "";
-    public $allMembersAreAdmininstrators = true;
+    public int $type = 0;
+    public string $title = "";
+    public bool $allMembersAreAdmininstrators = true;
 
     const TYPE__PRIVATE = 0;
     const TYPE__GROUP = 1;

@@ -4,9 +4,9 @@ require_once VTELEGRAM_REQUIRE_DIR . '/VTgTypes/VTgMessage.php';
 
 class VTgUpdate
 {
-    public $id;
-    public $type;
-    public $message = null;
+    public int $id;
+    public int $type;
+    public VTgMessage $message = null;
     public $inlineQuery = null;
     public $chosenInlineResult = null;
     public $callbackQuery = null;
