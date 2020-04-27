@@ -33,7 +33,7 @@ class VTelegram
      * @brief Constructor-initializer
      * @param string $token Bot API token
      */
-    public function __construct(string $token)
+    public function __construct(string $token = "")
     {
         $this->token = $token;
     }
@@ -109,7 +109,7 @@ class VTelegram
         curl_setopt($handler, CURLOPT_POSTFIELDS, $parameters);
         curl_setopt($handler, CURLOPT_RETURNTRANSFER, true);
         if ($this->proxySettings) {
-            curl_setopt($handler, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);  // тип прокси 
+            curl_setopt($handler, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
             curl_setopt($handler, CURLOPT_PROXY, $this->proxySettings['address'] . ':' . $this->proxySettings['port']);
             curl_setopt($handler, CURLOPT_PROXYUSERPWD, $this->proxySettings['username'] . ':' . $this->proxySettings['password']);
             curl_setopt($handler, CURLOPT_HEADER, false);

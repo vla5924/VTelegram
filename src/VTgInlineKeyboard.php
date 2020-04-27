@@ -4,7 +4,7 @@
  * @brief Inline keyboards for messages reply markup generators
  * @details Class provides a set of functions for convenient generating reply_markup content for messages sent via Telegram Bot API
  */
-class VTelegramInlBoard
+class VTgInlineKeyboard
 {
     /**
      * @brief Simple button generator
@@ -15,17 +15,17 @@ class VTelegramInlBoard
      *   'text'          => 'Click me!',
      *   'callback_data' => 'button_clicked'
      * ];
-     * $button = VTelegramInlBoard::button($data);
+     * $button = VTgInlineKeyboard::button($data);
      * 
      * $data = [
      *   'text'          => 'Click me!',
      *   'callback_data' => 'button_clicked',
      *   'url'           => 'https://telegram.org'
      * ];
-     * $button = VTelegramInlBoard::button($data);
+     * $button = VTgInlineKeyboard::button($data);
      * 
      * $data = ['Click me!', 'button_clicked'];
-     * $button = VTelegramInlBoard::button($data);
+     * $button = VTgInlineKeyboard::button($data);
      * @endcode
      * @param array $data Button data
      * @return array Valid array of button parameters
