@@ -61,4 +61,10 @@ var menudata={children:[
 {text:"s",url:"functions_func.htm#index_s"},
 {text:"t",url:"functions_func.htm#index_t"},
 {text:"u",url:"functions_func.htm#index_u"}]},
-{text:"Variables",url:"functions_vars.htm"}]}]}]}
+{text:"Variables",url:"functions_vars.htm"}]}]},
+{text:"Installation",url:"install.htm"},
+{text:"Downloads",url:"https://github.com/vla5924/VTelegram/releases"},
+{text:"GitHub Repo",url:"https://github.com/vla5924/VTelegram"},
+{text:"About Developer",url:"#",children:[
+{text:"My Website (Russian)",url:"https://mvla.ru"},
+{text:"Contact via Telegram",url:"https://t.me/vla5924"}]}]}

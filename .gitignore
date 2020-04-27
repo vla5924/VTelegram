@@ -1,2 +1,4 @@
 
 Doxyfile
+DoxygenLayout.xml
+src/docs.php

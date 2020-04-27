@@ -1,8 +1,7 @@
 var searchData=
 [
-  ['registercallbackqueryhandler_44',['registerCallbackQueryHandler',['../class_v_tg_bot.htm#a06754f0844a9d3b36dc15d8e8099d114',1,'VTgBot']]],
-  ['registercommandhandler_45',['registerCommandHandler',['../class_v_tg_bot.htm#aafa9bc2c06dee2c2b8905c85668e1692',1,'VTgBot']]],
-  ['registerstandardmessagehandler_46',['registerStandardMessageHandler',['../class_v_tg_bot.htm#a4e848fb69e0ea8cf5049bdc29f8e6678',1,'VTgBot']]],
-  ['row_47',['row',['../class_v_tg_inline_keyboard.htm#aaf3a7b0c806c5b18dcdab3fa7080591f',1,'VTgInlineKeyboard']]],
-  ['rowp_48',['rowP',['../class_v_tg_inline_keyboard.htm#af3842916f8683e159fd4bc828e9ca123',1,'VTgInlineKeyboard']]]
+  ['parse_5fmode_5f_5fhtml_41',['PARSE_MODE__HTML',['../class_v_telegram.htm#a550d0c2c1d1c6c03ab5553ff5e821146',1,'VTelegram']]],
+  ['parse_5fmode_5f_5fmarkdown_42',['PARSE_MODE__MARKDOWN',['../class_v_telegram.htm#a8402e1720fe15927caef3fcfe7a4a837',1,'VTelegram']]],
+  ['parse_5fmode_5f_5ftext_43',['PARSE_MODE__TEXT',['../class_v_telegram.htm#a610ec8b231f2e858ca6b3916228fa738',1,'VTelegram']]],
+  ['processupdatedata_44',['processUpdateData',['../class_v_tg_bot.htm#a2bc55311c5c175b1eba40988adbfb026',1,'VTgBot']]]
 ];
