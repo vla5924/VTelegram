@@ -209,6 +209,7 @@ class VTgBot
      * @details Algorithm depends on action type: sending or editing a message, calling some function etc.
      * @param VTgAction $action Action to do
      * @return mixed Result of action execution
+     * @todo EDIT_REPLY_MARKUP action
      */
     static protected final function doAction(VTgAction $action)
     {

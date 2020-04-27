@@ -1,23 +1,67 @@
 <?php
 
+/**
+ * @brief Class to reperesents information about actions related to bot to do
+ * @details A union-like structure to store information about actions like send a message, call a function etc.
+ * @todo Some other actions
+ */
 class VTgAction
 {
+    /**
+     * @brief Action code
+     * @details "Do nothing" by default.
+     */
     public int $action = 0;
+
+    /**
+     * @brief Chat identifier (integer or string)
+     * @details Needed for "Send message" and "Edit message" actions
+     */
     public $chatId;
+
+    /**
+     * @brief Message identifier (integer)
+     * @details Needed for "Send message" and "Edit message" actions
+     */
     public $messageId;
+
+    /**
+     * @brief Inline mode message identifier (string)
+     * @details Needed for "Edit message" actions 
+     */
     public $inlineMessageId;
+
+    /**
+     * @brief Message body text
+     * @details Needed for "Send message" and "Edit message" actions
+     */
     public string $text;
+
+    /**
+     * @brief Array of parameters for Bot API if needed
+     * @details Needed for "Send message" and "Edit message" actions
+     */
     public array $extraParameters = [];
+
+    /**
+     * @brief Handler function
+     * @details Needed for "Call function" action
+     */
     public callable $handler = null;
 
-    const ACTION__DO_NOTHING = 0;
-    const ACTION__SEND_MESSAGE = 1;
-    const ACTION__EDIT_MESSAGE = 2;
-    const ACTION__EDIT_REPLY_MARKUP = 3;
-    const ACTION__EDIT_INLINE_MESSAGE = 4;
-    const ACTION__CALL_FUNCTION = 100;
+    const ACTION__DO_NOTHING = 0;          ///< Represents "Do nothing" action
+    const ACTION__SEND_MESSAGE = 1;        ///< Represents "Send message" action
+    const ACTION__EDIT_MESSAGE = 2;        ///< Represents "Edit message regularly" action
+    const ACTION__EDIT_REPLY_MARKUP = 3;   ///< Represents "Edit reply markup of message" action
+    const ACTION__EDIT_INLINE_MESSAGE = 4; ///< Represents "Edit inline mode message" action
+    const ACTION__CALL_FUNCTION = 100;     ///< Represents "Call function" action
 
 
+    /**
+     * @brief Constructor-initializer
+     * @param int $action Action code (see ACTION__DO_NOTHING, ACTION__SEND_MESSAGE etc.)
+     * @param mixed|null $parameters Array of action parameters if needed
+     */
     public function __construct(int $action, ...$parameters = null)
     {
         $this->action = $action;
@@ -54,36 +98,81 @@ class VTgAction
         }
     }
 
+    /**
+     * @brief Inititates function call
+     * @param mixed|null $args Arguments to be passed to handler function
+     * @todo Examples of usage
+     */
     public function callFunctionHandler(...$args = null)
     {
-        if ($this->action == self::ACTION__CALL_FUNCTION) ($this->handler)(...$args);
+        if ($this->action == self::ACTION__CALL_FUNCTION) {
+            ($this->handler)(...$args);
+        }
     }
 
+    /**
+     * @brief Creates "Do nothing" action
+     * @return VTgAction Action
+     */
     static public function doNothing(): VTgAction
     {
         return new VTgAction(self::ACTION__DO_NOTHING);
     }
 
+    /**
+     * @brief Creates "Send message" action
+     * @param int|string $chatId Chat identifier
+     * @param string $text Message body text
+     * @param array $extraParameters Extra parameters for API request if needed
+     * @return VTgAction Action
+     */
     static public function sendMessage($chatId, string $text, array $extraParameters = []): VTgAction
     {
         return new VTgAction(self::ACTION__SEND_MESSAGE, $chatId, $text, $extraParameters);
     }
 
+    /**
+     * @brief Creates "Edit regular message" action
+     * @param int|string $chatId Chat identifier
+     * @param int $messageId Message identifier
+     * @param string $text New message body text
+     * @param array $extraParameters Extra parameters for API request if needed
+     * @return VTgAction Action
+     */
     static public function editMessage($chatId, int $messageId, string $text, array $extraParameters = []): VTgAction
     {
         return new VTgAction(self::ACTION__EDIT_MESSAGE, $chatId, $messageId, $text, $extraParameters);
     }
 
+    /**
+     * @brief Creates "Edit reply markup of message" action
+     * @param int|string $chatId Chat identifier
+     * @param int $messageId Message identifier
+     * @param string $replyMarkup New reply_markup value
+     * @return VTgAction Action
+     */
     static public function editReplyMarkup($chatId, int $messageId, string $replyMarkup): VTgAction
     {
         return new VTgAction(self::ACTION__EDIT_REPLY_MARKUP, $chatId, $messageId, $replyMarkup);
     }
 
+    /**
+     * @brief Creates "Edit inline mode message" action
+     * @param string $inlineMessageId Message identifier
+     * @param string $text New message body text
+     * @param array $extraParameters Extra parameters for API request if needed
+     * @return VTgAction Action
+     */
     static public function editInlineMessage(string $inlineMessageId, string $text, array $extraParameters = []): VTgAction
     {
         return new VTgAction(self::ACTION__EDIT_INLINE_MESSAGE, $inlineMessageId, $text, $extraParameters);
     }
 
+    /**
+     * @brief Creates "Call function" action
+     * @param callable $handler Handler function
+     * @return VTgAction Action
+     */
     static public function callFunction(callable $handler): VTgAction
     {
         return new VTgAction(self::ACTION__CALL_FUNCTION, $handler);

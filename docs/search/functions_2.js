@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['button_31',['button',['../class_v_telegram_inl_board.htm#aab4b7feca7b3fa2279f673d7d0fb9b3c',1,'VTelegramInlBoard']]]
+  ['button_79',['button',['../class_v_tg_inline_keyboard.htm#a49e83e0c2bc20da32b92c09c9db87ca8',1,'VTgInlineKeyboard']]]
 ];

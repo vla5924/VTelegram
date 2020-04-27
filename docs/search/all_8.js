@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['parse_5fmode_5f_5fhtml_14',['PARSE_MODE__HTML',['../class_v_telegram.htm#a550d0c2c1d1c6c03ab5553ff5e821146',1,'VTelegram']]],
-  ['parse_5fmode_5f_5fmarkdown_15',['PARSE_MODE__MARKDOWN',['../class_v_telegram.htm#a8402e1720fe15927caef3fcfe7a4a837',1,'VTelegram']]],
-  ['parse_5fmode_5f_5ftext_16',['PARSE_MODE__TEXT',['../class_v_telegram.htm#a610ec8b231f2e858ca6b3916228fa738',1,'VTelegram']]]
+  ['handlecallbackquery_35',['handleCallbackQuery',['../class_v_tg_bot.htm#a3dae3138a194f3f6078d8454b0a221cc',1,'VTgBot']]],
+  ['handlecommand_36',['handleCommand',['../class_v_tg_bot.htm#aa0ed6675b2fe746e56e63d234d108d13',1,'VTgBot']]],
+  ['handlemessage_37',['handleMessage',['../class_v_tg_bot.htm#a20738d6d7cf1cfd84111fa208b6dcb76',1,'VTgBot']]],
+  ['handleupdate_38',['handleUpdate',['../class_v_tg_bot.htm#a6a97af57e2b085315c2dd9cbec8c97f9',1,'VTgBot']]]
 ];
