@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['parse_5fmode_5f_5fhtml_132',['PARSE_MODE__HTML',['../class_v_telegram.htm#a550d0c2c1d1c6c03ab5553ff5e821146',1,'VTelegram']]],
-  ['parse_5fmode_5f_5fmarkdown_133',['PARSE_MODE__MARKDOWN',['../class_v_telegram.htm#a8402e1720fe15927caef3fcfe7a4a837',1,'VTelegram']]],
-  ['parse_5fmode_5f_5ftext_134',['PARSE_MODE__TEXT',['../class_v_telegram.htm#a610ec8b231f2e858ca6b3916228fa738',1,'VTelegram']]]
+  ['parse_5fmode_5f_5fhtml_166',['PARSE_MODE__HTML',['../class_v_tg_requestor.htm#ace0a1b512bb9f3a0c495cce0da33107b',1,'VTgRequestor']]],
+  ['parse_5fmode_5f_5fmarkdown_167',['PARSE_MODE__MARKDOWN',['../class_v_tg_requestor.htm#a806716d93a29f699bb792b05c9947796',1,'VTgRequestor']]],
+  ['parse_5fmode_5f_5ftext_168',['PARSE_MODE__TEXT',['../class_v_tg_requestor.htm#a65f681b9588f62495a5868f3c6695091',1,'VTgRequestor']]]
 ];

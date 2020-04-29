@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['processupdatedata_101',['processUpdateData',['../class_v_tg_bot.htm#a2bc55311c5c175b1eba40988adbfb026',1,'VTgBot']]]
+  ['json_125',['json',['../class_v_tg_inline_keyboard.htm#ac5165acf039e6006f4f2ef01f971f6f1',1,'VTgInlineKeyboard']]]
 ];

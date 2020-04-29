@@ -39,6 +39,14 @@ class VTgBot
      */
     static protected callable $callbackQueryHandler = null;
 
+    /**
+     * @brief Constructor-initializer
+     * @param string $token Bot API token
+     */
+    public function __construct(string $token = "")
+    {
+        $this->token = $token;
+    }
 
     /**
      * @brief Updates stored Bot API token for VTelegram instance
@@ -133,6 +141,7 @@ class VTgBot
      * $data = json_decode($json, true);
      * VTgBot::processUpdateData($data);
      * @endcode
+     * Or just use processUpdatePost() to achieve the same behavior.
      * @param array $data Array with JSON-decoded update data
      * @return mixed|bool Result of update handling or false
      */
@@ -140,6 +149,18 @@ class VTgBot
     {
         $update = new VTgUpdate($data);
         return self::handleUpdate($update);
+    }
+
+    /**
+     * @brief Processes JSON-decoded update data received from Telegram in POST query
+     * @details It simply wraps processUpdateData(), getting data from incoming POST query.
+     * @return mixed|bool Result of update handling or false
+     */
+    static public final function processUpdatePost()
+    {
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+        return self::processUpdateData($data);
     }
 
     /**
@@ -239,3 +260,7 @@ class VTgBot
         return $data;
     }
 }
+/**
+ * @example SimpleBot.php
+ * Example of how to create a simple Telegram bot with VTgBot class.
+ */

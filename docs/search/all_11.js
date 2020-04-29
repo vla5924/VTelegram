@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['welcome_20to_20vtelegram_20documentation_68',['Welcome to VTelegram Documentation',['../index.htm',1,'']]]
+  ['updatetoken_70',['updateToken',['../class_v_telegram.htm#af896499a15224320cd02793439c91970',1,'VTelegram']]]
 ];

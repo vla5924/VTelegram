@@ -67,11 +67,11 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><p>First things first, you need to download VTelegram.zip package on Downloads page.</p>
-<p>Then require source files in your PHP code: </p><div class="fragment"><div class="line">require_once <span class="stringliteral">&#39;/path/to/VTelegram/VTelegram.php&#39;</span>;</div>
-<div class="line">require_once <span class="stringliteral">&#39;/path/to/VTelegram/VTgInlineKeyboard.php&#39;</span>; <span class="comment">// e.g. if needed</span></div>
-</div><!-- fragment --><p>Or require everything in <a class="el" href="class_v_telegram.htm" title="Class provides an interface for interaction with Telegram Bot API.">VTelegram</a> library with autoloader (in autoload.php): </p><div class="fragment"><div class="line">require_once <span class="stringliteral">&#39;/path/to/VTelegram/autoload.php&#39;</span>;</div>
-</div><!-- fragment --><p>You can even place autoloader into any folder, but then remember to define path to <a class="el" href="class_v_telegram.htm" title="Class provides an interface for interaction with Telegram Bot API.">VTelegram</a> files in VTELEGRAM_REQUIRE_DIR constant, e. g.: </p><div class="fragment"><div class="line">define(<span class="stringliteral">&#39;VTELEGRAM_REQUIRE_DIR&#39;</span>, <span class="stringliteral">&#39;/path/to/VTelegram&#39;</span>);</div>
+<p>It is recommended to require everything in <a class="el" href="class_v_telegram.htm" title="Class provides basic interaction with Telegram Bot API.">VTelegram</a> library with autoloader (in autoload.php): </p><div class="fragment"><div class="line">require_once <span class="stringliteral">&#39;/path/to/VTelegram/autoload.php&#39;</span>;</div>
+</div><!-- fragment --><p>You can even place autoloader into any folder, but then remember to define path to <a class="el" href="class_v_telegram.htm" title="Class provides basic interaction with Telegram Bot API.">VTelegram</a> files in VTELEGRAM_REQUIRE_DIR constant, e. g.: </p><div class="fragment"><div class="line">define(<span class="stringliteral">&#39;VTELEGRAM_REQUIRE_DIR&#39;</span>, <span class="stringliteral">&#39;/path/to/VTelegram&#39;</span>);</div>
 <div class="line">require_once <span class="stringliteral">&#39;/path/to/autoloader/autoload.php&#39;</span>;</div>
+</div><!-- fragment --><p>Also you can require only needed source files in your PHP code (don't forget about VTELEGRAM_REQUIRE_DIR): </p><div class="fragment"><div class="line">require_once <span class="stringliteral">&#39;/path/to/VTelegram/VTelegram.php&#39;</span>;</div>
+<div class="line">require_once <span class="stringliteral">&#39;/path/to/VTelegram/VTgInlineKeyboard.php&#39;</span>; <span class="comment">// e.g. if needed</span></div>
 </div><!-- fragment --><p>Now you are ready to use Telegram Bot API via VTelegram! </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

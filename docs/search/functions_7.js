@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['handlecallbackquery_96',['handleCallbackQuery',['../class_v_tg_bot.htm#a3dae3138a194f3f6078d8454b0a221cc',1,'VTgBot']]],
-  ['handlecommand_97',['handleCommand',['../class_v_tg_bot.htm#aa0ed6675b2fe746e56e63d234d108d13',1,'VTgBot']]],
-  ['handlemessage_98',['handleMessage',['../class_v_tg_bot.htm#a20738d6d7cf1cfd84111fa208b6dcb76',1,'VTgBot']]],
-  ['handleupdate_99',['handleUpdate',['../class_v_tg_bot.htm#a6a97af57e2b085315c2dd9cbec8c97f9',1,'VTgBot']]]
+  ['getme_118',['getMe',['../class_v_tg_requestor.htm#a36e284d567f69a1cafbaadcaf5e9f2b2',1,'VTgRequestor']]],
+  ['grid_119',['grid',['../class_v_tg_inline_keyboard.htm#aff9fbe48121934156cdd535499324761',1,'VTgInlineKeyboard']]],
+  ['gridp_120',['gridP',['../class_v_tg_inline_keyboard.htm#a3af1ac5ee8dc4080e1fb9f46b46a6de7',1,'VTgInlineKeyboard']]]
 ];

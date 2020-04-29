@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['answercallbackquery_80',['answerCallbackQuery',['../class_v_telegram.htm#a0631336d6cf96c69d659ebe4086667da',1,'VTelegram']]]
+  ['answercallbackquery_102',['answerCallbackQuery',['../class_v_tg_requestor.htm#af9c649b1387053bffc9dac874224e63f',1,'VTgRequestor']]]
 ];

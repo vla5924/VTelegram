@@ -68,13 +68,25 @@ $(function() {
 <li>__construct()
 : <a class="el" href="class_v_telegram.htm#a444eb7d2f70878ec23cb8c1063d11dcf">VTelegram</a>
 , <a class="el" href="class_v_tg_action.htm#a04d10af822d8621e27e9c8e5ca7e6903">VTgAction</a>
+, <a class="el" href="class_v_tg_bot.htm#ac81f8d5d5480264aa7afc84686809cd5">VTgBot</a>
+, <a class="el" href="class_v_tg_callback_query.htm#ac158b23fa3e4a8206136c58d93e66ea7">VTgCallbackQuery</a>
+, <a class="el" href="class_v_tg_chat.htm#a8a9db88bbf24e423832630cb2fee1e5d">VTgChat</a>
+, <a class="el" href="class_v_tg_message.htm#a628e37a8d83340f5573dc647094a71a4">VTgMessage</a>
+, <a class="el" href="class_v_tg_message_entity.htm#aba8781a13506f1e7f616fce829fb76fa">VTgMessageEntity</a>
+, <a class="el" href="class_v_tg_object.htm#a111ef4c61f1b47a797f7a8246111e9d9">VTgObject</a>
+, <a class="el" href="class_v_tg_result.htm#ad3c14f56aaf4bc80627375ec9b2b6362">VTgResult</a>
+, <a class="el" href="class_v_tg_update.htm#aaf756edbeddee98f4c75db6c8dbb611b">VTgUpdate</a>
+, <a class="el" href="class_v_tg_user.htm#a4618fd929113f3a37ad5c73505c1c3c8">VTgUser</a>
+</li>
+<li>__invoke()
+: <a class="el" href="class_v_tg_result.htm#a47c6370ebdccdbe2bbdcda51bf8753bf">VTgResult</a>
 </li>
 </ul>
 
 
 <h3><a id="index_a"></a>- a -</h3><ul>
 <li>answerCallbackQuery()
-: <a class="el" href="class_v_telegram.htm#a0631336d6cf96c69d659ebe4086667da">VTelegram</a>
+: <a class="el" href="class_v_tg_requestor.htm#af9c649b1387053bffc9dac874224e63f">VTgRequestor</a>
 </li>
 </ul>
 
@@ -121,12 +133,12 @@ $(function() {
 
 <h3><a id="index_e"></a>- e -</h3><ul>
 <li>editInlineMessage()
-: <a class="el" href="class_v_telegram.htm#a9217d5eeabac2f375c39d9344c9710c5">VTelegram</a>
-, <a class="el" href="class_v_tg_action.htm#aa46e01df9813c551ca76a72d6cb015eb">VTgAction</a>
+: <a class="el" href="class_v_tg_action.htm#aa46e01df9813c551ca76a72d6cb015eb">VTgAction</a>
+, <a class="el" href="class_v_tg_requestor.htm#a322f7bcf1596304dd3d771f2933af326">VTgRequestor</a>
 </li>
 <li>editMessage()
-: <a class="el" href="class_v_telegram.htm#a9a99b57b6c0a0fd8ab9c6a51cb4fb81a">VTelegram</a>
-, <a class="el" href="class_v_tg_action.htm#a5e5bd8f678e4a58f970a7cdbbf5cf584">VTgAction</a>
+: <a class="el" href="class_v_tg_action.htm#a5e5bd8f678e4a58f970a7cdbbf5cf584">VTgAction</a>
+, <a class="el" href="class_v_tg_requestor.htm#a85da95219732a49ea0148a5fce6b18a0">VTgRequestor</a>
 </li>
 <li>editReplyMarkup()
 : <a class="el" href="class_v_tg_action.htm#a5ad13d33617ea56d4d45f40e2a066a9d">VTgAction</a>
@@ -138,7 +150,20 @@ $(function() {
 </ul>
 
 
+<h3><a id="index_f"></a>- f -</h3><ul>
+<li>forwardMessage()
+: <a class="el" href="class_v_tg_requestor.htm#a3f6be078b36bfadf3881215aee439085">VTgRequestor</a>
+</li>
+<li>fromData()
+: <a class="el" href="class_v_tg_result.htm#a04c8409528b78399ba1dbcf554af85bb">VTgResult</a>
+</li>
+</ul>
+
+
 <h3><a id="index_g"></a>- g -</h3><ul>
+<li>getMe()
+: <a class="el" href="class_v_tg_requestor.htm#a36e284d567f69a1cafbaadcaf5e9f2b2">VTgRequestor</a>
+</li>
 <li>grid()
 : <a class="el" href="class_v_tg_inline_keyboard.htm#aff9fbe48121934156cdd535499324761">VTgInlineKeyboard</a>
 </li>
@@ -171,9 +196,19 @@ $(function() {
 </ul>
 
 
+<h3><a id="index_m"></a>- m -</h3><ul>
+<li>multiple()
+: <a class="el" href="class_v_tg_action.htm#ae4d7d1c9ec27d63049e51c66beef4d5a">VTgAction</a>
+</li>
+</ul>
+
+
 <h3><a id="index_p"></a>- p -</h3><ul>
 <li>processUpdateData()
 : <a class="el" href="class_v_tg_bot.htm#a2bc55311c5c175b1eba40988adbfb026">VTgBot</a>
+</li>
+<li>processUpdatePost()
+: <a class="el" href="class_v_tg_bot.htm#a6cd8fcd9b9d6c5a63f20e1cba608cd88">VTgBot</a>
 </li>
 </ul>
 
@@ -198,12 +233,18 @@ $(function() {
 
 
 <h3><a id="index_s"></a>- s -</h3><ul>
+<li>sendAudio()
+: <a class="el" href="class_v_tg_requestor.htm#a74dc3f2fa4c5e575745383bea549d25b">VTgRequestor</a>
+</li>
 <li>sendMessage()
-: <a class="el" href="class_v_telegram.htm#adfa7def80d22781bb76792eed8f7045c">VTelegram</a>
-, <a class="el" href="class_v_tg_action.htm#a61d095c2ff993d3030d30ed429e02a34">VTgAction</a>
+: <a class="el" href="class_v_tg_action.htm#a61d095c2ff993d3030d30ed429e02a34">VTgAction</a>
+, <a class="el" href="class_v_tg_requestor.htm#ab75d89191e22f8820e913526c0b36af7">VTgRequestor</a>
+</li>
+<li>sendPhoto()
+: <a class="el" href="class_v_tg_requestor.htm#ac8aea2cc059f8484f102f2f69b5ce4f4">VTgRequestor</a>
 </li>
 <li>setParseMode()
-: <a class="el" href="class_v_telegram.htm#a68586fc2ae4ea6dff1cd0dd0f9a66b49">VTelegram</a>
+: <a class="el" href="class_v_tg_requestor.htm#ab6efe01f6eb2b25dddf6a80bd49a7b69">VTgRequestor</a>
 </li>
 <li>setToken()
 : <a class="el" href="class_v_tg_bot.htm#a00cb912c85d791c48853ee851d184cc4">VTgBot</a>
