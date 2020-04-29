@@ -8,52 +8,60 @@
 class VTgAction
 {
     /**
+     * @var int $action
      * @brief Action code
-     * @details "Do nothing" by default.
+     * @note "Do nothing" by default.
      */
-    public int $action = 0;
+    public $action = 0;
 
     /**
+     * @var int|string $chatId
      * @brief Chat identifier (integer or string)
      * @details Needed for "Send message" and "Edit message" actions
      */
     public $chatId;
 
     /**
+     * @var int $messageId
      * @brief Message identifier (integer)
      * @details Needed for "Send message" and "Edit message" actions
      */
     public $messageId;
 
     /**
+     * @var string $inlineMessageId
      * @brief Inline mode message identifier (string)
      * @details Needed for "Edit message" actions 
      */
     public $inlineMessageId;
 
     /**
+     * @var string $text
      * @brief Message body text
      * @details Needed for "Send message" and "Edit message" actions
      */
-    public string $text;
+    public $text;
 
     /**
+     * @var array $extraParameters
      * @brief Array of parameters for Bot API if needed
      * @details Needed for "Send message" and "Edit message" actions
      */
-    public array $extraParameters = [];
+    public $extraParameters = [];
 
     /**
+     * @var callable|null $handler
      * @brief Handler function
      * @details Needed for "Call function" action
      */
-    public callable $handler = null;
+    public $handler = null;
 
     /**
+     * @var array|null $actions
      * @brief Array of actions
      * @details Needed for "Multiple" action (one-by-one execution of actions in array)
      */
-    public array $actions = null;
+    public $actions = null;
 
     const ACTION__DO_NOTHING = 0;          ///< Represents "Do nothing" action
     const ACTION__SEND_MESSAGE = 1;        ///< Represents "Send message" action

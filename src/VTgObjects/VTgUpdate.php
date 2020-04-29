@@ -3,21 +3,58 @@
 require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgObject.php';
 require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgMessage.php';
 
+/**
+ * @brief Class (union-like structure) to represent update object received from Telegram
+ * @todo Check if there are any more types in documentation
+ */
 class VTgUpdate extends VTgObject
 {
-    public int $id;
-    public int $type;
-    public VTgMessage $message = null;
+    /**
+     * @var int $id
+     * @brief Unique identifier of update
+     */
+    public $id;
+
+    /**
+     * @var int $type
+     * @brief Update type code
+     */
+    public $type = 0;
+
+    /**
+     * @var VTgMessage|null $message
+     * @brief Message (if update type is "message")
+     */
+    public $message = null;
+
+    /**
+     * @var VTgInlineQuery|null $inlineQuery
+     * @brief Inline query (if update type is "inline query")
+     */
     public $inlineQuery = null;
+
+    /**
+     * @var VTgChosenInlineResult|null
+     * @brief Chosen inline result (if update type is "chosen inline result")
+     */
     public $chosenInlineResult = null;
+
+    /**
+     * @var VTgCallbackQuery|null $callbackQuery
+     * @brief Callback query (if update type is "callback query")
+     */
     public $callbackQuery = null;
 
-    const TYPE__UNKNOWN = 0;
-    const TYPE__MESSAGE = 1;
-    const TYPE__INLINE_QUERY = 2;
-    const TYPE__CHOSEN_INLINE_RESULT = 3;
-    const TYPE__CALLBACK_QUERY = 4;
+    const TYPE__UNKNOWN = 0;              ///< "Unknown" update
+    const TYPE__MESSAGE = 1;              ///< "Message" update
+    const TYPE__INLINE_QUERY = 2;         ///< "Inline query" update
+    const TYPE__CHOSEN_INLINE_RESULT = 3; ///< "Chosen inline result" update
+    const TYPE__CALLBACK_QUERY = 4;       ///< "Callback query" update
 
+    /**
+     * @brief Constructor-initializer
+     * @param array $data JSON-decoded update data received from Telegram
+     */
     public function __construct(array $data) {
         $this->id = $data['update_id'];
         $this->message = isset($data['message']) ? new VTgMessage($data['message']) : null;

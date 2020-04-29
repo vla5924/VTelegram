@@ -7,16 +7,18 @@
 class VTelegram
 {
     /**
+     * @var string $token
      * @brief Bot API token
      * @details Bot API token is stored for making requests
      */
-    private $token;
+    protected $token;
 
     /**
+     * @var array $proxySettings
      * @brief Array with proxy settings
      * @details Parameters to connect to Telegram API via proxy if needed
      */
-    private $proxySettings = [];
+    protected $proxySettings = [];
 
     const API_HOST = 'https://api.telegram.org'; ///< URL of API used in requests
 

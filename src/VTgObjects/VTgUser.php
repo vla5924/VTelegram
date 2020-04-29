@@ -2,13 +2,39 @@
 
 require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgObject.php';
 
+/**
+ * @brief Class to represent information about Telegram user
+ */
 class VTgUser extends VTgObject
 {
+    /**
+     * @var int $id
+     * @brief Unique identifier
+     */
     public $id;
+
+    /**
+     * @var string $firstName
+     * @brief First name
+     */
     public $firstName;
+
+    /**
+     * @var string $lastName
+     * @brief Last name (if provided)
+     */
     public $lastName = "";
+
+    /**
+     * @var string $username
+     * @brief Username (if provided)
+     */
     public $username = "";
 
+    /**
+     * @brief Constructor-initializer
+     * @param array $data JSON-decoded user data received from Telegram
+     */
     public function __construct(array $data)
     {
         $this->id = $data['id'] ?? $data[0] ?? 0;

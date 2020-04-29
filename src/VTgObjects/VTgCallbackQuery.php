@@ -4,15 +4,52 @@ require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgObject.php';
 require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgMessage.php';
 require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgUser.php';
 
+/**
+ * @brief Class to represent user callback query
+ * @description Callback queries are usually send when push buttons on inline keyboard
+ */
 class VTgCallbackQuery extends VTgObject
 {
-    public string $id;
-    public VTgUser $from;
-    public VTgMessage $message = null;
-    public bool $fromInlineMode = false;
-    public string $inlineMessageId = null;
-    public string $data = "";
+    /**
+     * @var int|string $id
+     * @brief Unique identifier of query (used for trigger an answer by e. g. VTgRequestor::answerCallbackQuery())
+     */
+    public $id;
 
+    /**
+     * @var VTgUser $from
+     * @brief User who initiated a query
+     */
+    public $from;
+
+    /**
+     * @var VTgMessage|null $message
+     * @brief Message
+     */
+    public $message = null;
+
+    /**
+     * @var bool $fromInlineMode
+     * @brief Flag if query was initiated from inline mode
+     */
+    public $fromInlineMode = false;
+
+    /**
+     * @var string|null $inlineMessageId
+     * @brief Unique identifier of inline message
+     */
+    public $inlineMessageId = null;
+
+    /**
+     * @var string $data
+     * @brief Callback query data (payload for bot)
+     */
+    public $data = "";
+
+    /**
+     * @brief Constructor-initializer
+     * @param array $data JSON-decoded callback query data received from Telegram
+     */
     public function __construct(array $data) {
         $this->id = $data['id'];
         $this->from = new VTgUser($data['user']);

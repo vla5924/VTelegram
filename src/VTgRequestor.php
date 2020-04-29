@@ -10,10 +10,11 @@ require_once VTELEGRAM_REQUIRE_DIR . '/VTgResult.php';
 class VTgRequestor extends VTelegram
 {
     /**
+     * @var array $defaultParameters
      * @brief Default parameters for requests
      * @details Some default parameters added to requests that are used only if not specified in methods
      */
-    private $defaultParameters = [];
+    protected $defaultParameters = [];
 
     const PARSE_MODE__TEXT = 0;     ///< Marker used for disabling parsing in messages
     const PARSE_MODE__MARKDOWN = 1; ///< Marker used for enabling parsing messages as Markdown

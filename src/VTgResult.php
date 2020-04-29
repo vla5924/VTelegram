@@ -9,18 +9,21 @@ require_once VTELEGRAM_REQUIRE_DIR . '/VTgError.php';
 class VTgResult
 {
     /**
+     * @var bool $ok
      * @brief Flag if request was successful
      * @details If $ok is true, use $object property, otherwise check $error data
      */
-    public bool $ok;
+    public $ok;
 
     /**
+     * @var VTgObject|null $object
      * @brief Object with something that API can return
      * @details See VTgObject children
      */
-    public VTgObject $object = null;
+    public $object = null;
 
     /**
+     * @var VTgError|null $error
      * @brief Error data if request was wrong
      * @details See https://core.telegram.org/bots/api#making-requests
      */

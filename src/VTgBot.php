@@ -16,37 +16,32 @@ require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgMessage.php';
 class VTgBot
 {
     /**
+     * @var VTgRequestor $tg
      * @brief VTgRequestor instance for accessing Bot API
      * @details If you want to use it in your methods, extend this class using inheritance
      */
-    static protected VTgRequestor $tg = new VTgRequestor();
+    static protected $tg = new VTgRequestor();
 
     /**
+     * @var array $commands
      * @brief Array with commands handlers
      * @details Each handler (being a callable type) must have a special header format, see registerCommandHandler()
      */
-    static protected array $commands = [];
+    static protected $commands = [];
 
     /**
+     * @var callable|null $standardMessageHadler
      * @brief Function for handling messages if they don't contain /commands
      * @details Handler must have a special header format, see registerStandardMessageHandler()
      */
-    static protected callable $standardMessageHadler = null;
+    static protected $standardMessageHadler = null;
 
     /**
+     * @var callable|null $callbackQueryHandler
      * @brief Function for handling callback queries if needed
      * @details Handler must have a special header format, see registerCallbackQueryHandler()
      */
-    static protected callable $callbackQueryHandler = null;
-
-    /**
-     * @brief Constructor-initializer
-     * @param string $token Bot API token
-     */
-    public function __construct(string $token = "")
-    {
-        $this->token = $token;
-    }
+    static protected $callbackQueryHandler = null;
 
     /**
      * @brief Updates stored Bot API token for VTelegram instance
