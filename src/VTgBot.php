@@ -16,11 +16,11 @@ require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgMessage.php';
 class VTgBot
 {
     /**
-     * @var VTgRequestor $tg
+     * @var VTgRequestor|null $tg
      * @brief VTgRequestor instance for accessing Bot API
      * @details If you want to use it in your methods, extend this class using inheritance
      */
-    static protected $tg = new VTgRequestor();
+    static protected $tg = null;
 
     /**
      * @var array $commands
@@ -44,33 +44,45 @@ class VTgBot
     static protected $callbackQueryHandler = null;
 
     /**
-     * @brief Updates stored Bot API token for VTelegram instance
+     * @brief Constructs static VTgRequestor instance if needed
+     */
+    static protected final function setUpRequestor(): void
+    {
+        if (!static::$tg)
+            static::$tg = new VTgRequestor();
+    }
+
+    /**
+     * @brief Updates stored Bot API token for VTgRequestor instance
      * @param string $token New Bot API token
      */
     static public final function setToken(string $token): void
     {
+        static::setUpRequestor();
         static::$tg->updateToken($token);
     }
 
     /**
-     * @brief Enables SOCKS5 proxy for VTelegram instance
+     * @brief Enables SOCKS5 proxy for VTgRequestor instance
      * @details Requests to Bot API will be made via proxy server
      * @param string $address Proxy HTTP address
      * @param string $port Connection port
      * @param string $username Username for proxy authentication
      * @param string $password Password for proxy authentication
      */
-    public function enableProxy(string $address, string $port, string $username, string $password): void
+    static public final function enableProxy(string $address, string $port, string $username, string $password): void
     {
-        $this->tg->enableProxy($address, $port, $username, $password);
+        static::setUpRequestor();
+        static::$tg->enableProxy($address, $port, $username, $password);
     }
 
     /**
-     * @brief Disables SOCKS5 proxy for VTelegram instance if enabled
+     * @brief Disables SOCKS5 proxy for VTgRequestor instance if enabled
      */
-    public function disableProxy(): void
+    static public final function disableProxy(): void
     {
-        $this->tg->disableProxy();
+        static::setUpRequestor();
+        static::$tg->disableProxy();
     }
 
     /**
@@ -165,6 +177,7 @@ class VTgBot
      */
     static protected final function handleUpdate(VTgUpdate $update)
     {
+        static::setUpRequestor();
         if ($update->type == VTgUpdate::TYPE__MESSAGE)
             return self::handleMessage($update->message);
         if ($update->type == VTgUpdate::TYPE__CALLBACK_QUERY)
@@ -184,7 +197,7 @@ class VTgBot
         if ($containsCommand && !empty(self::$commands)) {
             $data = explode(' ', $message->text, 2);
             $command = substr($data[0], 1);
-            $action = self::handleCommand($message, $command, $data[1]);
+            $action = self::handleCommand($message, $command, $data[1] ?? "");
         } else {
             if (self::$standardMessageHadler)
                 $action = (self::$standardMessageHadler)($message);
@@ -232,16 +245,16 @@ class VTgBot
         $data = false;
         switch ($action->action):
             case VTgAction::ACTION__SEND_MESSAGE:
-                $data = $this->tg->sendMessage($action->chatId, $action->text, $action->extraParameters);
+                $data = static::$tg->sendMessage($action->chatId, $action->text, $action->extraParameters);
                 break;
             case VTgAction::ACTION__EDIT_MESSAGE:
-                $data = $this->tg->editMessage($action->chatId, $action->messageId, $action->text, $action->extraParameters);
+                $data = static::$tg->editMessage($action->chatId, $action->messageId, $action->text, $action->extraParameters);
                 break;
             case VTgAction::ACTION__EDIT_REPLY_MARKUP:
                 // do action
                 break;
             case VTgAction::ACTION__EDIT_INLINE_MESSAGE:
-                $data = $this->tg->editInlineMessage($action->inlineMessageId, $action->text, $action->extraParameters);
+                $data = static::$tg->editInlineMessage($action->inlineMessageId, $action->text, $action->extraParameters);
                 break;
             case VTgAction::ACTION__CALL_FUNCTION:
                 $action->callFunctionHandler();

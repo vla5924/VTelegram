@@ -1,9 +1,9 @@
 <?php
 
 /**
- * @brief Class to reperesents information about actions related to bot to do
+ * @brief Class to reperesent information about actions related to bot to do
  * @details A union-like structure to store information about actions like send a message, call a function etc.
- * @todo Some other actions
+ * @todo Some other actions (edit caption, answer callback query...)
  */
 class VTgAction
 {
@@ -63,13 +63,13 @@ class VTgAction
      */
     public $actions = null;
 
-    const ACTION__DO_NOTHING = 0;          ///< Represents "Do nothing" action
-    const ACTION__SEND_MESSAGE = 1;        ///< Represents "Send message" action
-    const ACTION__EDIT_MESSAGE = 2;        ///< Represents "Edit message regularly" action
-    const ACTION__EDIT_REPLY_MARKUP = 3;   ///< Represents "Edit reply markup of message" action
-    const ACTION__EDIT_INLINE_MESSAGE = 4; ///< Represents "Edit inline mode message" action
-    const ACTION__CALL_FUNCTION = 100;     ///< Represents "Call function" action
-    const ACTION__MULTIPLE = 101;          ///< Represents "Multiple" action (see multiple())
+    const ACTION__DO_NOTHING = 0;          ///< Code for "Do nothing" action
+    const ACTION__SEND_MESSAGE = 1;        ///< Code for "Send message" action
+    const ACTION__EDIT_MESSAGE = 2;        ///< Code for "Edit text message" action
+    const ACTION__EDIT_REPLY_MARKUP = 3;   ///< Code for "Edit reply markup of message" action
+    const ACTION__EDIT_INLINE_MESSAGE = 4; ///< Code for "Edit inline message" action
+    const ACTION__CALL_FUNCTION = 100;     ///< Code for "Call function" action
+    const ACTION__MULTIPLE = 101;          ///< Code for "Multiple" action (see multiple())
 
 
     /**
@@ -77,10 +77,9 @@ class VTgAction
      * @param int $action Action code (see ACTION__DO_NOTHING, ACTION__SEND_MESSAGE etc.)
      * @param mixed|null $parameters Array of action parameters if needed
      */
-    public function __construct(int $action, ...$parameters = null)
+    public function __construct(int $action, ...$parameters)
     {
-        $this->action = $action;
-        switch ($this->action):
+        switch ($action):
             case self::ACTION__SEND_MESSAGE:
                 $this->chatId = $parameters[0];
                 $this->text = $parameters[1];
@@ -112,8 +111,10 @@ class VTgAction
                 break;
             case self::ACTION__DO_NOTHING:
             default:
+                $action = self::ACTION__DO_NOTHING;
                 break;
         endswitch;
+        $this->action = $action;
     }
 
     /**
@@ -121,7 +122,7 @@ class VTgAction
      * @param mixed|null $args Arguments to be passed to handler function
      * @todo Examples of usage
      */
-    public function callFunctionHandler(...$args = null)
+    public function callFunctionHandler(...$args)
     {
         if ($this->action == self::ACTION__CALL_FUNCTION) {
             ($this->handler)(...$args);
@@ -150,7 +151,7 @@ class VTgAction
     }
 
     /**
-     * @brief Creates "Edit regular message" action
+     * @brief Creates "Edit text message" action
      * @param int|string $chatId Chat identifier
      * @param int $messageId Message identifier
      * @param string $text New message body text
@@ -175,7 +176,7 @@ class VTgAction
     }
 
     /**
-     * @brief Creates "Edit inline mode message" action
+     * @brief Creates "Edit inline message" action
      * @param string $inlineMessageId Message identifier
      * @param string $text New message body text
      * @param array $extraParameters Extra parameters for API request if needed

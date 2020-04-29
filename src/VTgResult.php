@@ -27,7 +27,7 @@ class VTgResult
      * @brief Error data if request was wrong
      * @details See https://core.telegram.org/bots/api#making-requests
      */
-    public VTgError $error = null;
+    public $error = null;
 
     /**
      * @brief Construstor-initializer
@@ -71,7 +71,7 @@ class VTgResult
     {
         $ok = $data['ok'] ?? false;
         if ($ok)
-            return new self($ok, isset($data['result']) ? new $typename($data['result']) : null);
+            return new self($ok, isset($data['result']) && is_array($data['result']) ? new $typename($data['result']) : null);
         return new self($ok, new VTgError($data['error_code'], $data['description']));
     }
 }

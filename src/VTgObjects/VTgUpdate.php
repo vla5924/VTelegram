@@ -2,6 +2,7 @@
 
 require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgObject.php';
 require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgMessage.php';
+require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgCallbackQuery.php';
 
 /**
  * @brief Class (union-like structure) to represent update object received from Telegram
@@ -54,9 +55,20 @@ class VTgUpdate extends VTgObject
     /**
      * @brief Constructor-initializer
      * @param array $data JSON-decoded update data received from Telegram
+     * @todo Type handlers
      */
-    public function __construct(array $data) {
+    public function __construct(array $data)
+    {
         $this->id = $data['update_id'];
-        $this->message = isset($data['message']) ? new VTgMessage($data['message']) : null;
+        if (isset($data['message'])) {
+            $this->type = self::TYPE__MESSAGE;
+            $this->message = new VTgMessage($data['message']);
+            return;
+        }
+        if (isset($data['callback_query'])) {
+            $this->type = self::TYPE__CALLBACK_QUERY;
+            $this->callbackQuery = new VTgCallbackQuery($data['callback_query']);
+            return;
+        }
     }
 }

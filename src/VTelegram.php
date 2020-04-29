@@ -1,8 +1,11 @@
 <?php
 
 /**
- * @brief Class provides basic interaction with Telegram Bot API
- * @details Use new extended class VTgRequestor to have general parameters and methods native
+ * @brief Base class with general methods of interaction with API (see also: VTgRequestor)
+ * @details Use new extended class VTgRequestor to have general parameters and methods 
+ * natively-defined (e. g. VTgRequestor::sendMessage() returns VTgMessage object
+ * instead of raw JSON-descoded associative array) for interaction with Telegram Bot 
+ * API with comfort.
  */
 class VTelegram
 {
@@ -20,7 +23,19 @@ class VTelegram
      */
     protected $proxySettings = [];
 
-    const API_HOST = 'https://api.telegram.org'; ///< URL of API used in requests
+    /**
+     * @brief URL of API used in requests
+     */
+    const API_HOST = 'https://api.telegram.org';
+
+    /**
+     * @brief Fallback array if cURL request was finished incorrectly
+     */
+    const API_REQUEST_ERROR = [
+        'ok' => false, 
+        'error_code' => 0, 
+        'description' => 'Server is not responding correctly.'
+    ];
 
     /**
      * @brief Constructor-initializer
@@ -67,21 +82,11 @@ class VTelegram
     }
 
     /**
-     * @brief Calls Bot API method
-     * @details Makes a request to Bot API with specified method
-     * @param string $method Name of method to be called
-     * @param string $parameters Array of method parameters if needed
-     * @return array JSON-decoded array with result of request from Telegram
-     * @todo Less bulky curl usage in this method (maybe some wrappers will be added in the future)...
+     * @brief Checks and modifies proxy settings for cURL handler
+     * @param resource $handler cURL handler
      */
-    public function callMethod(string $method, array $parameters = []): array
+    protected function setUpCurlHandlerProxy(&$handler): void
     {
-        $apiUrl = self::API_HOST . '/bot' . $this->token;
-        $handler = curl_init();
-        curl_setopt($handler, CURLOPT_URL, $apiUrl . '/' . $method);
-        curl_setopt($handler, CURLOPT_POST, true);
-        curl_setopt($handler, CURLOPT_POSTFIELDS, $parameters);
-        curl_setopt($handler, CURLOPT_RETURNTRANSFER, true);
         if ($this->proxySettings) {
             curl_setopt($handler, CURLOPT_PROXYTYPE, CURLPROXY_SOCKS5);
             curl_setopt($handler, CURLOPT_PROXY, $this->proxySettings['address'] . ':' . $this->proxySettings['port']);
@@ -89,7 +94,26 @@ class VTelegram
             curl_setopt($handler, CURLOPT_HEADER, false);
             curl_setopt($handler, CURLOPT_SSL_VERIFYPEER, false);
         }
+    }
+
+    /**
+     * @brief Calls Bot API method
+     * @details Makes a request to Bot API with specified method
+     * @param string $method Name of method to be called
+     * @param string $parameters Array of method parameters if needed
+     * @return array JSON-decoded array with result of request from Telegram
+     * @todo Less bulky cURL usage in this method (maybe some wrappers will be added in the future)
+     */
+    public function callMethod(string $method, array $parameters = []): array
+    {
+        $apiUrl = self::API_HOST . '/bot' . $this->token . '/' . $method;
+        $handler = curl_init();
+        curl_setopt($handler, CURLOPT_URL, $apiUrl);
+        curl_setopt($handler, CURLOPT_POST, true);
+        curl_setopt($handler, CURLOPT_POSTFIELDS, $parameters);
+        curl_setopt($handler, CURLOPT_RETURNTRANSFER, true);
+        $this->setUpCurlHandlerProxy($handler);
         $curlResult = curl_exec($handler);
-        return json_decode($curlResult, true);
+        return json_decode($curlResult, true) ?? self::API_REQUEST_ERROR;
     }
 }
