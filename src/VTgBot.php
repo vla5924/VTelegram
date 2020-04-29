@@ -1,10 +1,10 @@
 <?php
 
-require_once VTELEGRAM_REQUIRE_DIR . '/VTelegram.php';
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgTypes/VTgUpdate.php';
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgTypes/VTgAction.php';
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgTypes/VTgCallbackQuery.php';
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgTypes/VTgMessage.php';
+require_once VTELEGRAM_REQUIRE_DIR . '/VTgRequestor.php';
+require_once VTELEGRAM_REQUIRE_DIR . '/VTgAction.php';
+require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgUpdate.php';
+require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgCallbackQuery.php';
+require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgMessage.php';
 
 /**
  * @brief Complex solution for creating a Telegram bot
@@ -16,10 +16,10 @@ require_once VTELEGRAM_REQUIRE_DIR . '/VTgTypes/VTgMessage.php';
 class VTgBot
 {
     /**
-     * @brief VTelegram instance for accessing Bot API
-     * @details If you want to use it on your methods, extend this class using inheritance
+     * @brief VTgRequestor instance for accessing Bot API
+     * @details If you want to use it in your methods, extend this class using inheritance
      */
-    static protected VTelegram $tg = new VTelegram();
+    static protected VTgRequestor $tg = new VTgRequestor();
 
     /**
      * @brief Array with commands handlers
@@ -114,7 +114,7 @@ class VTgBot
      * @code
      * VTgBot::registerCallbackQueryHandler(function (VTgCallbackQuery $callbackQuery) {
      *   $newText = 'Callback data: ' . $callbackQuery->data;
-     *   return VTgAction::editMessage($message->chat->id, $message->id, $newText);
+     *   return VTgAction::editMessage($callbackQuery->message->chat->id, $callbackQuery->message->id, $newText);
      * });
      * @endcode
      * @param callable $handler Standard message handler (function(VTgMessage):VTgAction)
@@ -149,9 +149,9 @@ class VTgBot
      */
     static protected final function handleUpdate(VTgUpdate $update)
     {
-        if($update->type == VTgUpdate::TYPE__MESSAGE)
+        if ($update->type == VTgUpdate::TYPE__MESSAGE)
             return self::handleMessage($update->message);
-        if($update->type == VTgUpdate::TYPE__CALLBACK_QUERY)
+        if ($update->type == VTgUpdate::TYPE__CALLBACK_QUERY)
             return self::handleCallbackQuery($update->callbackQuery);
         return false;
     }
@@ -170,7 +170,7 @@ class VTgBot
             $command = substr($data[0], 1);
             $action = self::handleCommand($message, $command, $data[1]);
         } else {
-            if(self::$standardMessageHadler)
+            if (self::$standardMessageHadler)
                 $action = (self::$standardMessageHadler)($message);
         }
         return self::doAction($action);
@@ -199,7 +199,7 @@ class VTgBot
     static protected final function handleCallbackQuery(VTgCallbackQuery $callbackQuery)
     {
         $action = VTgAction::doNothing();
-        if(self::$callbackQueryHandler)
+        if (self::$callbackQueryHandler)
             $action = (self::$callbackQueryHandler)($callbackQuery);
         return self::doAction($action);
     }
@@ -214,14 +214,28 @@ class VTgBot
     static protected final function doAction(VTgAction $action)
     {
         $data = false;
-        if ($action->action == VTgAction::ACTION__SEND_MESSAGE) {
-            $data = $this->tg->sendMessage($action->chatId, $action->text, $action->extraParameters);
-        } elseif ($action->action == VTgAction::ACTION__EDIT_MESSAGE) {
-            $data = $this->tg->editMessage($action->chatId, $action->messageId, $action->text, $action->extraParameters);
-        } elseif ($action->action == VTgAction::ACTION__EDIT_INLINE_MESSAGE) {
-            $data = $this->tg->editInlineMessage($action->inlineMessageId, $action->text, $action->extraParameters);
-        } elseif ($action->action == VTgAction::ACTION__CALL_FUNCTION) {
-        }
+        switch ($action->action):
+            case VTgAction::ACTION__SEND_MESSAGE:
+                $data = $this->tg->sendMessage($action->chatId, $action->text, $action->extraParameters);
+                break;
+            case VTgAction::ACTION__EDIT_MESSAGE:
+                $data = $this->tg->editMessage($action->chatId, $action->messageId, $action->text, $action->extraParameters);
+                break;
+            case VTgAction::ACTION__EDIT_REPLY_MARKUP:
+                // do action
+                break;
+            case VTgAction::ACTION__EDIT_INLINE_MESSAGE:
+                $data = $this->tg->editInlineMessage($action->inlineMessageId, $action->text, $action->extraParameters);
+                break;
+            case VTgAction::ACTION__CALL_FUNCTION:
+                $action->callFunctionHandler();
+                break;
+            case VTgAction::ACTION__MULTIPLE:
+                $data = [];
+                foreach ($action->actions as $act)
+                    $data[] = self::doAction($act);
+                break;
+        endswitch;
         return $data;
     }
 }

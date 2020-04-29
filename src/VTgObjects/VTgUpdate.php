@@ -1,8 +1,9 @@
 <?php
 
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgTypes/VTgMessage.php';
+require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgObject.php';
+require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgMessage.php';
 
-class VTgUpdate
+class VTgUpdate extends VTgObject
 {
     public int $id;
     public int $type;

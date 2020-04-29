@@ -1,6 +1,8 @@
 <?php
 
-class VTgUser
+require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgObject.php';
+
+class VTgUser extends VTgObject
 {
     public $id;
     public $firstName;

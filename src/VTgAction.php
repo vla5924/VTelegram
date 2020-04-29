@@ -49,12 +49,19 @@ class VTgAction
      */
     public callable $handler = null;
 
+    /**
+     * @brief Array of actions
+     * @details Needed for "Multiple" action (one-by-one execution of actions in array)
+     */
+    public array $actions = null;
+
     const ACTION__DO_NOTHING = 0;          ///< Represents "Do nothing" action
     const ACTION__SEND_MESSAGE = 1;        ///< Represents "Send message" action
     const ACTION__EDIT_MESSAGE = 2;        ///< Represents "Edit message regularly" action
     const ACTION__EDIT_REPLY_MARKUP = 3;   ///< Represents "Edit reply markup of message" action
     const ACTION__EDIT_INLINE_MESSAGE = 4; ///< Represents "Edit inline mode message" action
     const ACTION__CALL_FUNCTION = 100;     ///< Represents "Call function" action
+    const ACTION__MULTIPLE = 101;          ///< Represents "Multiple" action (see multiple())
 
 
     /**
@@ -65,37 +72,40 @@ class VTgAction
     public function __construct(int $action, ...$parameters = null)
     {
         $this->action = $action;
-        if ($this->action == self::ACTION__DO_NOTHING)
-            return;
-        if ($this->action == self::ACTION__SEND_MESSAGE) {
-            $this->chatId = $parameters[0];
-            $this->text = $parameters[1];
-            $this->extraParameters = $parameters[2] ?? [];
-            return;
-        }
-        if ($this->action == self::ACTION__EDIT_MESSAGE) {
-            $this->chatId = $parameters[0];
-            $this->messageId = $parameters[1];
-            $this->text = $parameters[2];
-            $this->extraParameters = $parameters[3] ?? [];
-            return;
-        }
-        if ($this->action == self::ACTION__EDIT_REPLY_MARKUP) {
-            $this->chatId = $parameters[0];
-            $this->messageId = $parameters[1];
-            $this->extraParameters = ['reply_markup' => $parameters[2]];
-            return;
-        }
-        if ($this->action == self::ACTION__EDIT_INLINE_MESSAGE) {
-            $this->inlineMessageId = $parameters[0];
-            $this->text = $parameters[1];
-            $this->extraParameters = $parameters[2] ?? [];
-            return;
-        }
-        if ($this->action == self::ACTION__CALL_FUNCTION) {
-            $this->handler = $parameters[0];
-            return;
-        }
+        switch ($this->action):
+            case self::ACTION__SEND_MESSAGE:
+                $this->chatId = $parameters[0];
+                $this->text = $parameters[1];
+                $this->extraParameters = $parameters[2] ?? [];
+                break;
+            case self::ACTION__EDIT_MESSAGE:
+                $this->chatId = $parameters[0];
+                $this->messageId = $parameters[1];
+                $this->text = $parameters[2];
+                $this->extraParameters = $parameters[3] ?? [];
+                break;
+            case self::ACTION__EDIT_REPLY_MARKUP:
+                $this->chatId = $parameters[0];
+                $this->messageId = $parameters[1];
+                $this->extraParameters = ['reply_markup' => $parameters[2]];
+                break;
+            case self::ACTION__EDIT_INLINE_MESSAGE:
+                $this->inlineMessageId = $parameters[0];
+                $this->text = $parameters[1];
+                $this->extraParameters = $parameters[2] ?? [];
+                break;
+            case self::ACTION__CALL_FUNCTION:
+                $this->handler = $parameters[0];
+                break;
+            case self::ACTION__MULTIPLE:
+                foreach ($parameters as $parameter)
+                    if ($parameter instanceof self)
+                        $this->actions[] = $parameter;
+                break;
+            case self::ACTION__DO_NOTHING:
+            default:
+                break;
+        endswitch;
     }
 
     /**
@@ -116,7 +126,7 @@ class VTgAction
      */
     static public function doNothing(): VTgAction
     {
-        return new VTgAction(self::ACTION__DO_NOTHING);
+        return new self(self::ACTION__DO_NOTHING);
     }
 
     /**
@@ -128,7 +138,7 @@ class VTgAction
      */
     static public function sendMessage($chatId, string $text, array $extraParameters = []): VTgAction
     {
-        return new VTgAction(self::ACTION__SEND_MESSAGE, $chatId, $text, $extraParameters);
+        return new self(self::ACTION__SEND_MESSAGE, $chatId, $text, $extraParameters);
     }
 
     /**
@@ -141,7 +151,7 @@ class VTgAction
      */
     static public function editMessage($chatId, int $messageId, string $text, array $extraParameters = []): VTgAction
     {
-        return new VTgAction(self::ACTION__EDIT_MESSAGE, $chatId, $messageId, $text, $extraParameters);
+        return new self(self::ACTION__EDIT_MESSAGE, $chatId, $messageId, $text, $extraParameters);
     }
 
     /**
@@ -153,7 +163,7 @@ class VTgAction
      */
     static public function editReplyMarkup($chatId, int $messageId, string $replyMarkup): VTgAction
     {
-        return new VTgAction(self::ACTION__EDIT_REPLY_MARKUP, $chatId, $messageId, $replyMarkup);
+        return new self(self::ACTION__EDIT_REPLY_MARKUP, $chatId, $messageId, $replyMarkup);
     }
 
     /**
@@ -165,7 +175,7 @@ class VTgAction
      */
     static public function editInlineMessage(string $inlineMessageId, string $text, array $extraParameters = []): VTgAction
     {
-        return new VTgAction(self::ACTION__EDIT_INLINE_MESSAGE, $inlineMessageId, $text, $extraParameters);
+        return new self(self::ACTION__EDIT_INLINE_MESSAGE, $inlineMessageId, $text, $extraParameters);
     }
 
     /**
@@ -175,6 +185,17 @@ class VTgAction
      */
     static public function callFunction(callable $handler): VTgAction
     {
-        return new VTgAction(self::ACTION__CALL_FUNCTION, $handler);
+        return new self(self::ACTION__CALL_FUNCTION, $handler);
+    }
+
+    /**
+     * @brief Creates "Multiple" action
+     * @details "Multiple" action is an action with array of actions which must have been executed one-by-one
+     * @param VTgAction $actions Actions to be executed
+     * @return VTgAction Action
+     */
+    static public function multiple(VTgAction ...$actions) : VTgAction
+    {
+        return new self(self::ACTION__MULTIPLE, ...$actions);
     }
 }

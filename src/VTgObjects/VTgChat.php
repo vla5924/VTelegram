@@ -1,6 +1,6 @@
 <?php
 
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgTypes/VTgUser.php';
+require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgUser.php';
 
 class VTgChat extends VTgUser
 {

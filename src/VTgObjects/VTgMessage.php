@@ -1,10 +1,15 @@
 <?php
 
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgTypes/VTgUser.php';
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgTypes/VTgChat.php';
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgTypes/VTgMessageEntity.php';
+require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgObject.php';
+require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgUser.php';
+require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgChat.php';
+require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgMessageEntity.php';
 
-class VTgMessage
+/**
+ * @brief Class represents a message in Telegram
+ * @todo Types for untyped member properties
+ */
+class VTgMessage extends VTgObject
 {
     public int $id;
     public VTgUser $from = null;

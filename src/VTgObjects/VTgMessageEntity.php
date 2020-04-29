@@ -1,6 +1,8 @@
 <?php
 
-class VTgMessageEntity
+require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgObject.php';
+
+class VTgMessageEntity extends VTgObject
 {
     public $type;
     public $offset;

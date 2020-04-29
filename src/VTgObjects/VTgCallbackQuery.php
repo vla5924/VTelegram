@@ -1,9 +1,10 @@
 <?php
 
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgTypes/VTgMessage.php';
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgTypes/VTgUser.php';
+require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgObject.php';
+require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgMessage.php';
+require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgUser.php';
 
-class VTgCallbackQuery
+class VTgCallbackQuery extends VTgObject
 {
     public string $id;
     public VTgUser $from;
