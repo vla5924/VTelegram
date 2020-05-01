@@ -3,11 +3,10 @@
 /**
  * @brief Base class with general methods of interaction with API (see also: VTgRequestor)
  * @details Use new extended class VTgRequestor to have general parameters and methods 
- * natively-defined (e. g. VTgRequestor::sendMessage() returns VTgMessage object
- * instead of raw JSON-descoded associative array) for interaction with Telegram Bot 
- * API with comfort.
+ * natively-defined (e. g. VTgRequestor::sendMessage() returns VTgMessage object instead 
+ * of raw JSON-descoded associative array) for interaction with Telegram Bot API with comfort.
  */
-class VTelegram
+class VTgRequestController
 {
     /**
      * @var string $token

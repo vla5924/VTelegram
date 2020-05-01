@@ -1,13 +1,17 @@
 <?php
 
-require_once VTELEGRAM_REQUIRE_DIR . '/VTelegram.php';
+require_once VTELEGRAM_REQUIRE_DIR . '/VTgRequestController.php';
 require_once VTELEGRAM_REQUIRE_DIR . '/VTgResult.php';
 
 /**
  * @brief Class provides full interface for interaction with Telegram Bot API
+ * @details Phylosophy of methods is all required parameters must be passed as arguments
+ * to functions, all optional parameters may be passed in additional array. In duet with
+ * detailed documentaion recognized by IDEs this makes code wrote with VTgRequestor more
+ * concise without loss of clarity.
  * @todo Wrappers for all methods of Telegram Bot API, including media and inline
  */
-class VTgRequestor extends VTelegram
+class VTgRequestor extends VTgRequestController
 {
     /**
      * @var array $defaultParameters

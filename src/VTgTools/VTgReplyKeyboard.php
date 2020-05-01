@@ -1,33 +1,41 @@
 <?php
 
 /**
- * @brief Inline keyboards for messages reply markup generators
+ * @brief Generator of reply keyboards
  * @details Class provides a set of functions for convenient generating reply_markup content for messages sent via Telegram Bot API
- * @todo Generators for other keyboards and templates
+ * @todo Documentation
  */
-class VTgInlineKeyboard
+class VTgReplyKeyboard
 {
+    const ONE_TIME = 1;
+    const RESIZE = 2;
+    const SELECTIVE = 4;
+
+    protected $keyboard = [];
+
+    public function __construct(array $keyboard)
+    {
+        $this->keyboard = $keyboard;
+    }
+
+    /**
+     * @brief Converts keyboard array into a valid for reply_markup parameter (in API methods) string
+     * @param int $options Bitmask of parameters (see ONE_TIME, RESIZE, SELECTIVE)
+     * @return string Reply markup ready to be passed in API methods
+     */
+    public function make(int $options = 0): string
+    {
+        return json_encode(['reply_keyboard' => [
+            'keyboard' => $this->keyboard,
+            'resize_keyboard' => (bool) ($options & self::RESIZE),
+            'one_time_keyboard' => (bool) ($options & self::ONE_TIME),
+            'selective' => (bool) ($options & self::SELECTIVE)
+        ]]);
+    }
+
     /**
      * @brief Simple button generator
      * @details Generates array describing a simple button from data passed in various formats.
-     * Some examples of arrays that could be passed to function:
-     * @code
-     * $data = [
-     *   'text'          => 'Click me!',
-     *   'callback_data' => 'button_clicked'
-     * ];
-     * $button = VTgInlineKeyboard::button($data);
-     * 
-     * $data = [
-     *   'text'          => 'Click me!',
-     *   'callback_data' => 'button_clicked',
-     *   'url'           => 'https://telegram.org'
-     * ];
-     * $button = VTgInlineKeyboard::button($data);
-     * 
-     * $data = ['Click me!', 'button_clicked'];
-     * $button = VTgInlineKeyboard::button($data);
-     * @endcode
      * @param array $data Button data
      * @return array Valid array of button parameters
      */
@@ -44,33 +52,23 @@ class VTgInlineKeyboard
     }
 
     /**
-     * @brief Converts keyboard array into a valid for reply_markup parameter (in API methods) string
-     * @param array &$keyboard Inline keyboard multidimensional array
-     * @return string Reply markup ready to be passed in API methods
-     */
-    static public function json(array &$keyboard): string
-    {
-        return json_encode(['inline_keyboard' => $keyboard]);
-    }
-
-    /**
      * @brief Generates a keyboard with one button
      * @param array $button Array describing a button
-     * @return string Reply markup ready to be passed in API methods
+     * @return VTgReplyKeyboard Reply keyboard object with prepared keyboard
      */
-    static public function single(array $button): string
+    static public function single(array $button): self
     {
         $keyboard = [[self::button($button)]];
-        return self::json($keyboard);
+        return new self($keyboard);
     }
 
     /**
      * @brief Generates a keyboard with one button (wrapper for single())
      * @param string $text Text displayed on a button
      * @param string $callbackData Callback data (used as a payload in API methods)
-     * @return string Reply markup ready to be passed in API methods
+     * @return VTgReplyKeyboard Reply keyboard object with prepared keyboard
      */
-    static public function singleP(string $text, string $callbackData): string
+    static public function singleP(string $text, string $callbackData): self
     {
         return self::single([$text, $callbackData]);
     }
@@ -78,22 +76,22 @@ class VTgInlineKeyboard
     /**
      * @brief Generates a keyboard with column of buttons
      * @param array $buttons1d Array of arrays describing buttons
-     * @return string Reply markup ready to be passed in API methods
+     * @return VTgReplyKeyboard Reply keyboard object with prepared keyboard
      */
-    static public function column(array $buttons1d): string
+    static public function column(array $buttons1d): self
     {
         $keyboard = [];
         foreach ($buttons1d as $button)
             $keyboard[] = [self::button($button)];
-        return self::json($keyboard);
+        return new self($keyboard);
     }
 
     /**
      * @brief Generates a keyboard with column of buttons (wrapper for column())
      * @param array $buttons Arrays describing buttons
-     * @return string Reply markup ready to be passed in API methods
+     * @return VTgReplyKeyboard Reply keyboard object with prepared keyboard
      */
-    static public function columnP(array ...$buttons): string
+    static public function columnP(array ...$buttons): self
     {
         return self::column($buttons);
     }
@@ -101,22 +99,22 @@ class VTgInlineKeyboard
     /**
      * @brief Generates a keyboard with row of buttons
      * @param array $buttons1d Array of arrays describing buttons
-     * @return string Reply markup ready to be passed in API methods
+     * @return VTgReplyKeyboard Reply keyboard object with prepared keyboard
      */
-    static public function row(array $buttons1d): string
+    static public function row(array $buttons1d): self
     {
         $keyboard = [[]];
         foreach ($buttons1d as $button)
             $keyboard[0][] = self::button($button);
-        return self::json($keyboard);
+        return new self($keyboard);
     }
 
     /**
      * @brief Generates a keyboard with row of buttons (wrapper for row())
      * @param array $buttons Arrays describing buttons
-     * @return string Reply markup ready to be passed in API methods
+     * @return VTgReplyKeyboard Reply keyboard object with prepared keyboard
      */
-    static public function rowP(array ...$buttons): string
+    static public function rowP(array ...$buttons): self
     {
         return self::row($buttons);
     }
@@ -126,15 +124,15 @@ class VTgInlineKeyboard
      * @details Number of rows depends on number of buttons, each row contains not more than given number of buttons
      * @param int $columns Number of columns in each row
      * @param array $buttons1d Array of arrays describing buttons
-     * @return string Reply markup ready to be passed in API methods
+     * @return VTgReplyKeyboard Reply keyboard object with prepared keyboard
      */
-    static public function grid(int $columns, array $buttons1d): string
+    static public function grid(int $columns, array $buttons1d): self
     {
         $keyboard = [];
         $i = 0;
         foreach ($buttons1d as $button)
             $keyboard[floor($i++ / $columns)][] = self::button($button);
-        return self::json($keyboard);
+        return new self($keyboard);
     }
 
     /**
@@ -142,9 +140,9 @@ class VTgInlineKeyboard
      * @details See grid().
      * @param int $columns Number of columns in each row
      * @param array $buttons Array of arrays describing buttons
-     * @return string Reply markup ready to be passed in API methods
+     * @return VTgReplyKeyboard Reply keyboard object with prepared keyboard
      */
-    static public function gridP(int $columns, array ...$buttons): string
+    static public function gridP(int $columns, array ...$buttons): self
     {
         return self::grid($columns, $buttons);
     }
@@ -153,9 +151,9 @@ class VTgInlineKeyboard
      * @brief Generates a keyboard with given positioned buttons
      * @details Keyboard is generated "as is", buttons are placed on rows and columns according to their order in the array.
      * @param array $buttons2d Array of arrays of arrays describing buttons
-     * @return string Reply markup ready to be passed in API methods
+     * @return VTgReplyKeyboard Reply keyboard object with prepared keyboard
      */
-    static public function table(array $buttons2d): string
+    static public function table(array $buttons2d): self
     {
         $keyboard = [];
         $rowNum = 0;
@@ -165,6 +163,6 @@ class VTgInlineKeyboard
             }
             $rowNum++;
         }
-        return self::json($keyboard);
+        return new self($keyboard);
     }
 }

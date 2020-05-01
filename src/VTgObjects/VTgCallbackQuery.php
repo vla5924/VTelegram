@@ -6,7 +6,7 @@ require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgUser.php';
 
 /**
  * @brief Class to represent user callback query
- * @description Callback queries are usually send when push buttons on inline keyboard
+ * @details Callback queries are usually send when push buttons on inline keyboard
  */
 class VTgCallbackQuery extends VTgObject
 {
