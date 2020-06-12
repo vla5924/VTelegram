@@ -1,10 +1,10 @@
 <?php
 
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgRequestor.php';
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgAction.php';
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgUpdate.php';
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgCallbackQuery.php';
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgMessage.php';
+require_once __DIR__ . '/VTgRequestor.php';
+require_once __DIR__ . '/VTgAction.php';
+require_once __DIR__ . '/VTgObjects/VTgUpdate.php';
+require_once __DIR__ . '/VTgObjects/VTgCallbackQuery.php';
+require_once __DIR__ . '/VTgObjects/VTgMessage.php';
 
 /**
  * @brief Complex solution for creating a Telegram bot
@@ -202,7 +202,7 @@ class VTgBot
             if (self::$standardMessageHadler)
                 $action = (self::$standardMessageHadler)($message);
         }
-        return self::doAction($action);
+        return $action->execute(static::$tg);
     }
 
     /**
@@ -230,42 +230,7 @@ class VTgBot
         $action = VTgAction::doNothing();
         if (self::$callbackQueryHandler)
             $action = (self::$callbackQueryHandler)($callbackQuery);
-        return self::doAction($action);
-    }
-
-    /**
-     * @brief Executes an action
-     * @details Algorithm depends on action type: sending or editing a message, calling some function etc.
-     * @param VTgAction $action Action to do
-     * @return mixed Result of action execution
-     * @todo EDIT_REPLY_MARKUP action
-     */
-    static protected final function doAction(VTgAction $action)
-    {
-        $data = false;
-        switch ($action->action):
-            case VTgAction::ACTION__SEND_MESSAGE:
-                $data = static::$tg->sendMessage($action->chatId, $action->text, $action->extraParameters);
-                break;
-            case VTgAction::ACTION__EDIT_MESSAGE:
-                $data = static::$tg->editMessage($action->chatId, $action->messageId, $action->text, $action->extraParameters);
-                break;
-            case VTgAction::ACTION__EDIT_REPLY_MARKUP:
-                // do action
-                break;
-            case VTgAction::ACTION__EDIT_INLINE_MESSAGE:
-                $data = static::$tg->editInlineMessage($action->inlineMessageId, $action->text, $action->extraParameters);
-                break;
-            case VTgAction::ACTION__CALL_FUNCTION:
-                $action->callFunctionHandler();
-                break;
-            case VTgAction::ACTION__MULTIPLE:
-                $data = [];
-                foreach ($action->actions as $act)
-                    $data[] = self::doAction($act);
-                break;
-        endswitch;
-        return $data;
+        return $action->execute(static::$tg);
     }
 }
 /**

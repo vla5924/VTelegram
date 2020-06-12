@@ -1,8 +1,8 @@
 <?php
 
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgObject.php';
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgMessage.php';
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgCallbackQuery.php';
+require_once __DIR__ . '/VTgObject.php';
+require_once __DIR__ . '/VTgMessage.php';
+require_once __DIR__ . '/VTgCallbackQuery.php';
 
 /**
  * @brief Class (union-like structure) to represent update object received from Telegram

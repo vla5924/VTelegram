@@ -1,8 +1,8 @@
 <?php
 
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgObject.php';
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgMessage.php';
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgUser.php';
+require_once __DIR__ . '/VTgObject.php';
+require_once __DIR__ . '/VTgMessage.php';
+require_once __DIR__ . '/VTgUser.php';
 
 /**
  * @brief Class to represent user callback query

@@ -31,9 +31,16 @@ class VTgAction
     /**
      * @var string $inlineMessageId
      * @brief Inline mode message identifier (string)
-     * @details Needed for "Edit message" actions 
+     * @details Needed for "Edit message" action
      */
     public $inlineMessageId;
+
+    /**
+     * @var string $callbackQueryId
+     * @brief Callback query identifier (string)
+     * @details Needed for "Answer callback query" action
+     */
+    public $callbackQueryId;
 
     /**
      * @var string $text
@@ -63,13 +70,14 @@ class VTgAction
      */
     public $actions = null;
 
-    const ACTION__DO_NOTHING = 0;          ///< Code for "Do nothing" action
-    const ACTION__SEND_MESSAGE = 1;        ///< Code for "Send message" action
-    const ACTION__EDIT_MESSAGE = 2;        ///< Code for "Edit text message" action
-    const ACTION__EDIT_REPLY_MARKUP = 3;   ///< Code for "Edit reply markup of message" action
-    const ACTION__EDIT_INLINE_MESSAGE = 4; ///< Code for "Edit inline message" action
-    const ACTION__CALL_FUNCTION = 100;     ///< Code for "Call function" action
-    const ACTION__MULTIPLE = 101;          ///< Code for "Multiple" action (see multiple())
+    const ACTION__DO_NOTHING = 0;            ///< Code for "Do nothing" action
+    const ACTION__SEND_MESSAGE = 1;          ///< Code for "Send message" action
+    const ACTION__EDIT_MESSAGE = 2;          ///< Code for "Edit text message" action
+    const ACTION__EDIT_REPLY_MARKUP = 3;     ///< Code for "Edit reply markup of message" action
+    const ACTION__EDIT_INLINE_MESSAGE = 4;   ///< Code for "Edit inline message" action
+    const ACTION__ANSWER_CALLBACK_QUERY = 5; ///< Code for "Answer callback query" action
+    const ACTION__CALL_FUNCTION = 100;       ///< Code for "Call function" action
+    const ACTION__MULTIPLE = 101;            ///< Code for "Multiple" action (see multiple())
 
 
     /**
@@ -101,6 +109,10 @@ class VTgAction
                 $this->text = $parameters[1];
                 $this->extraParameters = $parameters[2] ?? [];
                 break;
+            case self::ACTION__ANSWER_CALLBACK_QUERY:
+                $this->callbackQueryId = $parameters[0];
+                $this->extraParameters = $parameters[1] ?? [];
+                break;
             case self::ACTION__CALL_FUNCTION:
                 $this->handler = $parameters[0];
                 break;
@@ -127,6 +139,41 @@ class VTgAction
         if ($this->action == self::ACTION__CALL_FUNCTION) {
             ($this->handler)(...$args);
         }
+    }
+
+    /**
+     * @brief Executes an action
+     * @details Algorithm depends on action type: sending or editing a message, calling some function etc.
+     * @param VTgRequestor|null $tg Instance for calling Telegram API methods
+     * @return mixed Result of action execution
+     * @todo EDIT_REPLY_MARKUP action
+     */
+    public function execute(VTgRequestor $tg = null)
+    {
+        $data = false;
+        switch ($this->action):
+            case VTgAction::ACTION__SEND_MESSAGE:
+                $data = $tg->sendMessage($this->chatId, $this->text, $this->extraParameters);
+                break;
+            case VTgAction::ACTION__EDIT_MESSAGE:
+                $data = $tg->editMessage($this->chatId, $this->messageId, $this->text, $this->extraParameters);
+                break;
+            case VTgAction::ACTION__EDIT_REPLY_MARKUP:
+                // TODO: do action
+                break;
+            case VTgAction::ACTION__EDIT_INLINE_MESSAGE:
+                $data = $tg->editInlineMessage($this->inlineMessageId, $this->text, $this->extraParameters);
+                break;
+            case VTgAction::ACTION__CALL_FUNCTION:
+                $this->callFunctionHandler();
+                break;
+            case VTgAction::ACTION__MULTIPLE:
+                $data = [];
+                foreach ($this->actions as $action)
+                    $data[] = $action->execute($tg);
+                break;
+        endswitch;
+        return $data;
     }
 
     /**
@@ -188,6 +235,17 @@ class VTgAction
     }
 
     /**
+     * @brief Creates "Answer callback query" action
+     * @param string $callbackQueryId Callback query identifier
+     * @param array $extraParameters Extra parameters for API request if needed
+     * @return VTgAction Action
+     */
+    static public function answerCallbackQuery(string $callbackQueryId, array $extraParameters = []): VTgAction
+    {
+        return new self(self::ACTION__EDIT_INLINE_MESSAGE, $callbackQueryId, $extraParameters);
+    }
+
+    /**
      * @brief Creates "Call function" action
      * @param callable $handler Handler function
      * @return VTgAction Action
@@ -203,7 +261,7 @@ class VTgAction
      * @param VTgAction $actions Actions to be executed
      * @return VTgAction Action
      */
-    static public function multiple(VTgAction ...$actions) : VTgAction
+    static public function multiple(VTgAction ...$actions): VTgAction
     {
         return new self(self::ACTION__MULTIPLE, ...$actions);
     }

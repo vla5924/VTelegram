@@ -1,6 +1,6 @@
 <?php
 
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgUser.php';
+require_once __DIR__ . '/VTgUser.php';
 
 /**
  * @brief Class to represent information about chat

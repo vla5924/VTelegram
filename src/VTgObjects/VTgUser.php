@@ -1,6 +1,6 @@
 <?php
 
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgObject.php';
+require_once __DIR__ . '/VTgObject.php';
 
 /**
  * @brief Class to represent information about Telegram user

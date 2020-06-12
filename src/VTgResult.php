@@ -1,7 +1,7 @@
 <?php
 
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgObject.php';
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgError.php';
+require_once __DIR__ . '/VTgObjects/VTgObject.php';
+require_once __DIR__ . '/VTgError.php';
 
 /**
  * @brief Class represents a result of request to Telegram Bot API

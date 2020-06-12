@@ -1,6 +1,6 @@
 <?php
 
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgObject.php';
+require_once __DIR__ . '/VTgObject.php';
 
 class VTgMessageEntity extends VTgObject
 {

@@ -1,7 +1,7 @@
 <?php
 
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgRequestController.php';
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgResult.php';
+require_once __DIR__ . '/VTgRequestController.php';
+require_once __DIR__ . '/VTgResult.php';
 
 /**
  * @brief Class provides full interface for interaction with Telegram Bot API

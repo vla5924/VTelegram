@@ -1,9 +1,9 @@
 <?php
 
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgObject.php';
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgUser.php';
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgChat.php';
-require_once VTELEGRAM_REQUIRE_DIR . '/VTgObjects/VTgMessageEntity.php';
+require_once __DIR__ . '/VTgObject.php';
+require_once __DIR__ . '/VTgUser.php';
+require_once __DIR__ . '/VTgChat.php';
+require_once __DIR__ . '/VTgMessageEntity.php';
 
 /**
  * @brief Class represents a message in Telegram
