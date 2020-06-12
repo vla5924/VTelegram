@@ -1,7 +1,7 @@
 <?php
 
 require_once __DIR__ . '/VTgRequestController.php';
-require_once __DIR__ . '/VTgResult.php';
+require_once __DIR__ . '/VTgMetaObjects/VTgResult.php';
 
 /**
  * @brief Class provides full interface for interaction with Telegram Bot API
@@ -79,7 +79,7 @@ class VTgRequestor extends VTgRequestController
      * @brief Use this method to forward messages of any kind
      * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
      * @param string $fromChatId Unique identifier for the chat where the original message was sent (or channel @username)
-     * @param int @messageId Message identifier in the chat specified in $fromChatId
+     * @param int $messageId Message identifier in the chat specified in $fromChatId
      * @param bool $disableNotification If true, message will be forwarded silently (without a notification for users)
      * @return VTgResult Sent message as VTgMessage on success
      */

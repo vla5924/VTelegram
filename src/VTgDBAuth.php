@@ -1,10 +1,14 @@
 <?php
 
+require_once __DIR__ . '/VTgBot.php';
 require_once __DIR__ . '/VTgMetaObjects/VTgAuthUser.php';
 
 /**
- * @brief Preform for user authentication mechanism with MySQL (or literally any other SQL) database
- * @todo Database vendor class (maybe SafeMySQL or whatever)
+ * @class VTgDBAuth
+ * @brief Trait for user authentication mechanism with MySQL (or literally any other SQL) database
+ * @warning This is a trait, not a class (unfortunately, Doxygen does not
+ * support PHP traits so it looks like a class in documentation)
+ * @todo Add database vendor class (maybe SafeMySQL or whatever)
  */
 trait VTgDBAuth
 {
@@ -49,6 +53,7 @@ trait VTgDBAuth
     static protected $fields = [];
 
     /**
+     * @memberof VTgDBAuth
      * @brief Saves some database parameters
      * @param mixed $db Database "connection" instance
      * @param array $fields Array of fields (data structure representing a user)
@@ -62,6 +67,7 @@ trait VTgDBAuth
     }
 
     /**
+     * @memberof VTgDBAuth
      * @brief Serializes an array in SQL-style: `key` = 'value`, ...
      * @param array $fields Serializable array of fields with values
      * $return string Serialized fields
@@ -75,6 +81,7 @@ trait VTgDBAuth
     }
 
     /**
+     * @memberof VTgDBAuth
      * @brief Makes SQL query string for inserting a row with info about user
      * @param int $tgId Telegram user identifier
      * @param array $fields Fields with non-default values if needed
@@ -89,6 +96,7 @@ trait VTgDBAuth
     }
 
     /**
+     * @memberof VTgDBAuth
      * @brief Makes SQL query string for selection a row with info about user
      * @param int $tgId Telegram user identifier
      * @return string SQL query string
@@ -99,6 +107,7 @@ trait VTgDBAuth
     }
 
     /**
+     * @memberof VTgDBAuth
      * @brief Makes query to database for selecting a row
      * @note Implement it according to database "connection" class API so it
      * could return 1D-array with field names and keys and its values
@@ -108,6 +117,7 @@ trait VTgDBAuth
     abstract static protected function makeSelectRowQuery(string $query): array;
 
     /**
+     * @memberof VTgDBAuth
      * @brief Makes query to database for inserting a row
      * @note Implement it according to database "connection" class API so it
      * could return true if insertion was succeed
@@ -117,6 +127,7 @@ trait VTgDBAuth
     abstract static protected function makeInsertRowQuery(string $query): bool;
 
     /**
+     * @memberof VTgDBAuth
      * @brief Checks and authorizes Telegram user according to info in database
      * @details This method will try to select a row with info about a user with
      * given Telegram ID. If found, it will return meta-object with all the data
