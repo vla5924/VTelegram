@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../VTgUser.php';
+require_once __DIR__ . '/../VTgObjects/VTgUser.php';
 
 /**
  * @brief Service class for storing information about Telegram user with data from SQL database

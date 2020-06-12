@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/VTgObjects/VTgObject.php';
+require_once __DIR__ . '/../VTgObjects/VTgObject.php';
 require_once __DIR__ . '/VTgError.php';
 
 /**

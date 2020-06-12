@@ -179,9 +179,9 @@ class VTgBot
     {
         static::setUpRequestor();
         if ($update->type == VTgUpdate::TYPE__MESSAGE)
-            return self::handleMessage($update->message);
+            return static::handleMessage($update->message);
         if ($update->type == VTgUpdate::TYPE__CALLBACK_QUERY)
-            return self::handleCallbackQuery($update->callbackQuery);
+            return static::handleCallbackQuery($update->callbackQuery);
         return false;
     }
 
@@ -194,13 +194,13 @@ class VTgBot
     {
         $action = VTgAction::doNothing();
         $containsCommand = ($message->text and $message->text[0] == '/');
-        if ($containsCommand && !empty(self::$commands)) {
+        if ($containsCommand && !empty(static::$commands)) {
             $data = explode(' ', $message->text, 2);
             $command = substr($data[0], 1);
-            $action = self::handleCommand($message, $command, $data[1] ?? "");
+            $action = static::handleCommand($message, $command, $data[1] ?? "");
         } else {
-            if (self::$standardMessageHadler)
-                $action = (self::$standardMessageHadler)($message);
+            if (static::$standardMessageHadler)
+                $action = (static::$standardMessageHadler)($message);
         }
         return $action->execute(static::$tg);
     }
@@ -214,9 +214,9 @@ class VTgBot
      */
     static protected function handleCommand(VTgMessage $message, string $command, string $data = ""): VTgAction
     {
-        if (!isset(self::$commands[$command]))
+        if (!isset(static::$commands[$command]))
             return VTgAction::doNothing();
-        return (self::$commands[$command])($message, $data);
+        return (static::$commands[$command])($message, $data);
     }
 
 

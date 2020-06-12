@@ -6,40 +6,75 @@
  */
 class VTgIcon
 {
-    const info = 'ℹ️';
-    const warning = '⚠️';
-    const ban = '🚫';
+    /**
+     * @name Attention
+     */
+    ///@{
+    const info = 'ℹ️'; ///< Info
+    const warning = '⚠️'; ///< Warning
+    const ban = '🚫'; ///< Ban (block)
+    ///@}
 
-    const left = '⬅️';
-    const right = '➡️';
-    const up = '⬆️';
-    const down = '⬇️';
+    /**
+     * @name Arrows
+     */
+    ///@{
+    const left = '⬅️'; ///< Left arrow
+    const right = '➡️'; ///< Right arrow
+    const up = '⬆️'; ///< Up arrow
+    const down = '⬇️'; ///< Down arrow
+    ///@}
 
-    const left_a = '◀️';
-    const right_a = '▶️';
-    const up_a = '🔼';
-    const down_a = '🔽';
+    /**
+     * @name Arrows (caret style)
+     */
+    ///@{
+    const left_a = '◀️'; ///< Left arrow
+    const right_a = '▶️'; ///< Right arrow
+    const up_a = '🔼'; ///< Up arrow
+    const down_a = '🔽'; ///< Down arrow
+    ///@}
 
-    const fire = '🔥';
-    const bomb = '💣';
-    const trash = '🗑';
-    const globe = '🌐';
+    /**
+     * @name Miscellaneous
+     */
+    ///@{
+    const fire = '🔥'; ///< Fire
+    const bomb = '💣'; ///< Bomb
+    const trash = '🗑'; ///< Trash (recycle bin)
+    const globe = '🌐'; ///< Globe (earth sign)
+    ///@}
 
-    const tick = '✔️';
-    const tick_g = '✅';
-    const tick_b = '☑️';
-    const cross = '❌';
-    const cross_g = '❎';
-    const cross_b = '✖️';
+    /**
+     * @name Checking marks
+     */
+    ///@{
+    const tick = '✔️'; ///< Tick
+    const tick_g = '✅'; ///< Green tick
+    const tick_b = '☑️'; ///< Alternative tick
+    const cross = '❌'; ///< Cross
+    const cross_g = '❎'; ///< Green cross
+    const cross_b = '✖️'; ///< Alternative cross
+    ///@}
 
-    const play = '▶️';
-    const pause = '⏸';
-    const play_pause = '⏯';
-    const refresh = '🔄';
+    /**
+     * @name Playback controls
+     */
+    ///@{
+    const play = '▶️'; ///< Play
+    const pause = '⏸'; ///< Pause
+    const play_pause = '⏯'; ///< Play/pause
+    const refresh = '🔄'; ///< Refresh (update, sync)
+    ///@}
 
-    const pencil = '✏️';
-    const pen = '🖊';
-    const writing = '✍️';
-    const attach = '📎';
-    const link = '🔗';
+    /**
+     * @name Writing and attachments
+     */
+    ///@{
+    const pencil = '✏️'; ///< Pencil
+    const pen = '🖊'; ///< Pen
+    const writing = '✍️'; ///< Hand writing
+    const clip = '📎'; ///< Clip (attach)
+    const link = '🔗'; ///< Link (chain)
+    ///@}
 }

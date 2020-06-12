@@ -63,7 +63,8 @@ trait VTgDynamicCommands
      */
     static public function registerDynamicCommandHandler(string $patternCommand, callable $handler): void
     {
-        static::$commands[$patternCommand] = $handler;
+        static::$commands['%DYNAMIC%'] = false;
+        static::$dynamicCommands[$patternCommand] = $handler;
     }
     
     /**
@@ -78,13 +79,13 @@ trait VTgDynamicCommands
      */
     static protected function handleCommand(VTgMessage $message, string $command, string $data = ""): VTgAction
     {
-        foreach (self::$dynamicCommands as $patternCommand => $handler) {
+        foreach (static::$dynamicCommands as $patternCommand => $handler) {
             $parameters = [];
             if (self::checkMatch($patternCommand, $command, $parameters))
                 return ($handler)($message, $parameters, $data);
         }
-        if (!isset(self::$commands[$command]))
+        if (!isset(static::$commands[$command]))
             return VTgAction::doNothing();
-        return (self::$commands[$command])($message, $data);
+        return (static::$commands[$command])($message, $data);
     }
 }
