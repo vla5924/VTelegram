@@ -46,7 +46,7 @@ class VTgBot
     /**
      * @brief Constructs static VTgRequestor instance if needed
      */
-    static protected final function setUpRequestor(): void
+    static protected function setUpRequestor(): void
     {
         if (!static::$tg)
             static::$tg = new VTgRequestor();
@@ -56,7 +56,7 @@ class VTgBot
      * @brief Updates stored Bot API token for VTgRequestor instance
      * @param string $token New Bot API token
      */
-    static public final function setToken(string $token): void
+    static public function setToken(string $token): void
     {
         static::setUpRequestor();
         static::$tg->updateToken($token);
@@ -70,7 +70,7 @@ class VTgBot
      * @param string $username Username for proxy authentication
      * @param string $password Password for proxy authentication
      */
-    static public final function enableProxy(string $address, string $port, string $username, string $password): void
+    static public function enableProxy(string $address, string $port, string $username, string $password): void
     {
         static::setUpRequestor();
         static::$tg->enableProxy($address, $port, $username, $password);
@@ -79,7 +79,7 @@ class VTgBot
     /**
      * @brief Disables SOCKS5 proxy for VTgRequestor instance if enabled
      */
-    static public final function disableProxy(): void
+    static public function disableProxy(): void
     {
         static::setUpRequestor();
         static::$tg->disableProxy();
@@ -99,7 +99,7 @@ class VTgBot
      * @param string $command Command you want to handle (don't mention '/', e.g. 'help', not '/help')
      * @param callable $handler Command handler (function(VTgMessage, string):VTgAction)
      */
-    static public final function registerCommandHandler(string $command, callable $handler): void
+    static public function registerCommandHandler(string $command, callable $handler): void
     {
         static::$commands[$command] = $handler;
     }
@@ -117,7 +117,7 @@ class VTgBot
      * @endcode
      * @param callable $handler Standard message handler (function(VTgMessage):VTgAction)
      */
-    static public final function registerStandardMessageHandler(callable $handler): void
+    static public function registerStandardMessageHandler(callable $handler): void
     {
         self::$standardMessageHadler = $handler;
     }
@@ -134,7 +134,7 @@ class VTgBot
      * @endcode
      * @param callable $handler Standard message handler (function(VTgMessage):VTgAction)
      */
-    static public final function registerCallbackQueryHandler(callable $handler): void
+    static public function registerCallbackQueryHandler(callable $handler): void
     {
         self::$callbackQueryHandler = $handler;
     }
@@ -152,7 +152,7 @@ class VTgBot
      * @param array $data Array with JSON-decoded update data
      * @return mixed|bool Result of update handling or false
      */
-    static public final function processUpdateData(array $data)
+    static public function processUpdateData(array $data)
     {
         $update = new VTgUpdate($data);
         return self::handleUpdate($update);
@@ -163,7 +163,7 @@ class VTgBot
      * @details It simply wraps processUpdateData(), getting data from incoming POST query.
      * @return mixed|bool Result of update handling or false
      */
-    static public final function processUpdatePost()
+    static public function processUpdatePost()
     {
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
@@ -175,7 +175,7 @@ class VTgBot
      * @param VTgUpdate $update Object with data received from Telegram
      * @return mixed|bool Result of update handling or false
      */
-    static protected final function handleUpdate(VTgUpdate $update)
+    static protected function handleUpdate(VTgUpdate $update)
     {
         static::setUpRequestor();
         if ($update->type == VTgUpdate::TYPE__MESSAGE)
@@ -190,7 +190,7 @@ class VTgBot
      * @param VTgMessage $message Message data received from Telegram
      * @return mixed|bool Result of message handling or false
      */
-    static protected final function handleMessage(VTgMessage $message)
+    static protected function handleMessage(VTgMessage $message)
     {
         $action = VTgAction::doNothing();
         $containsCommand = ($message->text and $message->text[0] == '/');
@@ -212,7 +212,7 @@ class VTgBot
      * @param string $data A part of message following the command
      * @return VTgAction Action for how to handle with command
      */
-    static protected final function handleCommand(VTgMessage $message, string $command, string $data = ""): VTgAction
+    static protected function handleCommand(VTgMessage $message, string $command, string $data = ""): VTgAction
     {
         if (!isset(self::$commands[$command]))
             return VTgAction::doNothing();
@@ -225,7 +225,7 @@ class VTgBot
      * @param VTgCallbackQuery $callbackQuery Callback query data received from Telegram
      * @return VTgAction Action for how to handle with command
      */
-    static protected final function handleCallbackQuery(VTgCallbackQuery $callbackQuery)
+    static protected function handleCallbackQuery(VTgCallbackQuery $callbackQuery)
     {
         $action = VTgAction::doNothing();
         if (self::$callbackQueryHandler)

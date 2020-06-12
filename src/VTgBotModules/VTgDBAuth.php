@@ -1,10 +1,11 @@
 <?php
 
-require_once __DIR__ . '/VTgBot.php';
-require_once __DIR__ . '/VTgMetaObjects/VTgAuthUser.php';
+require_once __DIR__ . '/../VTgBot.php';
+require_once __DIR__ . '/../VTgMetaObjects/VTgAuthUser.php';
 
 /**
  * @class VTgDBAuth
+ * @extends VTgBot
  * @brief Trait for user authentication mechanism with MySQL (or literally any other SQL) database
  * @warning This is a trait, not a class (unfortunately, Doxygen does not
  * support PHP traits so it looks like a class in documentation)
