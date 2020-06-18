@@ -4,6 +4,7 @@ require_once __DIR__ . '/VTgObject.php';
 require_once __DIR__ . '/VTgUser.php';
 require_once __DIR__ . '/VTgChat.php';
 require_once __DIR__ . '/VTgMessageEntity.php';
+require_once __DIR__ . '/../VTgMetaObjects/VTgAction.php';
 
 /**
  * @brief Class represents a message in Telegram
@@ -35,6 +36,10 @@ class VTgMessage extends VTgObject
 
     const SERVICE__UNDEFINED = 0;
 
+    /**
+     * @brief Constructor-initializer
+     * @param array $data JSON-decoded chat data received from Telegram
+     */
     public function __construct(array $data)
     {
         $this->id = $data['message_id'] ?? $data['id'] ?? 0;
@@ -50,5 +55,19 @@ class VTgMessage extends VTgObject
             foreach($data['entities'] as $entity)
                 $this->entities[] = new VTgMessageEntity($entity);
         }
+    }
+
+    /**
+     * @brief Creates an action to reply this message
+     * @param string $text Message text
+     * @param bool $explicitly If true, extra parameter reply_to_message_id will be provided automatically
+     * @param array $extraParameters Extra parameters for request if needed
+     * @return VTgAction "Send message" action (ready to execute)
+     */
+    public function reply(string $text, bool $explicitly = false, array $extraParameters = []): VTgAction
+    {
+        if($explicitly)
+            $extraParameters['reply_to_message_id'] = $this->id;
+        return VTgAction::sendMessage($this->chat->id, $text, $extraParameters);
     }
 }
