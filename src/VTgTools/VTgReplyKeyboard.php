@@ -36,18 +36,17 @@ class VTgReplyKeyboard
     /**
      * @brief Simple button generator
      * @details Generates array describing a simple button from data passed in various formats.
-     * @param array $data Button data
+     * @param array|string $data Button data or text
      * @return array Valid array of button parameters
+     * @todo request_contact, request_location, request_poll parameters
      */
-    static public function button(array $data): array
+    static public function button($data): array
     {
-        $button = ['text' => $data[0] ?? $data['text']];
-        if (isset($data[1]))
-            $button['callback_data'] = $data[1];
-        elseif (isset($data['callback_data']))
-            $button['callback_data'] = $data['callback_data'];
-        if (isset($data['url']))
-            $button['url'] = $data['url'];
+        if(gettype($data) === "string")
+            $text = $data;
+        else
+            $text = $data[0] ?? $data['text'];
+        $button = ['text' => $text];
         return $button;
     }
 

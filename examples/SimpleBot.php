@@ -7,13 +7,13 @@ class SimpleBot extends VTgBot
 }
 
 SimpleBot::setToken("<token>");
-SimpleBot::registerCommandHandler('help', function (VTgMessage &$message, string $data) {
+SimpleBot::registerCommandHandler('help', function (VTgBotController $bot, VTgMessage $message, string $data) {
     $answer = '/help with data: ' . $data;
-    return VTgAction::sendMessage($message->chat->id, $answer);
+    $bot->execute(VTgAction::sendMessage($message->chat->id, $answer));
 });
-SimpleBot::registerStandardMessageHandler(function (VTgMessage &$message) {
+SimpleBot::registerStandardMessageHandler(function (VTgBotController $bot, VTgMessage $message) {
     $greeting = 'Hello! ' . $message->chat->firstName;
-    return VTgAction::sendMessage($message->chat->id, $greeting);
+    $bot->execute(VTgAction::sendMessage($message->chat->id, $greeting));
 });
 
 $result = SimpleBot::processUpdatePost();

@@ -41,16 +41,22 @@ trait VTgDynamicCommands
     }
 
     /**
+     * @brief Makes bot controller object
+     * @return VTgBotController Bot controller object
+     */
+    abstract static protected function makeController(): VTgBotController;
+
+    /**
      * @memberof VTgDynamicCommands
      * @brief Registers a function as a handler for messages containing /dynamic_commands
-     * @details A handler will be passed: VTgMessage object as first parameter, 
-     * array with command itself and found %parameters as second parameter,
-     * string (part of message following the command) as third parameter. Then, 
-     * it must return VTgAction object. So you can use it like this:
+     * @details A handler will be passed: VTgBotController object as first parameter, 
+     * VTgMessage object as second parameter,  array with command itself and found 
+     * %parameters as third parameter, string (part of message following the command)
+     * as fourth parameter. So you can use it like this:
      * @code
-     * VTgBot::registerDynamicCommandHandler('get_%d', function (VTgMessage &$message, array $parameters, string $data) {
+     * VTgBot::registerDynamicCommandHandler('get_%d', function (VTgBotController $bot, VTgMessage $message, array $parameters, string $data) {
      *   $answer = 'Getting ' . $parameters[1] . ' for chat ' . $message->chat->id;
-     *   return VTgAction::sendMessage($message->chat->id, $answer);
+     *   $bot->execute(VTgAction::sendMessage($message->chat->id, $answer));
      * });
      * @endcode
      * As you can see, you can provide command parameters as typed placeholder (just like in printf function).
@@ -59,7 +65,7 @@ trait VTgDynamicCommands
      * %s - letters string (set of a-z, A-Z symbols, e.g. hello), 
      * %a - letters and numbers string (set of 0-9, a-z, A-Z symbols, e.g. h1ello23)
      * @param string $command Command you want to handle (don't mention '/', e.g. 'help', not '/help')
-     * @param callable $handler Command handler (function(VTgMessage, array, string):VTgAction)
+     * @param callable $handler Command handler [function (VTgBotController, VTgMessage, array, string): VTgAction]
      */
     static public function registerDynamicCommandHandler(string $patternCommand, callable $handler): void
     {
@@ -75,17 +81,17 @@ trait VTgDynamicCommands
      * @param VTgMessage $message Message data received from Telegram
      * @param string $command Command to handle
      * @param string $data A part of message following the command
-     * @return VTgAction Action for how to handle with command
      */
-    static protected function handleCommand(VTgMessage $message, string $command, string $data = ""): VTgAction
+    static protected function handleCommand(VTgMessage $message, string $command, string $data = ""): void
     {
         foreach (static::$dynamicCommands as $patternCommand => $handler) {
             $parameters = [];
-            if (self::checkMatch($patternCommand, $command, $parameters))
-                return ($handler)($message, $parameters, $data);
+            if (self::checkMatch($patternCommand, $command, $parameters)) {
+                ($handler)(static::makeController(), $message, $parameters, $data);
+                return;
+            }
         }
-        if (!isset(static::$commands[$command]))
-            return VTgAction::doNothing();
-        return (static::$commands[$command])($message, $data);
+        if (isset(static::$commands[$command]))
+            (static::$commands[$command])(static::makeController(), $message, $data);
     }
 }

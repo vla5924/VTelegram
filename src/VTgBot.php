@@ -1,10 +1,11 @@
 <?php
 
 require_once __DIR__ . '/VTgRequestor.php';
-require_once __DIR__ . '/VTgAction.php';
+require_once __DIR__ . '/VTgMetaObjects/VTgAction.php';
 require_once __DIR__ . '/VTgObjects/VTgUpdate.php';
 require_once __DIR__ . '/VTgObjects/VTgCallbackQuery.php';
 require_once __DIR__ . '/VTgObjects/VTgMessage.php';
+require_once __DIR__ . '/VTgBotController.php';
 
 /**
  * @brief Complex solution for creating a Telegram bot
@@ -86,36 +87,26 @@ class VTgBot
     }
 
     /**
-     * @brief Registers a function as a handler for messages containing /commands
-     * @details A handler will be passed: VTgMessage object as first parameter, 
-     * string (part of message following the command) as second parameter. Then, 
-     * it must return VTgAction object. So you can use it like this:
-     * @code
-     * VTgBot::registerCommandHandler('hello', function (VTgMessage &$message, string $data) {
-     *   $answer = 'Hello, ' . $message->chat->id;
-     *   return VTgAction::sendMessage($message->chat->id, $answer);
-     * });
-     * @endcode
-     * @param string $command Command you want to handle (don't mention '/', e.g. 'help', not '/help')
-     * @param callable $handler Command handler (function(VTgMessage, string):VTgAction)
+     * @brief Makes bot controller object
+     * @return VTgBotController Bot controller object
      */
-    static public function registerCommandHandler(string $command, callable $handler): void
+    static protected function makeController(): VTgBotController
     {
-        static::$commands[$command] = $handler;
+        return new VTgBotController(static::$tg);
     }
 
     /**
      * @brief Registers a function as a regular message handler
      * @details Registers a function to handle with any messages or (if command handlers were set) 
-     * with messages without commands. A handler will be passed VTgMessage object. 
-     * Then, it must return VTgAction object. So you can use it like this:
+     * with messages without commands. A handler will be passed VTgBotController and
+     * VTgMessage object. So you can use it like this:
      * @code
-     * VTgBot::registerStandardMessageHandler(function (VTgMessage &$message) {
+     * VTgBot::registerStandardMessageHandler(function (VTgBotController $bot, VTgMessage $message) {
      *   $answer = 'You sent me: ' . $message->text;
-     *   return VTgAction::sendMessage($message->chat->id, $answer);
+     *   $bot->execute(VTgAction::sendMessage($message->chat->id, $answer));
      * });
      * @endcode
-     * @param callable $handler Standard message handler (function(VTgMessage):VTgAction)
+     * @param callable $handler Standard message handler [function (VTgBotController, VTgMessage): VTgAction]
      */
     static public function registerStandardMessageHandler(callable $handler): void
     {
@@ -123,16 +114,35 @@ class VTgBot
     }
 
     /**
-     * @brief Registers a function as a callback query handler
-     * @details A handler will be passed VTgCallbackQuery object.
-     * Then, it must return VTgAction object. So you can use it like this:
+     * @brief Registers a function as a handler for messages containing /commands
+     * @details A handler will be passed: VTgBotController object as first parameter,
+     * VTgMessage object as second parameter,  string (part of message following the 
+     * command) as third parameter. So you can use it like this:
      * @code
-     * VTgBot::registerCallbackQueryHandler(function (VTgCallbackQuery $callbackQuery) {
-     *   $newText = 'Callback data: ' . $callbackQuery->data;
-     *   return VTgAction::editMessage($callbackQuery->message->chat->id, $callbackQuery->message->id, $newText);
+     * VTgBot::registerCommandHandler('hello', function (VTgBotController $bot, VTgMessage $message, string $data) {
+     *   $answer = 'Hello, ' . $message->chat->id;
+     *   $bot->execute(VTgAction::sendMessage($message->chat->id, $answer));
      * });
      * @endcode
-     * @param callable $handler Standard message handler (function(VTgMessage):VTgAction)
+     * @param string $command Command you want to handle (don't mention '/', e.g. 'help', not '/help')
+     * @param callable $handler Command handler [function (VTgBotController, VTgMessage, string): VTgAction]
+     */
+    static public function registerCommandHandler(string $command, callable $handler): void
+    {
+        static::$commands[$command] = $handler;
+    }
+
+    /**
+     * @brief Registers a function as a callback query handler
+     * @details A handler will be passed VTgBotController object and VTgCallbackQuery object.
+     * So you can use it like this:
+     * @code
+     * VTgBot::registerCallbackQueryHandler(function (VTgBotController $bot, VTgCallbackQuery $callbackQuery) {
+     *   $newText = 'Callback data: ' . $callbackQuery->data;
+     *   $bot->execute(VTgAction::editMessage($callbackQuery->message->chat->id, $callbackQuery->message->id, $newText));
+     * });
+     * @endcode
+     * @param callable $handler Callback query handler [function (VTgBotController, VTgCallbackQuery): VTgAction]
      */
     static public function registerCallbackQueryHandler(callable $handler): void
     {
@@ -150,59 +160,52 @@ class VTgBot
      * @endcode
      * Or just use processUpdatePost() to achieve the same behavior.
      * @param array $data Array with JSON-decoded update data
-     * @return mixed|bool Result of update handling or false
      */
-    static public function processUpdateData(array $data)
+    static public function processUpdateData(array $data): void
     {
         $update = new VTgUpdate($data);
-        return self::handleUpdate($update);
+        self::handleUpdate($update);
     }
 
     /**
      * @brief Processes JSON-decoded update data received from Telegram in POST query
      * @details It simply wraps processUpdateData(), getting data from incoming POST query.
-     * @return mixed|bool Result of update handling or false
      */
-    static public function processUpdatePost()
+    static public function processUpdatePost(): void
     {
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
-        return self::processUpdateData($data);
+        self::processUpdateData($data);
     }
 
     /**
      * @brief Processes an update from Telegram
      * @param VTgUpdate $update Object with data received from Telegram
-     * @return mixed|bool Result of update handling or false
      */
-    static protected function handleUpdate(VTgUpdate $update)
+    static protected function handleUpdate(VTgUpdate $update): void
     {
         static::setUpRequestor();
         if ($update->type == VTgUpdate::TYPE__MESSAGE)
-            return static::handleMessage($update->message);
+            static::handleMessage($update->message);
         if ($update->type == VTgUpdate::TYPE__CALLBACK_QUERY)
-            return static::handleCallbackQuery($update->callbackQuery);
-        return false;
+            static::handleCallbackQuery($update->callbackQuery);
     }
 
     /**
      * @brief Hadles with a received message
      * @param VTgMessage $message Message data received from Telegram
-     * @return mixed|bool Result of message handling or false
      */
-    static protected function handleMessage(VTgMessage $message)
+    static protected function handleMessage(VTgMessage $message): void
     {
-        $action = VTgAction::doNothing();
         $containsCommand = ($message->text and $message->text[0] == '/');
         if ($containsCommand && !empty(static::$commands)) {
             $data = explode(' ', $message->text, 2);
             $command = substr($data[0], 1);
-            $action = static::handleCommand($message, $command, $data[1] ?? "");
+            static::handleCommand($message, $command, $data[1] ?? "");
         } else {
             if (static::$standardMessageHadler)
-                $action = (static::$standardMessageHadler)($message);
+                (static::$standardMessageHadler)(self::makeController(), $message);
         }
-        return $action->execute(static::$tg);
     }
 
     /**
@@ -210,27 +213,21 @@ class VTgBot
      * @param VTgMessage $message Message data received from Telegram
      * @param string $command Command name to handle
      * @param string $data A part of message following the command
-     * @return VTgAction Action for how to handle with command
      */
-    static protected function handleCommand(VTgMessage $message, string $command, string $data = ""): VTgAction
+    static protected function handleCommand(VTgMessage $message, string $command, string $data = ""): void
     {
-        if (!isset(static::$commands[$command]))
-            return VTgAction::doNothing();
-        return (static::$commands[$command])($message, $data);
+        if (isset(static::$commands[$command]))
+            (static::$commands[$command])(self::makeController(), $message, $data);
     }
 
 
     /**
      * @brief Hadles with a callback query
      * @param VTgCallbackQuery $callbackQuery Callback query data received from Telegram
-     * @return VTgAction Action for how to handle with command
      */
-    static protected function handleCallbackQuery(VTgCallbackQuery $callbackQuery)
+    static protected function handleCallbackQuery(VTgCallbackQuery $callbackQuery): void
     {
-        $action = VTgAction::doNothing();
-        if (self::$callbackQueryHandler)
-            $action = (self::$callbackQueryHandler)($callbackQuery);
-        return $action->execute(static::$tg);
+        (self::$callbackQueryHandler)(self::makeController(), $callbackQuery);
     }
 }
 /**
