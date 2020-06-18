@@ -31,6 +31,13 @@ class VTgBot
     static protected $commands = [];
 
     /**
+     * @var callable|null $commandFallbackHandler
+     * @brief Function for handling messages if they don't contain /commands
+     * @details Handler must have a special header format, see registerCommandFallbackHandler()
+     */
+    static protected $commandFallbackHandler = null;
+
+    /**
      * @var callable|null $standardMessageHadler
      * @brief Function for handling messages if they don't contain /commands
      * @details Handler must have a special header format, see registerStandardMessageHandler()
@@ -133,6 +140,24 @@ class VTgBot
     }
 
     /**
+     * @brief Registers a function as a handler for messages containing undefined /commands
+     * @details A handler will be passed: VTgBotController object as first parameter,
+     * VTgMessage object as second parameter,  string with command as third parameter,
+     * string (part of message following the command) as fourth parameter.
+     * So you can use it like this:
+     * @code
+     * VTgBot::registerCommandFallbackHandler(function (VTgBotController $bot, VTgMessage $message, string $command, string $data) {
+     *   $bot->execute(VTgAction::sendMessage($message->chat->id, "I don't know this command: " . $command));
+     * });
+     * @endcode
+     * @param callable $handler Command handler [function (VTgBotController, VTgMessage, string): VTgAction]
+     */
+    static public function registerCommandFallbackHandler(callable $handler): void
+    {
+        static::$commandFallbackHandler = $handler;
+    }
+
+    /**
      * @brief Registers a function as a callback query handler
      * @details A handler will be passed VTgBotController object and VTgCallbackQuery object.
      * So you can use it like this:
@@ -191,6 +216,11 @@ class VTgBot
             static::handleCallbackQuery($update->callbackQuery);
     }
 
+    static protected function handleMessageStandardly(VTgMessage $message): void
+    {
+        if (static::$standardMessageHadler) (static::$standardMessageHadler)(self::makeController(), $message);
+    }
+
     /**
      * @brief Hadles with a received message
      * @param VTgMessage $message Message data received from Telegram
@@ -203,8 +233,7 @@ class VTgBot
             $command = substr($data[0], 1);
             static::handleCommand($message, $command, $data[1] ?? "");
         } else {
-            if (static::$standardMessageHadler)
-                (static::$standardMessageHadler)(self::makeController(), $message);
+            static::handleMessageStandardly($message);
         }
     }
 
@@ -216,8 +245,13 @@ class VTgBot
      */
     static protected function handleCommand(VTgMessage $message, string $command, string $data = ""): void
     {
-        if (isset(static::$commands[$command]))
+        if (isset(static::$commands[$command])) {
             (static::$commands[$command])(self::makeController(), $message, $data);
+        } elseif (static::$commandFallbackHandler) {
+            (static::$commandFallbackHandler)(self::makeController(), $message, $command, $data);
+        } else {
+            static::handleMessageStandardly($message);
+        }
     }
 
 

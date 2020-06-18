@@ -27,6 +27,13 @@ trait VTgDynamicCommands
     static protected $dynamicCommands = [];
 
     /**
+     * @var callable|null $commandFallbackHandler
+     * @brief Function for handling messages if they don't contain /commands
+     * @details See VTgBot::$commandFallbackHandler
+     */
+    static protected $commandFallbackHandler = null;
+
+    /**
      * @memberof VTgDynamicCommands
      * @brief Checks if a command matches a given pattern
      * @param string $patternCommand Pattern command (will be converted into regular expresson)
@@ -39,12 +46,6 @@ trait VTgDynamicCommands
         $regExp = '/^' . str_replace(['%d', '%s', '%a'], ['([0-9]+)', '([A-Za-z]+)', '([0-9a-zA-Z]+)'], $patternCommand) . '$/';
         return preg_match($regExp, $controlCommand, $matchParameters) === 1;
     }
-
-    /**
-     * @brief Makes bot controller object
-     * @return VTgBotController Bot controller object
-     */
-    abstract static protected function makeController(): VTgBotController;
 
     /**
      * @memberof VTgDynamicCommands
@@ -72,7 +73,7 @@ trait VTgDynamicCommands
         static::$commands['%DYNAMIC%'] = false;
         static::$dynamicCommands[$patternCommand] = $handler;
     }
-    
+
     /**
      * @memberof VTgDynamicCommands
      * @brief Hadles with a command if found in message
@@ -91,7 +92,16 @@ trait VTgDynamicCommands
                 return;
             }
         }
-        if (isset(static::$commands[$command]))
+        if (isset(static::$commands[$command])) {
             (static::$commands[$command])(static::makeController(), $message, $data);
+        } elseif (static::$commandFallbackHandler) {
+            (static::$commandFallbackHandler)(static::makeController(), $message, $command, $data);
+        } else {
+            static::handleMessageStandardly($message);
+        }
     }
 }
+/**
+ * @example DynamicCommandsBot.php
+ * Example of how to create a bot with dynamic command handler using VTgDynamicCommands trait.
+ */

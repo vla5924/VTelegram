@@ -12,15 +12,61 @@ require_once __DIR__ . '/../VTgMetaObjects/VTgAction.php';
  */
 class VTgMessage extends VTgObject
 {
+    /**
+     * @var int $id
+     * @brief Message unique identifier
+     */
     public $id;
+
+    /**
+     * @var VTgUser|null $from
+     * @brief Sender, empty for messages sent to channels
+     */
     public $from = null;
+
+    /**
+     * @var DateTime $date
+     * @brief Date the message was sent
+     */
     public $date;
+
+    /**
+     * @var VTgChat $chat
+     * @brief Conversation the message belongs to
+     */
     public $chat;
+
+    /**
+     * @var VTgUser|null $forwardFrom
+     * @brief For forwarded messages, sender of the original message
+     */
     public $forwardFrom = null;
+
+    /**
+     * @var DateTime|null $forwardDate
+     * @brief For forwarded messages, date the original message was sent
+     */
     public $forwardDate = null;
+
+    /**
+     * @var VTgMessage|null $replyTo
+     * @brief For replies, the original message
+     */
     public $replyTo = null;
+
+    /**
+     * @var string $text
+     * @brief Message text
+     */
     public $text = "";
+
+    /**
+     * @var array|null $entities
+     * @brief Array of VTgMessageEntity (if appeared in the text)
+     */
     public $entities = null;
+
+    public $replyMarkup = null;
     public $audio = null;
     public $document = null;
     public $photo = [];
@@ -35,10 +81,24 @@ class VTgMessage extends VTgObject
     public $serviceData = null;
 
     const SERVICE__UNDEFINED = 0;
+    const SERVICE__NEW_CHAT_MEMBERS = 1;
+    const SERVICE__LEFT_CHAT_MEMBER = 2;
+    const SERVICE__NEW_CHAT_TITLE = 3;
+    const SERVICE__NEW_CHAT_PHOTO = 4;
+    const SERVICE__DELETE_CHAT_PHOTO = 5;
+    const SERVICE__GROUP_CHAT_CREATED = 6;
+    const SERVICE__SUPERGROUP_CHAT_CREATED = 7;
+    const SERVICE__CHANNEL_CHAT_CREATED = 8;
+    const SERVICE__PINNED_MESSAGE = 9;
+    const SERVICE__INVOICE = 10;
+    const SERVICE__SUCCESSFUL_PAYMENT = 11;
+    const SERVICE__CONNECTED_WEBSITE = 12;
+    const SERVICE__PASSPORT_DATA = 13;
 
     /**
      * @brief Constructor-initializer
      * @param array $data JSON-decoded chat data received from Telegram
+     * @todo Support for other fields like audio, video, sticker etc.
      */
     public function __construct(array $data)
     {
@@ -50,9 +110,9 @@ class VTgMessage extends VTgObject
         $this->forwardDate = isset($data['forward_date']) ? new DateTime('@' . $data['forward_date']) : null;
         $this->replyTo = isset($data['reply_to_message']) ? new VTgMessage($data['reply_to_message']) : null;
         $this->text = $data['text'] ?? "";
-        if(isset($data['entities'])) {
+        if (isset($data['entities'])) {
             $this->entities = [];
-            foreach($data['entities'] as $entity)
+            foreach ($data['entities'] as $entity)
                 $this->entities[] = new VTgMessageEntity($entity);
         }
     }
@@ -66,7 +126,7 @@ class VTgMessage extends VTgObject
      */
     public function reply(string $text, bool $explicitly = false, array $extraParameters = []): VTgAction
     {
-        if($explicitly)
+        if ($explicitly)
             $extraParameters['reply_to_message_id'] = $this->id;
         return VTgAction::sendMessage($this->chat->id, $text, $extraParameters);
     }
