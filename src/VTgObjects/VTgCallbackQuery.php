@@ -92,20 +92,24 @@ class VTgCallbackQuery extends VTgObject
     /**
      * @brief Creates an action to edit text of the message callback query attached to
      * @param string $text Text of the message
-     * @return VTgAction "Edit message text" action (ready to execute)
+     * @return VTgAction "Edit message text" or "edit inline message text" action (ready to execute)
      */
     public function editMessageText(string $text, array $extraParameters = []): VTgAction
     {
+        if ($this->fromInlineMode)
+            return VTgAction::editIMessageText($this->inlineMessageId, $text, $extraParameters);
         return VTgAction::editMessageText($this->message->chat->id, $this->message->id, $text, $extraParameters);
     }
 
     /**
      * @brief Creates an action to edit reply markup of the message callback query attached to
      * @param mixed $replyMarkup New reply markup or false to remove
-     * @return VTgAction "Edit reply markup" action (ready to execute)
+     * @return VTgAction "Edit message reply markup" or "edit inline message reply markup" action (ready to execute)
      */
     public function editMessageReplyMarkup($replyMarkup = false): VTgAction
     {
+        if ($this->fromInlineMode)
+            return VTgAction::editIMessageReplyMarkup($this->inlineMessageId, $replyMarkup);
         return VTgAction::editMessageReplyMarkup($this->message->chat->id, $this->message->id, $replyMarkup);
     }
 }

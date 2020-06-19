@@ -1,9 +1,11 @@
 <?php
 
+require_once __DIR__ . '/VTgObject.php';
+
 /**
  * @brief Class to represent file stored on Telegram servers
  */
-class VTgFile
+class VTgFile extends VTgObject
 {
     /**
      * @var string $id

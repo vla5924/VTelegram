@@ -464,4 +464,19 @@ class VTgRequestor extends VTgRequestController
             $parameters['reply_markup'] = $replyMarkup;
         return $this->editMessageReplyMarkupStd($parameters);
     }
+
+    public function answerInlineQuery(string $inlineQueryId, array $results, array $extraParameters = []): VTgResult
+    {
+        foreach ($results as &$result)
+            $result = $result->toArray();
+        $parameters = [
+            'inline_query_id' => $inlineQueryId,
+            'results' => json_encode($results)
+        ];
+        $this->mergeExtraParameters($parameters, $extraParameters);
+        $result = $this->callMethod('answerInlineQuery', $parameters);
+        if ($result['ok'])
+            return new VTgResult(true);
+        return VTgResult::fromData($result);
+    }
 }

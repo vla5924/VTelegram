@@ -3,6 +3,8 @@
 require_once __DIR__ . '/VTgObject.php';
 require_once __DIR__ . '/VTgMessage.php';
 require_once __DIR__ . '/VTgCallbackQuery.php';
+require_once __DIR__ . '/VTgInlineQuery.php';
+require_once __DIR__ . '/VTgChosenInlineResult.php';
 
 /**
  * @brief Class (union-like structure) to represent update object received from Telegram
@@ -68,6 +70,16 @@ class VTgUpdate extends VTgObject
         if (isset($data['callback_query'])) {
             $this->type = self::TYPE__CALLBACK_QUERY;
             $this->callbackQuery = new VTgCallbackQuery($data['callback_query']);
+            return;
+        }
+        if (isset($data['inline_query'])) {
+            $this->type = self::TYPE__INLINE_QUERY;
+            $this->inlineQuery = new VTgInlineQuery($data['inline_query']);
+            return;
+        }
+        if (isset($data['chosen_inline_result'])) {
+            $this->type = self::TYPE__CHOSEN_INLINE_RESULT;
+            $this->chosenInlineResult = new VTgChosenInlineResult($data['chosen_inline_result']);
             return;
         }
     }

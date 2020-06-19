@@ -51,6 +51,9 @@ class VTgBot
      */
     static protected $callbackQueryHandler = null;
 
+    static protected $inlineQueryHandler = null;
+    static protected $inlineResultHandler = null;
+
     /**
      * @brief Constructs static VTgRequestor instance if needed
      */
@@ -174,6 +177,16 @@ class VTgBot
         self::$callbackQueryHandler = $handler;
     }
 
+    static public function registerInlineQueryHandler(callable $handler): void
+    {
+        self::$inlineQueryHandler = $handler;
+    }
+
+    static public function registerInlineResultHandler(callable $handler): void
+    {
+        self::$inlineResultHandler = $handler;
+    }
+
     /**
      * @brief Processes JSON-decoded update data from Telegram
      * @details You should pass an associative array with data received from Telegram (with Webhook or Long-poll).
@@ -214,11 +227,17 @@ class VTgBot
             static::handleMessage($update->message);
         if ($update->type == VTgUpdate::TYPE__CALLBACK_QUERY)
             static::handleCallbackQuery($update->callbackQuery);
+        if ($update->type == VTgUpdate::TYPE__INLINE_QUERY)
+            static::handleInlineQuery($update->inlineQuery);
+        if ($update->type == VTgUpdate::TYPE__CHOSEN_INLINE_RESULT)
+            static::handleInlineResult($update->chosenInlineResult);
     }
 
     static protected function handleMessageStandardly(VTgMessage $message): void
     {
-        if (static::$standardMessageHadler) (static::$standardMessageHadler)(self::makeController(), $message);
+        if (static::$standardMessageHadler) {
+            (static::$standardMessageHadler)(self::makeController(), $message);
+        }
     }
 
     /**
@@ -260,7 +279,31 @@ class VTgBot
      */
     static protected function handleCallbackQuery(VTgCallbackQuery $callbackQuery): void
     {
-        (self::$callbackQueryHandler)(self::makeController(), $callbackQuery);
+        if (self::$callbackQueryHandler) {
+            (self::$callbackQueryHandler)(self::makeController(), $callbackQuery);
+        }
+    }
+
+    /**
+     * @brief Hadles with an inline query
+     * @param VTgInlineQuery $inlineQuery Inline query data received from Telegram
+     */
+    static protected function handleInlineQuery(VTgInlineQuery $inlineQuery): void
+    {
+        if (self::$inlineQueryHandler) {
+            (self::$inlineQueryHandler)(self::makeController(), $inlineQuery);
+        }
+    }
+
+    /**
+     * @brief Hadles with a chosen inline result
+     * @param VTgChosenInlineResult $inlineResult Inline result data received from Telegram
+     */
+    static protected function handleInlineResult(VTgChosenInlineResult $inlineResult): void
+    {
+        if (self::$inlineResultHandler) {
+            (self::$inlineResultHandler)(self::makeController(), $inlineResult);
+        }
     }
 }
 /**
