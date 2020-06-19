@@ -15,10 +15,12 @@ class VTgIMTextContent extends VTgIMContent
 
     public function toArray(): array
     {
-        return [
-            'text' => $this->text,
-            'parse_mode' => $this->parseMode,
+        $array = [
+            'message_text' => $this->text,
             'disable_web_page_preview' => $this->disableWebPagePreview
         ];
+        if($this->parseMode)
+            $array['parse_mode'] = $this->parseMode;
+        return $array;
     }
 }

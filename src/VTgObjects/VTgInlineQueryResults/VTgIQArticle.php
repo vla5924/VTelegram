@@ -20,12 +20,11 @@ class VTgIQArticle
 
     public function toArray(): array
     {
-        return [
+        return array_merge([
             'type' => self::TYPE,
             'id' => $this->id,
             'title' => $this->title,
             'input_message_content' => $this->inputMessageContent->toArray(),
-            ...$this->extraParameters
-        ];
+        ], $this->extraParameters);
     }
 }
