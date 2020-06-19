@@ -3,7 +3,7 @@
 /**
  * @brief Class used to reprsesent InputFile
  */
-class VTgFile
+class VTgInputFile
 {
     /**
      * @var int $type

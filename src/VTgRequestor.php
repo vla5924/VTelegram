@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/VTgRequestController.php';
 require_once __DIR__ . '/VTgMetaObjects/VTgResult.php';
-require_once __DIR__ . '/VTgMetaObjects/VTgFile.php';
+require_once __DIR__ . '/VTgMetaObjects/VTgInputFile.php';
 
 /**
  * @brief Class provides full interface for interaction with Telegram Bot API
@@ -27,6 +27,17 @@ class VTgRequestor extends VTgRequestController
     const PARSE_MODE__HTML     = 'HTML';       ///< Marker used for enabling parsing messages as HTML
 
     const DISABLE_WEB_PAGE_PREVIEW__PARAM = 'disable_web_page_preview'; ///< Disable web page preview parameter name
+
+    const CHAT_ACTION__TYPING = 'typing';
+    const CHAT_ACTION__UPLOAD_PHOTO = 'upload_photo';
+    const CHAT_ACTION__RECORD_VIDEO = 'record_video';
+    const CHAT_ACTION__UPLOAD_VIDEO = 'upload_video';
+    const CHAT_ACTION__RECORD_AUDIO = 'record_audio';
+    const CHAT_ACTION__UPLOAD_AUDIO = 'upload_audio';
+    const CHAT_ACTION__UPLOAD_DOCUMENT = 'upload_document';
+    const CHAT_ACTION__FIND_LOCATION = 'find_location';
+    const CHAT_ACTION__RECORD_VIDEO_NOTE = 'record_video_note';
+    const CHAT_ACTION__UPLOAD_VIDEO_NOTE = 'upload_video_note';
 
     /**
      * @brief Updates default parse mode
@@ -146,12 +157,11 @@ class VTgRequestor extends VTgRequestController
     /**
      * @brief Use this method to send photos
      * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
-     * @param VTgFile $photo Photo to send (pass file_id or HTTP URL as string, or upload a new photo)
+     * @param VTgInputFile $photo Photo to send
      * @param array $extraParameters Other parameters if needed
      * @return VTgResult Sent message as VTgMessage on success
-     * @todo Uploading and InputFile usage
      */
-    public function sendPhoto(string $chatId, VTgFile $photo, array $extraParameters = []): VTgResult
+    public function sendPhoto(string $chatId, VTgInputFile $photo, array $extraParameters = []): VTgResult
     {
         $parameters = [
             'chat_id' => $chatId,
@@ -168,12 +178,11 @@ class VTgRequestor extends VTgRequestController
      * Your audio must be in the .MP3 or .M4A format.
      * @note For sending voice messages, use the sendVoice().
      * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
-     * @param VTgFile $audio Audio to send (pass file_id or HTTP URL as string, or upload a new audio file)
+     * @param VTgInputFile $audio Audio to send
      * @param array $extraParameters Other parameters if needed
      * @return VTgResult Sent message as VTgMessage on success
-     * @todo Uploading and InputFile usage
      */
-    public function sendAudio(string $chatId, VTgFile $audio, array $extraParameters = []): VTgResult
+    public function sendAudio(string $chatId, VTgInputFile $audio, array $extraParameters = []): VTgResult
     {
         $parameters = [
             'chat_id' => $chatId,
@@ -182,6 +191,174 @@ class VTgRequestor extends VTgRequestController
         $this->applyDefaultParameters($parameters, self::PARSE_MODE__PARAM);
         $this->mergeExtraParameters($parameters, $extraParameters);
         return VTgResult::fromData($this->callMethod('sendAudio', $parameters), 'VTgMessage');
+    }
+
+    /**
+     * @brief Use this method to send documents
+     * @details Use this method to send general files
+     * @note Bots can currently send files of any type of up to 50 MB in size.
+     * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
+     * @param VTgInputFile $document Document to send
+     * @param array $extraParameters Other parameters if needed
+     * @return VTgResult Sent message as VTgMessage on success
+     */
+    public function sendDocument(string $chatId, VTgInputFile $document, array $extraParameters = []): VTgResult
+    {
+        $parameters = [
+            'chat_id' => $chatId,
+            'document' => $document->get()
+        ];
+        $this->applyDefaultParameters($parameters, self::PARSE_MODE__PARAM);
+        $this->mergeExtraParameters($parameters, $extraParameters);
+        return VTgResult::fromData($this->callMethod('sendDocument', $parameters), 'VTgMessage');
+    }
+
+    /**
+     * @brief Use this method to send MP4-videos
+     * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
+     * @param VTgInputFile $video Video to send
+     * @param array $extraParameters Other parameters if needed
+     * @return VTgResult Sent message as VTgMessage on success
+     */
+    public function sendVideo(string $chatId, VTgInputFile $video, array $extraParameters = []): VTgResult
+    {
+        $parameters = [
+            'chat_id' => $chatId,
+            'video' => $video->get()
+        ];
+        $this->applyDefaultParameters($parameters, self::PARSE_MODE__PARAM);
+        $this->mergeExtraParameters($parameters, $extraParameters);
+        return VTgResult::fromData($this->callMethod('sendVideo', $parameters), 'VTgMessage');
+    }
+
+    /**
+     * @brief Use this method to send animation files (GIF or H.264/MPEG-4 AVC video without sound)
+     * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
+     * @param VTgInputFile $animation Animation file to send
+     * @param array $extraParameters Other parameters if needed
+     * @return VTgResult Sent message as VTgMessage on success
+     */
+    public function sendAnimation(string $chatId, VTgInputFile $animation, array $extraParameters = []): VTgResult
+    {
+        $parameters = [
+            'chat_id' => $chatId,
+            'animation' => $animation->get()
+        ];
+        $this->applyDefaultParameters($parameters, self::PARSE_MODE__PARAM);
+        $this->mergeExtraParameters($parameters, $extraParameters);
+        return VTgResult::fromData($this->callMethod('sendAnimation', $parameters), 'VTgMessage');
+    }
+
+    /**
+     * @brief Use this method to send voice messages
+     * @details Use this method to send audio files, if you want Telegram clients to display the file as a playable voice message.
+     * @note Your audio must be in an .OGG file encoded with OPUS
+     * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
+     * @param VTgInputFile $voice Audio file to send
+     * @param array $extraParameters Other parameters if needed
+     * @return VTgResult Sent message as VTgMessage on success
+     */
+    public function sendVoice(string $chatId, VTgInputFile $voice, array $extraParameters = []): VTgResult
+    {
+        $parameters = [
+            'chat_id' => $chatId,
+            'voice' => $voice->get()
+        ];
+        $this->applyDefaultParameters($parameters, self::PARSE_MODE__PARAM);
+        $this->mergeExtraParameters($parameters, $extraParameters);
+        return VTgResult::fromData($this->callMethod('sendVoice', $parameters), 'VTgMessage');
+    }
+
+    /**
+     * @brief Use this method to send video messages
+     * @details Telegram clients support rounded square mp4 videos of up to 1 minute long.
+     * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
+     * @param VTgInputFile $videoNote Video file to send
+     * @param array $extraParameters Other parameters if needed
+     * @return VTgResult Sent message as VTgMessage on success
+     */
+    public function sendVideoNote(string $chatId, VTgInputFile $videoNote, array $extraParameters = []): VTgResult
+    {
+        $parameters = [
+            'chat_id' => $chatId,
+            'video_note' => $videoNote->get()
+        ];
+        $this->mergeExtraParameters($parameters, $extraParameters);
+        return VTgResult::fromData($this->callMethod('sendVideoNote', $parameters), 'VTgMessage');
+    }
+
+    /**
+     * @brief Use this method to send point on the map
+     * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
+     * @param float $latitude Latitude of the location
+     * @param float $longitude Longitude of the location
+     * @param array $extraParameters Other parameters if needed
+     * @return VTgResult Sent message as VTgMessage on success
+     */
+    public function sendLocation(string $chatId, float $latitude, float $longitude, array $extraParameters = []): VTgResult
+    {
+        $parameters = [
+            'chat_id' => $chatId,
+            'latitude' => $latitude,
+            'longitude' => $longitude
+        ];
+        $this->mergeExtraParameters($parameters, $extraParameters);
+        return VTgResult::fromData($this->callMethod('sendLocation', $parameters), 'VTgMessage');
+    }
+
+    /**
+     * @brief Use this method when you need to send chat action
+     * @details Use this method when you need to tell the user that something is happening on the bot's side
+     * @note The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status).
+     * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
+     * @param string $action Type of action to broadcast
+     * @return VTgResult Sent message as VTgMessage on success
+     */
+    public function sendChatAction(string $chatId, string $action): VTgResult
+    {
+        $parameters = [
+            'chat_id' => $chatId,
+            'action' => $action
+        ];
+        return VTgResult::fromData($this->callMethod('sendChatAction', $parameters), 'VTgMessage');
+    }
+
+    /**
+     * @brief Use this method to get basic info about a file and prepare it for downloading
+     * @details For the moment, bots can download files of up to 20MB in size.
+     * @warning It is guaranteed that the link will be valid for at least 1 hour. 
+     * When the link expires, a new one can be requested by calling getFile() again.
+     * @note This function may not preserve the original file name and MIME type. 
+     * You should save the file's MIME type and name (if available) when the VTgFile object is received..
+     * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
+     * @param string $action Type of action to broadcast
+     * @return VTgResult Sent message as VTgMessage on success
+     */
+    public function getFile(string $fileId): VTgResult
+    {
+        $parameters = [
+            'file_id' => $fileId
+        ];
+        return VTgResult::fromData($this->callMethod('getFile', $parameters), 'VTgFile');
+    }
+
+    /**
+     * @brief Use this method to send answers to callback queries sent from inline keyboards
+     * @details The answer will be displayed to the user as a notification at the top of the chat screen or as an alert
+     * @param string $callbackQueryId Identifier of query to answer
+     * @param array $extraParameters Other parameters if needed
+     * @return VTgResult True on success
+     */
+    public function answerCallbackQuery(string $callbackQueryId, array $extraParameters = []): VTgResult
+    {
+        $parameters = [
+            'callback_query_id' => $callbackQueryId,
+        ];
+        $this->mergeExtraParameters($parameters, $extraParameters);
+        $result = $this->callMethod('answerCallbackQuery', $parameters);
+        if ($result['ok'])
+            return new VTgResult(true);
+        return VTgResult::fromData($result);
     }
 
     /**
@@ -230,7 +407,7 @@ class VTgRequestor extends VTgRequestController
      * @param array $extraParameters Other parameters if needed
      * @return VTgResult If edited message is sent by the bot, VTgMessage is returned, otherwise true
      */
-    public function editInlineMessageText(string $inlineMessageId, string $text, array $extraParameters = []): VTgResult
+    public function editIMessageText(string $inlineMessageId, string $text, array $extraParameters = []): VTgResult
     {
         $parameters = [
             'inline_message_id' => $inlineMessageId,
@@ -240,21 +417,51 @@ class VTgRequestor extends VTgRequestController
     }
 
     /**
-     * @brief Use this method to send answers to callback queries sent from inline keyboards
-     * @details The answer will be displayed to the user as a notification at the top of the chat screen or as an alert
-     * @param string $callbackQueryId Identifier of query to answer
-     * @param array $extraParameters Other parameters if needed
-     * @return VTgResult True on success
+     * @brief Use this method to edit only the reply markup of messages
+     * @details Wrapper for callMethod() for editing a text message sent by the bot
+     * @note This method corresponds to 'optionality' as declared in Telegram API documentation.
+     * See wrappers for this method like editMessageReplyMarkup() etc. for more convenience.
+     * @param array $parameters Parameters if needed
+     * @return VTgResult If edited message is sent by the bot, VTgMessage is returned, otherwise true
      */
-    public function answerCallbackQuery(string $callbackQueryId, array $extraParameters = []): VTgResult
+    public function editMessageReplyMarkupStd(array $parameters = []): VTgResult
+    {
+        return VTgResult::fromData($this->callMethod('editMessageReplyMarkup', $parameters), 'VTgMessage');
+    }
+
+    /**
+     * @brief Use this method to edit only the reply markup of messages
+     * @details This is a wrapper for editMessageReplyMarkupStd()
+     * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
+     * @param int $messageId Identifier of the message to edit
+     * @param string|bool $replyMarkup New reply markup or false to remove it
+     * @return VTgResult If edited message is sent by the bot, VTgMessage is returned, otherwise true
+     */
+    public function editMessageReplyMarkup(string $chatId, int $messageId, $replyMarkup = false): VTgResult
     {
         $parameters = [
-            'callback_query_id' => $callbackQueryId,
+            'chat_id' => $chatId,
+            'message_id' => $messageId
         ];
-        $this->mergeExtraParameters($parameters, $extraParameters);
-        $result = $this->callMethod('answerCallbackQuery', $parameters);
-        if ($result['ok'])
-            return new VTgResult(true);
-        return VTgResult::fromData($result);
+        if ($replyMarkup)
+            $parameters['reply_markup'] = $replyMarkup;
+        return $this->editMessageReplyMarkupStd($parameters);
+    }
+
+    /**
+     * @brief Use this method to edit only the reply markup of messages
+     * @details This is a wrapper for editMessageReplyMarkupStd()
+     * @param string $inlineMessageId Identifier of the inline message
+     * @param string|bool $replyMarkup New reply markup or false to remove it
+     * @return VTgResult If edited message is sent by the bot, VTgMessage is returned, otherwise true
+     */
+    public function editIMessageReplyMarkup(string $inlineMessageId, $replyMarkup = false): VTgResult
+    {
+        $parameters = [
+            'inline_message_id' => $inlineMessageId
+        ];
+        if ($replyMarkup)
+            $parameters['reply_markup'] = $replyMarkup;
+        return $this->editMessageReplyMarkupStd($parameters);
     }
 }

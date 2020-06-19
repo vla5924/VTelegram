@@ -70,14 +70,15 @@ class VTgAction
      */
     public $actions = null;
 
-    const ACTION__DO_NOTHING = 0;            ///< Code for "Do nothing" action
-    const ACTION__SEND_MESSAGE = 1;          ///< Code for "Send message" action
-    const ACTION__EDIT_MESSAGE_TEXT = 2;     ///< Code for "Edit text message" action
-    const ACTION__EDIT_REPLY_MARKUP = 3;     ///< Code for "Edit reply markup of message" action
-    const ACTION__EDIT_INLINE_MESSAGE_TEXT = 4; ///< Code for "Edit inline message" action
-    const ACTION__ANSWER_CALLBACK_QUERY = 5; ///< Code for "Answer callback query" action
-    const ACTION__CALL_FUNCTION = 100;       ///< Code for "Call function" action
-    const ACTION__MULTIPLE = 101;            ///< Code for "Multiple" action (see multiple())
+    const ACTION__DO_NOTHING = 0; ///< Code for "Do nothing" action
+    const ACTION__SEND_MESSAGE = 1; ///< Code for "Send message" action
+    const ACTION__EDIT_MESSAGE_TEXT = 2; ///< Code for "Edit text message" action
+    const ACTION__EDIT_IMESSAGE_TEXT = 3; ///< Code for "Edit inline message" action
+    const ACTION__EDIT_MESSAGE_REPLY_MARKUP = 4; ///< Code for "Edit reply markup of message" action
+    const ACTION__EDIT_IMESSAGE_REPLY_MARKUP = 5; ///< Code for "Edit reply markup of inline message" action
+    const ACTION__ANSWER_CALLBACK_QUERY = 6; ///< Code for "Answer callback query" action
+    const ACTION__CALL_FUNCTION = 99; ///< Code for "Call function" action
+    const ACTION__MULTIPLE = 100; ///< Code for "Multiple" action (see multiple())
 
 
     /**
@@ -99,15 +100,19 @@ class VTgAction
                 $this->text = $parameters[2];
                 $this->extraParameters = $parameters[3] ?? [];
                 break;
-            case self::ACTION__EDIT_REPLY_MARKUP:
-                $this->chatId = $parameters[0];
-                $this->messageId = $parameters[1];
-                $this->extraParameters = ['reply_markup' => $parameters[2]];
-                break;
-            case self::ACTION__EDIT_INLINE_MESSAGE_TEXT:
+            case self::ACTION__EDIT_IMESSAGE_TEXT:
                 $this->inlineMessageId = $parameters[0];
                 $this->text = $parameters[1];
                 $this->extraParameters = $parameters[2] ?? [];
+                break;
+            case self::ACTION__EDIT_MESSAGE_REPLY_MARKUP:
+                $this->chatId = $parameters[0];
+                $this->messageId = $parameters[1];
+                $this->extraParameters = ['reply_markup' => $parameters[2]] ?? [];
+                break;
+            case self::ACTION__EDIT_IMESSAGE_REPLY_MARKUP:
+                $this->inlineMessageId = $parameters[0];
+                $this->extraParameters = ['reply_markup' => $parameters[1]] ?? [];
                 break;
             case self::ACTION__ANSWER_CALLBACK_QUERY:
                 $this->callbackQueryId = $parameters[0];
@@ -158,11 +163,11 @@ class VTgAction
             case VTgAction::ACTION__EDIT_MESSAGE_TEXT:
                 $data = $tg->editMessageText($this->chatId, $this->messageId, $this->text, $this->extraParameters);
                 break;
-            case VTgAction::ACTION__EDIT_REPLY_MARKUP:
+            case VTgAction::ACTION__EDIT_MESSAGE_REPLY_MARKUP:
                 // TODO: do action
                 break;
-            case VTgAction::ACTION__EDIT_INLINE_MESSAGE_TEXT:
-                $data = $tg->editInlineMessageText($this->inlineMessageId, $this->text, $this->extraParameters);
+            case VTgAction::ACTION__EDIT_IMESSAGE_TEXT:
+                $data = $tg->editIMessageText($this->inlineMessageId, $this->text, $this->extraParameters);
                 break;
             case VTgAction::ACTION__CALL_FUNCTION:
                 $this->callFunctionHandler();
@@ -211,27 +216,38 @@ class VTgAction
     }
 
     /**
-     * @brief Creates "Edit reply markup of message" action
-     * @param int|string $chatId Chat identifier
-     * @param int $messageId Message identifier
-     * @param string $replyMarkup New reply_markup value
-     * @return VTgAction Action
-     */
-    static public function editReplyMarkup($chatId, int $messageId, string $replyMarkup): VTgAction
-    {
-        return new self(self::ACTION__EDIT_REPLY_MARKUP, $chatId, $messageId, $replyMarkup);
-    }
-
-    /**
      * @brief Creates "Edit inline message" action
      * @param string $inlineMessageId Message identifier
      * @param string $text New message body text
      * @param array $extraParameters Extra parameters for API request if needed
      * @return VTgAction Action
      */
-    static public function editInlineMessageText(string $inlineMessageId, string $text, array $extraParameters = []): VTgAction
+    static public function editIMessageText(string $inlineMessageId, string $text, array $extraParameters = []): VTgAction
     {
-        return new self(self::ACTION__EDIT_INLINE_MESSAGE_TEXT, $inlineMessageId, $text, $extraParameters);
+        return new self(self::ACTION__EDIT_IMESSAGE_TEXT, $inlineMessageId, $text, $extraParameters);
+    }
+
+    /**
+     * @brief Creates "Edit reply markup of message" action
+     * @param int|string $chatId Chat identifier
+     * @param int $messageId Message identifier
+     * @param string|false $replyMarkup New reply_markup value
+     * @return VTgAction Action
+     */
+    static public function editMessageReplyMarkup($chatId, int $messageId, $replyMarkup = false): VTgAction
+    {
+        return new self(self::ACTION__EDIT_MESSAGE_REPLY_MARKUP, $chatId, $messageId, $replyMarkup);
+    }
+
+    /**
+     * @brief Creates "Edit reply markup of inline message" action
+     * @param string $inlineMessageId Inline message identifier
+     * @param string $replyMarkup New reply_markup value
+     * @return VTgAction Action
+     */
+    static public function editIMessageReplyMarkup(string $inlineMessageId, string $replyMarkup): VTgAction
+    {
+        return new self(self::ACTION__EDIT_IMESSAGE_REPLY_MARKUP, $inlineMessageId, $replyMarkup);
     }
 
     /**

@@ -98,4 +98,14 @@ class VTgCallbackQuery extends VTgObject
     {
         return VTgAction::editMessageText($this->message->chat->id, $this->message->id, $text, $extraParameters);
     }
+
+    /**
+     * @brief Creates an action to edit reply markup of the message callback query attached to
+     * @param mixed $replyMarkup New reply markup or false to remove
+     * @return VTgAction "Edit reply markup" action (ready to execute)
+     */
+    public function editMessageReplyMarkup($replyMarkup = false): VTgAction
+    {
+        return VTgAction::editMessageReplyMarkup($this->message->chat->id, $this->message->id, $replyMarkup);
+    }
 }
