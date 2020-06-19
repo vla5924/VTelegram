@@ -164,7 +164,7 @@ class VTgBot
      * @code
      * VTgBot::registerCallbackQueryHandler(function (VTgBotController $bot, VTgCallbackQuery $callbackQuery) {
      *   $newText = 'Callback data: ' . $callbackQuery->data;
-     *   $bot->execute(VTgAction::editMessage($callbackQuery->message->chat->id, $callbackQuery->message->id, $newText));
+     *   $bot->execute(VTgAction::editMessageText($callbackQuery->message->chat->id, $callbackQuery->message->id, $newText));
      * });
      * @endcode
      * @param callable $handler Callback query handler [function (VTgBotController, VTgCallbackQuery): VTgAction]
@@ -189,7 +189,7 @@ class VTgBot
     static public function processUpdateData(array $data): void
     {
         $update = new VTgUpdate($data);
-        self::handleUpdate($update);
+        self::processUpdate($update);
     }
 
     /**
@@ -207,7 +207,7 @@ class VTgBot
      * @brief Processes an update from Telegram
      * @param VTgUpdate $update Object with data received from Telegram
      */
-    static protected function handleUpdate(VTgUpdate $update): void
+    static public function processUpdate(VTgUpdate $update): void
     {
         static::setUpRequestor();
         if ($update->type == VTgUpdate::TYPE__MESSAGE)
@@ -253,7 +253,6 @@ class VTgBot
             static::handleMessageStandardly($message);
         }
     }
-
 
     /**
      * @brief Hadles with a callback query

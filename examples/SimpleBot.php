@@ -16,4 +16,4 @@ SimpleBot::registerStandardMessageHandler(function (VTgBotController $bot, VTgMe
     $bot->execute(VTgAction::sendMessage($message->chat->id, $greeting));
 });
 
-$result = SimpleBot::processUpdatePost();
+SimpleBot::processUpdatePost();

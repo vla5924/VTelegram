@@ -72,9 +72,9 @@ class VTgAction
 
     const ACTION__DO_NOTHING = 0;            ///< Code for "Do nothing" action
     const ACTION__SEND_MESSAGE = 1;          ///< Code for "Send message" action
-    const ACTION__EDIT_MESSAGE = 2;          ///< Code for "Edit text message" action
+    const ACTION__EDIT_MESSAGE_TEXT = 2;     ///< Code for "Edit text message" action
     const ACTION__EDIT_REPLY_MARKUP = 3;     ///< Code for "Edit reply markup of message" action
-    const ACTION__EDIT_INLINE_MESSAGE = 4;   ///< Code for "Edit inline message" action
+    const ACTION__EDIT_INLINE_MESSAGE_TEXT = 4; ///< Code for "Edit inline message" action
     const ACTION__ANSWER_CALLBACK_QUERY = 5; ///< Code for "Answer callback query" action
     const ACTION__CALL_FUNCTION = 100;       ///< Code for "Call function" action
     const ACTION__MULTIPLE = 101;            ///< Code for "Multiple" action (see multiple())
@@ -93,7 +93,7 @@ class VTgAction
                 $this->text = $parameters[1];
                 $this->extraParameters = $parameters[2] ?? [];
                 break;
-            case self::ACTION__EDIT_MESSAGE:
+            case self::ACTION__EDIT_MESSAGE_TEXT:
                 $this->chatId = $parameters[0];
                 $this->messageId = $parameters[1];
                 $this->text = $parameters[2];
@@ -104,7 +104,7 @@ class VTgAction
                 $this->messageId = $parameters[1];
                 $this->extraParameters = ['reply_markup' => $parameters[2]];
                 break;
-            case self::ACTION__EDIT_INLINE_MESSAGE:
+            case self::ACTION__EDIT_INLINE_MESSAGE_TEXT:
                 $this->inlineMessageId = $parameters[0];
                 $this->text = $parameters[1];
                 $this->extraParameters = $parameters[2] ?? [];
@@ -155,14 +155,14 @@ class VTgAction
             case VTgAction::ACTION__SEND_MESSAGE:
                 $data = $tg->sendMessage($this->chatId, $this->text, $this->extraParameters);
                 break;
-            case VTgAction::ACTION__EDIT_MESSAGE:
-                $data = $tg->editMessage($this->chatId, $this->messageId, $this->text, $this->extraParameters);
+            case VTgAction::ACTION__EDIT_MESSAGE_TEXT:
+                $data = $tg->editMessageText($this->chatId, $this->messageId, $this->text, $this->extraParameters);
                 break;
             case VTgAction::ACTION__EDIT_REPLY_MARKUP:
                 // TODO: do action
                 break;
-            case VTgAction::ACTION__EDIT_INLINE_MESSAGE:
-                $data = $tg->editInlineMessage($this->inlineMessageId, $this->text, $this->extraParameters);
+            case VTgAction::ACTION__EDIT_INLINE_MESSAGE_TEXT:
+                $data = $tg->editInlineMessageText($this->inlineMessageId, $this->text, $this->extraParameters);
                 break;
             case VTgAction::ACTION__CALL_FUNCTION:
                 $this->callFunctionHandler();
@@ -205,9 +205,9 @@ class VTgAction
      * @param array $extraParameters Extra parameters for API request if needed
      * @return VTgAction Action
      */
-    static public function editMessage($chatId, int $messageId, string $text, array $extraParameters = []): VTgAction
+    static public function editMessageText($chatId, int $messageId, string $text, array $extraParameters = []): VTgAction
     {
-        return new self(self::ACTION__EDIT_MESSAGE, $chatId, $messageId, $text, $extraParameters);
+        return new self(self::ACTION__EDIT_MESSAGE_TEXT, $chatId, $messageId, $text, $extraParameters);
     }
 
     /**
@@ -229,9 +229,9 @@ class VTgAction
      * @param array $extraParameters Extra parameters for API request if needed
      * @return VTgAction Action
      */
-    static public function editInlineMessage(string $inlineMessageId, string $text, array $extraParameters = []): VTgAction
+    static public function editInlineMessageText(string $inlineMessageId, string $text, array $extraParameters = []): VTgAction
     {
-        return new self(self::ACTION__EDIT_INLINE_MESSAGE, $inlineMessageId, $text, $extraParameters);
+        return new self(self::ACTION__EDIT_INLINE_MESSAGE_TEXT, $inlineMessageId, $text, $extraParameters);
     }
 
     /**
@@ -242,7 +242,7 @@ class VTgAction
      */
     static public function answerCallbackQuery(string $callbackQueryId, array $extraParameters = []): VTgAction
     {
-        return new self(self::ACTION__EDIT_INLINE_MESSAGE, $callbackQueryId, $extraParameters);
+        return new self(self::ACTION__ANSWER_CALLBACK_QUERY, $callbackQueryId, $extraParameters);
     }
 
     /**

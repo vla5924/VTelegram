@@ -16,4 +16,4 @@ DynamicCommandsBot::registerStandardMessageHandler(function (VTgBotController $b
     $bot->execute($message->reply("This message has no command."));
 });
 
-$result = DynamicCommandsBot::processUpdatePost();
+DynamicCommandsBot::processUpdatePost();

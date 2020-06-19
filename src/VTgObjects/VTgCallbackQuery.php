@@ -54,7 +54,7 @@ class VTgCallbackQuery extends VTgObject
     public function __construct(array $data)
     {
         $this->id = $data['id'];
-        $this->from = new VTgUser($data['user']);
+        $this->from = new VTgUser($data['from']);
         $this->data = $data['data'];
         $this->message = isset($data['message']) ? new VTgMessage($data['message']) : null;
         if (isset($data['inline_message_id'])) {
@@ -87,5 +87,15 @@ class VTgCallbackQuery extends VTgObject
             'text' => $text,
             'show_alert' => $showAlert
         ]);
+    }
+
+    /**
+     * @brief Creates an action to edit text of the message callback query attached to
+     * @param string $text Text of the message
+     * @return VTgAction "Edit message text" action (ready to execute)
+     */
+    public function editMessageText(string $text, array $extraParameters = []): VTgAction
+    {
+        return VTgAction::editMessageText($this->message->chat->id, $this->message->id, $text, $extraParameters);
     }
 }

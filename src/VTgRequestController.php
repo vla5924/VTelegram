@@ -103,7 +103,7 @@ class VTgRequestController
      * @return array JSON-decoded array with result of request from Telegram
      * @todo Less bulky cURL usage in this method (maybe some wrappers will be added in the future)
      */
-    public function callMethod(string $method, array $parameters = []): array
+    public function callMethod(string $method, array $parameters = [], array $fileFields = []): array
     {
         $apiUrl = self::API_HOST . '/bot' . $this->token . '/' . $method;
         $handler = curl_init();

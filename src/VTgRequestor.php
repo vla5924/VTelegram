@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/VTgRequestController.php';
 require_once __DIR__ . '/VTgMetaObjects/VTgResult.php';
+require_once __DIR__ . '/VTgMetaObjects/VTgFile.php';
 
 /**
  * @brief Class provides full interface for interaction with Telegram Bot API
@@ -15,33 +16,84 @@ class VTgRequestor extends VTgRequestController
 {
     /**
      * @var array $defaultParameters
-     * @brief Default parameters for requests
+     * @brief Default parameters for text messages
      * @details Some default parameters added to requests that are used only if not specified in methods
      */
     protected $defaultParameters = [];
 
-    const PARSE_MODE__TEXT = 0;     ///< Marker used for disabling parsing in messages
-    const PARSE_MODE__MARKDOWN = 1; ///< Marker used for enabling parsing messages as Markdown
-    const PARSE_MODE__HTML = 2;     ///< Marker used for enabling parsing messages as HTML
+    const PARSE_MODE__PARAM    = 'parse_mode'; ///< Parse mode parameter name
+    const PARSE_MODE__DISABLED = '';           ///< Marker used for disabling parsing in messages
+    const PARSE_MODE__MARKDOWN = 'Markdown';   ///< Marker used for enabling parsing messages as Markdown
+    const PARSE_MODE__HTML     = 'HTML';       ///< Marker used for enabling parsing messages as HTML
+
+    const DISABLE_WEB_PAGE_PREVIEW__PARAM = 'disable_web_page_preview'; ///< Disable web page preview parameter name
 
     /**
      * @brief Updates default parse mode
      * @details Changes default parse mode to passed so it will be used when sending and editing messages
-     * @param int $parseModeCode New default parse mode code (can be 0, 1 or 2)
+     * @param string $parseMode New default parse mode name
      */
-    public function setParseMode(int $parseModeCode): void
+    public function setParseMode(string $parseMode): void
     {
-        switch ($parseModeCode) {
+        switch ($parseMode) {
             case self::PARSE_MODE__MARKDOWN:
-                $this->defaultParameters['parse_mode'] = 'Markdown';
+                $this->defaultParameters[self::PARSE_MODE__PARAM] = self::PARSE_MODE__MARKDOWN;
                 break;
             case self::PARSE_MODE__HTML:
-                $this->defaultParameters['parse_mode'] = 'HTML';
+                $this->defaultParameters[self::PARSE_MODE__PARAM] = self::PARSE_MODE__HTML;
                 break;
             default:
-                if (isset($this->defaultParameters['parse_mode']))
-                    unset($this->defaultParameters['parse_mode']);
+                if (isset($this->defaultParameters[self::PARSE_MODE__PARAM]))
+                    unset($this->defaultParameters[self::PARSE_MODE__PARAM]);
         }
+    }
+
+    /**
+     * @brief Updates default disabling web page preview state
+     * @param bool $value Parameter value
+     */
+    public function setDisableWebPagePreview(bool $value = true): void
+    {
+        $this->defaultParameters[self::DISABLE_WEB_PAGE_PREVIEW__PARAM] = $value;
+    }
+
+    /**
+     * @brief Adds or changes default parameter
+     * @param string $name Parameter name
+     * @param mixed $value Parameter value
+     */
+    public function setDefaultParameter(string $name, $value = true): void
+    {
+        $this->defaultParameters[$name] = $value;
+    }
+
+    /**
+     * @brief Removes default parameter if set
+     * @param string $name Parameter name
+     */
+    public function unsetDefaultParameter(string $name): void
+    {
+        if (isset($this->defaultParameters[$name]))
+            unset($this->defaultParameters[$name]);
+    }
+
+    /**
+     * @brief Adds default values for given parameter names if presented
+     * @param array $parameters Destination array
+     * @param string $paramNames Any parameter names to check
+     */
+    protected function applyDefaultParameters(array &$parameters, string ...$paramNames): void
+    {
+        foreach ($paramNames as $name) {
+            if (isset($this->defaultParameters[$name]))
+                $parameters[$name] = $this->defaultParameters[$name];
+        }
+    }
+
+    protected function mergeExtraParameters(array &$parameters, array $extraParameters = []): void
+    {
+        if (!empty($extraParameters))
+            $parameters = array_merge($parameters, $extraParameters);
     }
 
     /**
@@ -66,12 +118,9 @@ class VTgRequestor extends VTgRequestController
         $parameters = [
             'chat_id' => $chatId,
             'text' => $text,
-            'disable_web_page_preview' => true
         ];
-        if (isset($this->defaultParameters['parse_mode']))
-            $parameters['parse_mode'] = $this->defaultParameters['parse_mode'] ?? null;
-        if (!empty($extraParameters))
-            $parameters = array_merge($parameters, $extraParameters);
+        $this->applyDefaultParameters($parameters, self::PARSE_MODE__PARAM, self::DISABLE_WEB_PAGE_PREVIEW__PARAM);
+        $this->mergeExtraParameters($parameters, $extraParameters);
         return VTgResult::fromData($this->callMethod('sendMessage', $parameters), 'VTgMessage');
     }
 
@@ -97,21 +146,19 @@ class VTgRequestor extends VTgRequestController
     /**
      * @brief Use this method to send photos
      * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
-     * @param mixed|string $photo Photo to send (pass file_id or HTTP URL as string, or upload a new photo)
+     * @param VTgFile $photo Photo to send (pass file_id or HTTP URL as string, or upload a new photo)
      * @param array $extraParameters Other parameters if needed
      * @return VTgResult Sent message as VTgMessage on success
      * @todo Uploading and InputFile usage
      */
-    public function sendPhoto(string $chatId, $photo, array $extraParameters = []): VTgResult
+    public function sendPhoto(string $chatId, VTgFile $photo, array $extraParameters = []): VTgResult
     {
         $parameters = [
             'chat_id' => $chatId,
-            'photo' => $photo
+            'photo' => $photo->get()
         ];
-        if (isset($this->defaultParameters['parse_mode']))
-            $parameters['parse_mode'] = $this->defaultParameters['parse_mode'] ?? null;
-        if (!empty($extraParameters))
-            $parameters = array_merge($parameters, $extraParameters);
+        $this->applyDefaultParameters($parameters, self::PARSE_MODE__PARAM);
+        $this->mergeExtraParameters($parameters, $extraParameters);
         return VTgResult::fromData($this->callMethod('sendPhoto', $parameters), 'VTgMessage');
     }
 
@@ -121,68 +168,75 @@ class VTgRequestor extends VTgRequestController
      * Your audio must be in the .MP3 or .M4A format.
      * @note For sending voice messages, use the sendVoice().
      * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
-     * @param mixed|string $audio Audio to send (pass file_id or HTTP URL as string, or upload a new audio file)
+     * @param VTgFile $audio Audio to send (pass file_id or HTTP URL as string, or upload a new audio file)
      * @param array $extraParameters Other parameters if needed
      * @return VTgResult Sent message as VTgMessage on success
      * @todo Uploading and InputFile usage
      */
-    public function sendAudio(string $chatId, $audio, array $extraParameters = []): VTgResult
+    public function sendAudio(string $chatId, VTgFile $audio, array $extraParameters = []): VTgResult
     {
         $parameters = [
             'chat_id' => $chatId,
-            'audio' => $audio
+            'audio' => $audio->get()
         ];
-        if (isset($this->defaultParameters['parse_mode']))
-            $parameters['parse_mode'] = $this->defaultParameters['parse_mode'] ?? null;
-        if (!empty($extraParameters))
-            $parameters = array_merge($parameters, $extraParameters);
+        $this->applyDefaultParameters($parameters, self::PARSE_MODE__PARAM);
+        $this->mergeExtraParameters($parameters, $extraParameters);
         return VTgResult::fromData($this->callMethod('sendAudio', $parameters), 'VTgMessage');
     }
 
     /**
      * @brief Use this method to edit text and game messages
-     * @details Wrapper for callMethod() for editing a regular message sent by the bot
+     * @details Wrapper for callMethod() for editing a text message sent by the bot
+     * @note This method corresponds to 'optionality' as declared in Telegram API documentation.
+     * See wrappers for this method like editMessageText() etc. for more convenience.
+     * @param string $text New text of the message
+     * @param array $extraParameters Other parameters if needed
+     * @return VTgResult If edited message is sent by the bot, VTgMessage is returned, otherwise true
+     */
+    public function editMessageTextStd(string $text, array $extraParameters = []): VTgResult
+    {
+        $parameters = [
+            'text' => $text,
+        ];
+        $this->applyDefaultParameters($parameters, self::PARSE_MODE__PARAM, self::DISABLE_WEB_PAGE_PREVIEW__PARAM);
+        $this->mergeExtraParameters($parameters, $extraParameters);
+        return VTgResult::fromData($this->callMethod('editMessageText', $parameters), 'VTgMessage');
+    }
+
+    /**
+     * @brief Use this method to edit text and game messages
+     * @details This is a wrapper for editMessageTextStd()
      * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
      * @param int $messageId Identifier of the message to edit
      * @param string $text New text of the message
      * @param array $extraParameters Other parameters if needed
      * @return VTgResult If edited message is sent by the bot, VTgMessage is returned, otherwise true
      */
-    public function editMessage(string $chatId, int $messageId, string $text, array $extraParameters = []): VTgResult
+    public function editMessageText(string $chatId, int $messageId, string $text, array $extraParameters = []): VTgResult
     {
         $parameters = [
             'chat_id' => $chatId,
             'message_id' => $messageId,
-            'text' => $text,
-            'disable_web_page_preview' => true
         ];
-        if (isset($this->defaultParameters['parse_mode']))
-            $parameters['parse_mode'] = $this->defaultParameters['parse_mode'] ?? null;
-        if (!empty($extraParameters))
-            $parameters = array_merge($parameters, $extraParameters);
-        return VTgResult::fromData($this->callMethod('editMessageText', $parameters), 'VTgMessage');
+        $this->mergeExtraParameters($parameters, $extraParameters);
+        return $this->editMessageTextStd($text, $parameters);
     }
 
     /**
      * @brief Use this method to edit inline messages
-     * @details Wrapper for callMethod() for editing a regular message sent by the bot
+     * @details This is a wrapper for editMessageTextStd()
      * @param string $inlineMessageId Identifier of the inline message
      * @param string $text New text of the message
      * @param array $extraParameters Other parameters if needed
      * @return VTgResult If edited message is sent by the bot, VTgMessage is returned, otherwise true
      */
-    public function editInlineMessage(string $inlineMessageId, string $text, array $extraParameters = []): VTgResult
+    public function editInlineMessageText(string $inlineMessageId, string $text, array $extraParameters = []): VTgResult
     {
         $parameters = [
             'inline_message_id' => $inlineMessageId,
-            'text' => $text,
-            'disable_web_page_preview' => true
         ];
-        if (isset($this->defaultParameters['parse_mode']))
-            $parameters['parse_mode'] = $this->defaultParameters['parse_mode'] ?? null;
-        if (!empty($extraParameters))
-            $parameters = array_merge($parameters, $extraParameters);
-        return VTgResult::fromData($this->callMethod('editMessageText', $parameters), 'VTgMessage');
+        $this->mergeExtraParameters($parameters, $extraParameters);
+        return $this->editMessageTextStd($text, $parameters);
     }
 
     /**
@@ -197,10 +251,9 @@ class VTgRequestor extends VTgRequestController
         $parameters = [
             'callback_query_id' => $callbackQueryId,
         ];
-        if (!empty($extraParameters))
-            $parameters = array_merge($parameters, $extraParameters);
+        $this->mergeExtraParameters($parameters, $extraParameters);
         $result = $this->callMethod('answerCallbackQuery', $parameters);
-        if($result['ok'])
+        if ($result['ok'])
             return new VTgResult(true);
         return VTgResult::fromData($result);
     }
