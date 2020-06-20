@@ -7,12 +7,20 @@
  */
 class VTgReplyKeyboard
 {
-    const ONE_TIME = 1;
-    const RESIZE = 2;
-    const SELECTIVE = 4;
+    const ONE_TIME = 1; ///< Requests clients to resize the keyboard vertically for optimal fit
+    const RESIZE = 2; ///< Requests clients to hide the keyboard as soon as it's been used
+    const SELECTIVE = 4; ///< Use this parameter if you want to show the keyboard to specific users only
 
+    /**
+     * @var array $keyboard
+     * @brief Array of array of buttons
+     */
     protected $keyboard = [];
 
+    /**
+     * @brief Constructor-initializer
+     * @param array $keyboard Array of array of buttons
+     */
     public function __construct(array $keyboard)
     {
         $this->keyboard = $keyboard;

@@ -13,7 +13,7 @@ require_once __DIR__ . '/../VTgObjects/VTgUser.php';
 require_once __DIR__ . '/../VTgObjects/VTgInputMessageContents/VTgIMContent.php';
 require_once __DIR__ . '/../VTgObjects/VTgInputMessageContents/VTgIMTextContent.php';
 
-require_once __DIR__ . '/../VTgObjects/VTgInlineQueryResults/VTgIQArticle.php';
+require_once __DIR__ . '/../VTgObjects/VTgInlineQueryResults/VTgIQRArticle.php';
 
 require_once __DIR__ . '/VTgError.php';
 

@@ -6,8 +6,16 @@
  */
 class VTgInlineKeyboard
 {
+    /**
+     * @var array $keyboard
+     * @brief Array of array of buttons
+     */
     protected $keyboard = [];
 
+    /**
+     * @brief Constructor-initializer
+     * @param array $keyboard Array of array of buttons
+     */
     public function __construct(array $keyboard)
     {
         $this->keyboard = $keyboard;
@@ -25,7 +33,7 @@ class VTgInlineKeyboard
     }
 
     /**
-     * @brief Simple button generator
+     * @brief Simple button generator (service method)
      * @details Generates array describing a simple button from data passed in various formats.
      * Some examples of arrays that could be passed to function:
      * @code
@@ -63,7 +71,7 @@ class VTgInlineKeyboard
     /**
      * @brief Generates a keyboard with one button
      * @param array $button Array describing a button
-     * @return VTgInlineKeyboard Reply markup ready to be passed in API methods
+     * @return VTgInlineKeyboard Reply keyboard object with prepared keyboard
      */
     static public function single(array $button): self
     {
@@ -75,7 +83,7 @@ class VTgInlineKeyboard
      * @brief Generates a keyboard with one button (wrapper for single())
      * @param string $text Text displayed on a button
      * @param string $callbackData Callback data (used as a payload in API methods)
-     * @return VTgInlineKeyboard Reply markup ready to be passed in API methods
+     * @return VTgInlineKeyboard Reply keyboard object with prepared keyboard
      */
     static public function singleP(string $text, string $callbackData): self
     {
@@ -85,7 +93,7 @@ class VTgInlineKeyboard
     /**
      * @brief Generates a keyboard with column of buttons
      * @param array $buttons1d Array of arrays describing buttons
-     * @return VTgInlineKeyboard Reply markup ready to be passed in API methods
+     * @return VTgInlineKeyboard Reply keyboard object with prepared keyboard
      */
     static public function column(array $buttons1d): self
     {
@@ -98,7 +106,7 @@ class VTgInlineKeyboard
     /**
      * @brief Generates a keyboard with column of buttons (wrapper for column())
      * @param array $buttons Arrays describing buttons
-     * @return VTgInlineKeyboard Reply markup ready to be passed in API methods
+     * @return VTgInlineKeyboard Reply keyboard object with prepared keyboard
      */
     static public function columnP(array ...$buttons): self
     {
@@ -108,7 +116,7 @@ class VTgInlineKeyboard
     /**
      * @brief Generates a keyboard with row of buttons
      * @param array $buttons1d Array of arrays describing buttons
-     * @return VTgInlineKeyboard Reply markup ready to be passed in API methods
+     * @return VTgInlineKeyboard Reply keyboard object with prepared keyboard
      */
     static public function row(array $buttons1d): self
     {
@@ -121,7 +129,7 @@ class VTgInlineKeyboard
     /**
      * @brief Generates a keyboard with row of buttons (wrapper for row())
      * @param array $buttons Arrays describing buttons
-     * @return VTgInlineKeyboard Reply markup ready to be passed in API methods
+     * @return VTgInlineKeyboard Reply keyboard object with prepared keyboard
      */
     static public function rowP(array ...$buttons): self
     {
@@ -133,7 +141,7 @@ class VTgInlineKeyboard
      * @details Number of rows depends on number of buttons, each row contains not more than given number of buttons
      * @param int $columns Number of columns in each row
      * @param array $buttons1d Array of arrays describing buttons
-     * @return VTgInlineKeyboard Reply markup ready to be passed in API methods
+     * @return VTgInlineKeyboard Reply keyboard object with prepared keyboard
      */
     static public function grid(int $columns, array $buttons1d): self
     {
@@ -149,7 +157,7 @@ class VTgInlineKeyboard
      * @details See grid().
      * @param int $columns Number of columns in each row
      * @param array $buttons Array of arrays describing buttons
-     * @return VTgInlineKeyboard Reply markup ready to be passed in API methods
+     * @return VTgInlineKeyboard Reply keyboard object with prepared keyboard
      */
     static public function gridP(int $columns, array ...$buttons): self
     {
@@ -160,7 +168,7 @@ class VTgInlineKeyboard
      * @brief Generates a keyboard with given positioned buttons
      * @details Keyboard is generated "as is", buttons are placed on rows and columns according to their order in the array.
      * @param array $buttons2d Array of arrays of arrays describing buttons
-     * @return VTgInlineKeyboard Reply markup ready to be passed in API methods
+     * @return VTgInlineKeyboard Reply keyboard object with prepared keyboard
      */
     static public function table(array $buttons2d): self
     {

@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/VTgObject.php';
+require_once __DIR__ . '/../VTgRequestor.php';
 
 /**
  * @brief Class to represent file stored on Telegram servers
@@ -45,6 +46,17 @@ class VTgFile extends VTgObject
     }
 
     /**
+     * @brief Checks if file can be downloaded
+     * @return bool True if file can be downloaded (has file_path)
+     */
+    public function canBeDownloaded(): bool
+    {
+        if ($this->filePath)
+            return true;
+        return false;
+    }
+
+    /**
      * @brief The file can be downloaded via the link provided by this method
      * @param string $token Bot API token
      * @return string URL for downloading
@@ -73,5 +85,20 @@ class VTgFile extends VTgObject
     public function putContents(string $token, string $destinationPath)
     {
         return file_put_contents($destinationPath, $this->getDownloadUrl($token));
+    }
+
+    /**
+     * @brief Gets file path and unique ID from Telegram for current file object by ID
+     * @param VTgRequestor $tg Requestor for call getFile method
+     * @return VTgFile Itself
+     */
+    public function getById(VTgRequestor $tg): self
+    {
+        $result = $tg->getFile($this->id);
+        if ($result->ok) {
+            $this->uniqueId = $result->object->uniqueId;
+            $this->filePath = $result->object->filePath;
+        }
+        return $this;
     }
 }
