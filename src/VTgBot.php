@@ -120,7 +120,7 @@ class VTgBot
      */
     static public function registerStandardMessageHandler(callable $handler): void
     {
-        self::$standardMessageHadler = $handler;
+        static::$standardMessageHadler = $handler;
     }
 
     /**
@@ -174,17 +174,17 @@ class VTgBot
      */
     static public function registerCallbackQueryHandler(callable $handler): void
     {
-        self::$callbackQueryHandler = $handler;
+        static::$callbackQueryHandler = $handler;
     }
 
     static public function registerInlineQueryHandler(callable $handler): void
     {
-        self::$inlineQueryHandler = $handler;
+        static::$inlineQueryHandler = $handler;
     }
 
     static public function registerInlineResultHandler(callable $handler): void
     {
-        self::$inlineResultHandler = $handler;
+        static::$inlineResultHandler = $handler;
     }
 
     /**

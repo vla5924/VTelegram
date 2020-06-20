@@ -27,6 +27,7 @@ trait VTgCQHandlers
     static protected $callbackQueries = [];
 
     /**
+     * @memberof VTgCQHandlers
      * @brief Registers a function as a callback query handler
      * @details A handler will be passed VTgBotController object and VTgCallbackQuery object.
      * So you can use it like this:
@@ -44,6 +45,25 @@ trait VTgCQHandlers
     }
 
     /**
+     * @memberof VTgCQHandlers
+     * @brief Registers a function as a callback query fallback handler
+     * @details A handler will be passed VTgBotController object and VTgCallbackQuery object.
+     * So you can use it like this:
+     * @code
+     * VTgBot::registerCallbackQueryFallbackHandler(function (VTgBotController $bot, VTgCallbackQuery $callbackQuery) {
+     *   $newText = 'Callback data: ' . $callbackQuery->data;
+     *   $bot->execute(VTgAction::editMessageText($callbackQuery->message->chat->id, $callbackQuery->message->id, $newText));
+     * });
+     * @endcode
+     * @param callable $handler Callback query handler [function (VTgBotController, VTgCallbackQuery): VTgAction]
+     */
+    static public function registerCallbackQueryFallbackHandler(callable $handler): void
+    {
+        static::$callbackQueryHandler = $handler;
+    }
+
+    /**
+     * @memberof VTgCQHandlers
      * @brief Hadles with a callback query
      * @param VTgCallbackQuery $callbackQuery Callback query data received from Telegram
      */

@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../VTgBot.php';
+require_once __DIR__ . '/VTgPatternChecker.php';
 
 /**
  * @class VTgDynamicCommands
@@ -33,19 +34,7 @@ trait VTgDynamicCommands
      */
     static protected $commandFallbackHandler = null;
 
-    /**
-     * @memberof VTgDynamicCommands
-     * @brief Checks if a command matches a given pattern
-     * @param string $patternCommand Pattern command (will be converted into regular expresson)
-     * @param string $controlCommand Command to check
-     * @param [out] array $matchParameters Array with command itself and found %parameters
-     * @return bool True if a command matches a pattern
-     */
-    static protected function checkMatch(string $patternCommand, string $controlCommand, array &$matchParameters = null): bool
-    {
-        $regExp = '/^' . str_replace(['%d', '%s', '%a'], ['([0-9]+)', '([A-Za-z]+)', '([0-9a-zA-Z]+)'], $patternCommand) . '$/';
-        return preg_match($regExp, $controlCommand, $matchParameters) === 1;
-    }
+    use VTgPatternChecker;
 
     /**
      * @memberof VTgDynamicCommands

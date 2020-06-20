@@ -2,9 +2,11 @@
 
 if (!defined('VTELEGRAM_BOT_MODULES')) {
     define('VTELEGRAM_BOT_MODULES', [
+        'PatternChecker',
         'DBAuth',
         'DynamicCommands',
-        'CQHandlers'
+        'CQHandlers',
+        'DynamicCQHandlers'
     ]);
 }
 
