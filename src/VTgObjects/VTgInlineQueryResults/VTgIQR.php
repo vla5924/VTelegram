@@ -7,6 +7,8 @@ require_once __DIR__ . '/../VTgObject.php';
  */
 abstract class VTgIQR extends VTgObject
 {
+    const IMC_PARAM = 'input_message_content'; /// < Input message content parameter
+
     /**
      * @brief Converts object data to array
      * @return array Array

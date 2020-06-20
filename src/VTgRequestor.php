@@ -465,6 +465,14 @@ class VTgRequestor extends VTgRequestController
         return $this->editMessageReplyMarkupStd($parameters);
     }
 
+    /**
+     * @brief Use this method to send answers to an inline query
+     * @details No more than 50 results per query are allowed.
+     * @param string $inlineQueryId Unique identifier for the answered query
+     * @param array $results Array of results - VTgIQR objects - for the inline query
+     * @param array $extraParameters Other parameters if needed
+     * @return VTgResult On success, true is returned
+     */
     public function answerInlineQuery(string $inlineQueryId, array $results, array $extraParameters = []): VTgResult
     {
         foreach ($results as &$result)

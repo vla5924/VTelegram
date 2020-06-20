@@ -59,7 +59,7 @@ class VTgIQRArticle extends VTgIQR
             'type' => self::TYPE,
             'id' => $this->id,
             'title' => $this->title,
-            'input_message_content' => $this->inputMessageContent->toArray(),
+            self::IMC_PARAM => $this->inputMessageContent->toArray(),
         ], $this->extraParameters);
     }
 }
