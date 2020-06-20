@@ -5,6 +5,7 @@ require_once __DIR__ . '/../VTgInputMessageContents/VTgIMC.php';
 
 /**
  * @brief Class for Inline Query Result Article type
+ * @details Represents a link to an article or web page.
  */
 class VTgIQRArticle extends VTgIQR
 {
