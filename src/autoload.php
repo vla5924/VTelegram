@@ -3,7 +3,8 @@
 if (!defined('VTELEGRAM_BOT_MODULES')) {
     define('VTELEGRAM_BOT_MODULES', [
         'DBAuth',
-        'DynamicCommands'
+        'DynamicCommands',
+        'CQHandlers'
     ]);
 }
 
@@ -11,7 +12,8 @@ if (!defined('VTELEGRAM_TOOLS')) {
     define('VTELEGRAM_TOOLS', [
         'Icon',
         'InlineKeyboard',
-        'ReplyKeyboard'
+        'ReplyKeyboard',
+        'IQRArticles'
     ]);
 }
 

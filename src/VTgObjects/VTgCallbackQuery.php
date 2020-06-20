@@ -48,6 +48,12 @@ class VTgCallbackQuery extends VTgObject
     public $data = "";
 
     /**
+     * @var string $chatInstance
+     * @brief Global identifier, uniquely corresponding to the chat to which the message with the callback button was sent
+     */
+    public $chatInstance;
+
+    /**
      * @brief Constructor-initializer
      * @param array $data JSON-decoded callback query data received from Telegram
      */
@@ -63,6 +69,7 @@ class VTgCallbackQuery extends VTgObject
         } else {
             $this->fromInlineMode = false;
         }
+        $this->chatInstance = $data['chat_instance'];
     }
 
     /**
