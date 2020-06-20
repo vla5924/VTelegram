@@ -10,8 +10,8 @@ require_once __DIR__ . '/../VTgObjects/VTgMessageEntity.php';
 require_once __DIR__ . '/../VTgObjects/VTgUpdate.php';
 require_once __DIR__ . '/../VTgObjects/VTgUser.php';
 
-require_once __DIR__ . '/../VTgObjects/VTgInputMessageContents/VTgIMContent.php';
-require_once __DIR__ . '/../VTgObjects/VTgInputMessageContents/VTgIMTextContent.php';
+require_once __DIR__ . '/../VTgObjects/VTgInputMessageContents/VTgIMC.php';
+require_once __DIR__ . '/../VTgObjects/VTgInputMessageContents/VTgIMCText.php';
 
 require_once __DIR__ . '/../VTgObjects/VTgInlineQueryResults/VTgIQRArticle.php';
 

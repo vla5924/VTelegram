@@ -5,8 +5,7 @@ if (!defined('VTELEGRAM_BOT_MODULES')) {
         'PatternChecker',
         'DBAuth',
         'DynamicCommands',
-        'CQHandlers',
-        'DynamicCQHandlers'
+        'CQHandlers'
     ]);
 }
 
@@ -15,7 +14,7 @@ if (!defined('VTELEGRAM_TOOLS')) {
         'Icon',
         'InlineKeyboard',
         'ReplyKeyboard',
-        'IQRArticles'
+        'IQRTemplate'
     ]);
 }
 
