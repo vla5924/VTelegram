@@ -14,12 +14,6 @@ class VTgIQRPhoto extends VTgIQR
     const TYPE = 'photo'; ///< Type of the result
 
     /**
-     * @var int|string $id
-     * @brief Unique identifier for this result, 1-64 Bytes
-     */
-    public $id;
-
-    /**
      * @var string $url
      * @brief A valid URL of the photo
      * @details Photo must be in jpeg format. Photo size must not exceed 5 MB.

@@ -12,12 +12,6 @@ class VTgIQRArticle extends VTgIQR
     const TYPE = 'article'; ///< Type of the result
 
     /**
-     * @var int|string $id
-     * @brief Unique identifier for this result, 1-64 Bytes
-     */
-    public $id;
-
-    /**
      * @var string $title
      * @brief Title of the result
      */

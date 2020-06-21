@@ -22,15 +22,23 @@ class VTgInlineKeyboard
     }
 
     /**
-     * @brief Converts keyboard array into a valid for reply_markup parameter (in API methods) string
-     * @param bool $jsonEncoded True if JSON-serialized object needed
-     * @return string|array Reply markup ready to be passed in API methods
+     * @brief Converts keyboard array into a valid for reply_markup parameter (in API methods) object
+     * @return array Reply markup as associative array ready to be passed in API methods
      */
-    public function make(bool $jsonEncoded = true)
+    public function assoc(): array
     {
-        $result = ['inline_keyboard' => $this->keyboard];
-        return $jsonEncoded ? json_encode($result) : $result;
+        return ['inline_keyboard' => $this->keyboard];
     }
+
+    /**
+     * @brief Converts keyboard array into a valid for reply_markup parameter (in API methods) string
+     * @return string JSON-serialized reply markup ready to be passed in API methods
+     */
+    public function json(): string
+    {
+        return json_encode($this->assoc());
+    }
+
 
     /**
      * @brief Simple button generator (service method)

@@ -27,20 +27,28 @@ class VTgReplyKeyboard
     }
 
     /**
-     * @brief Converts keyboard array into a valid for reply_markup parameter (in API methods) string
+     * @brief Converts keyboard array into a valid for reply_markup parameter (in API methods) object
      * @param int $options Bitmask of parameters (see ONE_TIME, RESIZE, SELECTIVE)
-     * @param bool $jsonEncoded True if JSON-serialized object needed
-     * @return string|array Reply markup ready to be passed in API methods
+     * @return array Reply markup as associative array ready to be passed in API methods
      */
-    public function make(int $options = 0, bool $jsonEncoded = true)
+    public function assoc(int $options = 0): array
     {
-        $result = ['reply_keyboard' => [
+        return ['reply_keyboard' => [
             'keyboard' => $this->keyboard,
             'resize_keyboard' => (bool) ($options & self::RESIZE),
             'one_time_keyboard' => (bool) ($options & self::ONE_TIME),
             'selective' => (bool) ($options & self::SELECTIVE)
         ]];
-        return $jsonEncoded ? json_encode($result) : $result;
+    }
+
+    /**
+     * @brief Converts keyboard array into a valid for reply_markup parameter (in API methods) string
+     * @param int $options Bitmask of parameters (see ONE_TIME, RESIZE, SELECTIVE)
+     * @return string JSON-serialized reply markup ready to be passed in API methods
+     */
+    public function json(int $options = 0): string
+    {
+        return json_encode($this->assoc($options));
     }
 
     /**

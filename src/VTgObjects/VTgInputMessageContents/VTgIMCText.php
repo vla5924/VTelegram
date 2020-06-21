@@ -13,17 +13,29 @@ class VTgIMCText extends VTgIMC
      */
     public $text;
     
+    /**
+     * @var string|null $parseMode
+     * @brief Parse mode
+     */
     public $parseMode = null;
+
+    /**
+     * @var bool $disableWebPagePreview
+     * @brief Disable web page preview for links in message text
+     */
     public $disableWebPagePreview = false;
 
     /**
      * @brief Constructor-initializer
      * @param string $text Text of the message
-     * @todo Other parameters
+     * @param string $parseMode Parse mode
+     * @param bool $disableWebPagePreview Disable web page preview for links in message text
      */
-    public function __construct(string $text)
+    public function __construct(string $text, string $parseMode = null, bool $disableWebPagePreview = false)
     {
         $this->text = $text;
+        $this->parseMode = $parseMode ?? null;
+        $this->disableWebPagePreview = $disableWebPagePreview;
     }
 
     /**
