@@ -130,4 +130,12 @@ class VTgMessage extends VTgObject
             $extraParameters['reply_to_message_id'] = $this->id;
         return VTgAction::sendMessage($this->chat->id, $text, $extraParameters);
     }
+
+    /**
+     * @todo Implementation
+     */
+    public function forward(string $chatId, bool $disableNotification = false)
+    {
+        return VTgAction::doNothing();
+    }
 }

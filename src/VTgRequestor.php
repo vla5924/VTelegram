@@ -101,6 +101,11 @@ class VTgRequestor extends VTgRequestController
         }
     }
 
+    /**
+     * @brief Merges arrays if $extraMarameters is not empty
+     * @param [out] array $parameters Destination array
+     * @param array $extraParameters Array to merge from
+     */
     protected function mergeExtraParameters(array &$parameters, array $extraParameters = []): void
     {
         if (!empty($extraParameters))

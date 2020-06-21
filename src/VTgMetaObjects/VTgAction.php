@@ -108,11 +108,11 @@ class VTgAction
             case self::ACTION__EDIT_MESSAGE_REPLY_MARKUP:
                 $this->chatId = $parameters[0];
                 $this->messageId = $parameters[1];
-                $this->extraParameters = ['reply_markup' => $parameters[2]] ?? [];
+                $this->extraParameters = ['reply_markup' => $parameters[2] ?? false];
                 break;
             case self::ACTION__EDIT_IMESSAGE_REPLY_MARKUP:
                 $this->inlineMessageId = $parameters[0];
-                $this->extraParameters = ['reply_markup' => $parameters[1]] ?? [];
+                $this->extraParameters = ['reply_markup' => $parameters[1] ?? false];
                 break;
             case self::ACTION__ANSWER_CALLBACK_QUERY:
                 $this->callbackQueryId = $parameters[0];
@@ -151,7 +151,6 @@ class VTgAction
      * @details Algorithm depends on action type: sending or editing a message, calling some function etc.
      * @param VTgRequestor|null $tg Instance for calling Telegram API methods
      * @return mixed Result of action execution
-     * @todo EDIT_REPLY_MARKUP action
      */
     public function execute(VTgRequestor $tg = null)
     {
@@ -164,10 +163,13 @@ class VTgAction
                 $data = $tg->editMessageText($this->chatId, $this->messageId, $this->text, $this->extraParameters);
                 break;
             case VTgAction::ACTION__EDIT_MESSAGE_REPLY_MARKUP:
-                // TODO: do action
+                $data = $tg->editMessageReplyMarkup($this->chatId, $this->messageId, $this->extraParameters['reply_markup']);
                 break;
             case VTgAction::ACTION__EDIT_IMESSAGE_TEXT:
                 $data = $tg->editIMessageText($this->inlineMessageId, $this->text, $this->extraParameters);
+                break;
+            case VTgAction::ACTION__EDIT_IMESSAGE_REPLY_MARKUP:
+                $data = $tg->editIMessageReplyMarkup($this->inlineMessageId, $this->extraParameters['reply_markup']);
                 break;
             case VTgAction::ACTION__CALL_FUNCTION:
                 $this->callFunctionHandler();
@@ -242,10 +244,10 @@ class VTgAction
     /**
      * @brief Creates "Edit reply markup of inline message" action
      * @param string $inlineMessageId Inline message identifier
-     * @param string $replyMarkup New reply_markup value
+     * @param string|false $replyMarkup New reply_markup value
      * @return VTgAction Action
      */
-    static public function editIMessageReplyMarkup(string $inlineMessageId, string $replyMarkup): VTgAction
+    static public function editIMessageReplyMarkup(string $inlineMessageId, $replyMarkup = false): VTgAction
     {
         return new self(self::ACTION__EDIT_IMESSAGE_REPLY_MARKUP, $inlineMessageId, $replyMarkup);
     }
