@@ -51,11 +51,13 @@ trait VTgDynamicCommands
      * @endcode
      * As you can see, you can provide command parameters as typed placeholder (just like in printf function).
      * There are three placeholders available: 
+     * @code{.txt} 
      * %d - integer (set of 0-9 symbols, e.g. 123), 
      * %s - letters string (set of a-z, A-Z symbols, e.g. hello), 
      * %a - letters and numbers string (set of 0-9, a-z, A-Z symbols, e.g. h1ello23)
+     * @endcode
      * @param string $command Command you want to handle (don't mention '/', e.g. 'help', not '/help')
-     * @param callable $handler Command handler [function (VTgBotController, VTgMessage, array, string): VTgAction]
+     * @param callable $handler Command handler [function (VTgBotController, VTgMessage, array, string)]
      */
     static public function registerDynamicCommandHandler(string $patternCommand, callable $handler): void
     {

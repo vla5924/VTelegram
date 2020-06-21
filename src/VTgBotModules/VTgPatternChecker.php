@@ -13,11 +13,13 @@ trait VTgPatternChecker
     /**
      * @memberof VTgPatternChecker
      * @brief Checks if a command matches a given pattern
-     * @details You can provide command parameters as typed placeholder (just like in printf function):
-     * percent sign and a letter. There are three placeholders available: 
+     * @details You can provide command parameters as typed placeholder (just like in printf function).
+     * There are three placeholders available: 
+     * @code{.txt} 
      * %d - integer (set of 0-9 symbols, e.g. 123), 
      * %s - letters string (set of a-z, A-Z symbols, e.g. hello), 
      * %a - letters and numbers string (set of 0-9, a-z, A-Z symbols, e.g. h1ello23)
+     * @endcode
      * @param string $pattern Pattern string (will be converted into regular expresson)
      * @param string $control String to check
      * @param [out] array $matchParameters Array with control string itself and found %parameters

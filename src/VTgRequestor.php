@@ -330,8 +330,7 @@ class VTgRequestor extends VTgRequestController
      * When the link expires, a new one can be requested by calling getFile() again.
      * @note This function may not preserve the original file name and MIME type. 
      * You should save the file's MIME type and name (if available) when the VTgFile object is received..
-     * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
-     * @param string $action Type of action to broadcast
+     * @param string $fileId file_id of file stored on Telegram servers
      * @return VTgResult Sent message as VTgMessage on success
      */
     public function getFile(string $fileId): VTgResult

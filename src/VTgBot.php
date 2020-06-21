@@ -51,7 +51,18 @@ class VTgBot
      */
     static protected $callbackQueryHandler = null;
 
+    /**
+     * @var callable|null $inlineQueryHandler
+     * @brief Function for handling inline queries if needed
+     * @details Handler must have a special header format, see registerInlineQueryHandler()
+     */
     static protected $inlineQueryHandler = null;
+
+    /**
+     * @var callable|null $inlineResultHandler
+     * @brief Function for handling chosen inline results if needed
+     * @details Handler must have a special header format, see registerInlineResultHandler()
+     */
     static protected $inlineResultHandler = null;
 
     /**
@@ -116,7 +127,7 @@ class VTgBot
      *   $bot->execute(VTgAction::sendMessage($message->chat->id, $answer));
      * });
      * @endcode
-     * @param callable $handler Standard message handler [function (VTgBotController, VTgMessage): VTgAction]
+     * @param callable $handler Standard message handler [function (VTgBotController, VTgMessage)]
      */
     static public function registerStandardMessageHandler(callable $handler): void
     {
@@ -135,7 +146,7 @@ class VTgBot
      * });
      * @endcode
      * @param string $command Command you want to handle (don't mention '/', e.g. 'help', not '/help')
-     * @param callable $handler Command handler [function (VTgBotController, VTgMessage, string): VTgAction]
+     * @param callable $handler Command handler [function (VTgBotController, VTgMessage, string)]
      */
     static public function registerCommandHandler(string $command, callable $handler): void
     {
@@ -153,7 +164,7 @@ class VTgBot
      *   $bot->execute(VTgAction::sendMessage($message->chat->id, "I don't know this command: " . $command));
      * });
      * @endcode
-     * @param callable $handler Command handler [function (VTgBotController, VTgMessage, string): VTgAction]
+     * @param callable $handler Command handler [function (VTgBotController, VTgMessage, string)]
      */
     static public function registerCommandFallbackHandler(callable $handler): void
     {
@@ -170,18 +181,28 @@ class VTgBot
      *   $bot->execute(VTgAction::editMessageText($callbackQuery->message->chat->id, $callbackQuery->message->id, $newText));
      * });
      * @endcode
-     * @param callable $handler Callback query handler [function (VTgBotController, VTgCallbackQuery): VTgAction]
+     * @param callable $handler Callback query handler [function (VTgBotController, VTgCallbackQuery)]
      */
     static public function registerCallbackQueryHandler(callable $handler): void
     {
         static::$callbackQueryHandler = $handler;
     }
 
+    /**
+     * @brief Registers a function as a inline query handler
+     * @details A handler will be passed VTgBotController object and VTgInlineQuery object.
+     * @param callable $handler Inline query handler [function (VTgBotController, VTgInlineQuery)]
+     */
     static public function registerInlineQueryHandler(callable $handler): void
     {
         static::$inlineQueryHandler = $handler;
     }
 
+    /**
+     * @brief Registers a function as a chosen inline result handler
+     * @details A handler will be passed VTgBotController object and VTgChosenInlineResult object.
+     * @param callable $handler Inline result handler [function (VTgBotController, VTgChosenInlineResult)]
+     */
     static public function registerInlineResultHandler(callable $handler): void
     {
         static::$inlineResultHandler = $handler;
@@ -233,6 +254,10 @@ class VTgBot
             static::handleInlineResult($update->chosenInlineResult);
     }
 
+    /**
+     * @brief Handles message with standard message handler if defined
+     * @param VTgMessage $message Message received from Telegram user
+     */
     static protected function handleMessageStandardly(VTgMessage $message): void
     {
         if (static::$standardMessageHadler) {

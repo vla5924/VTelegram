@@ -34,15 +34,25 @@ trait VTgCQHandlers
      */
     static protected $dynamicCallbackQueries = [];
 
+    /**
+     * @var bool $dynamicCallbackQueriesEnabled
+     * @brief True if handlers for dynamic callback queries must be used
+     */
     static protected $dynamicCallbackQueriesEnabled = true;
 
     use VTgPatternChecker;
 
+    /**
+     * @brief Enables dynamic callback queries handling
+     */
     static public function enableDynamic(): void
     {
         static::$dynamicCallbackQueriesEnabled = true;
     }
 
+    /**
+     * @brief Disables dynamic callback queries handling
+     */
     static public function disableDynamic(): void
     {
         static::$dynamicCallbackQueriesEnabled = false;
@@ -59,7 +69,8 @@ trait VTgCQHandlers
      *   $bot->execute(VTgAction::editMessageText($callbackQuery->message->chat->id, $callbackQuery->message->id, $newText));
      * });
      * @endcode
-     * @param callable $handler Callback query handler [function (VTgBotController, VTgCallbackQuery): VTgAction]
+     * @param string $query Query data
+     * @param callable $handler Callback query handler [function (VTgBotController, VTgCallbackQuery)]
      */
     static public function registerStaticCQHandler(string $query, callable $handler): void
     {
@@ -79,11 +90,14 @@ trait VTgCQHandlers
      * });
      * @endcode
      * As you can see, you can provide command parameters as typed placeholder (just like in printf function):
-     * percent sign and a letter. There are three placeholders available: 
+     * percent sign and a letter. There are three placeholders available:
+     * @code{.txt} 
      * %d - integer (set of 0-9 symbols, e.g. 123), 
      * %s - letters string (set of a-z, A-Z symbols, e.g. hello), 
      * %a - letters and numbers string (set of 0-9, a-z, A-Z symbols, e.g. h1ello23)
-     * @param callable $handler Callback query handler [function (VTgBotController, VTgCallbackQuery, array): VTgAction]
+     * @endcode
+     * @param string $queryPattern Query data pattern
+     * @param callable $handler Dynamic callback query handler [function (VTgBotController, VTgCallbackQuery, array)]
      */
     static public function registerDynamicCQHandler(string $queryPattern, callable $handler): void
     {
