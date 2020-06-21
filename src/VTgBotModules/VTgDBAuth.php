@@ -113,9 +113,9 @@ trait VTgDBAuth
      * @note Implement it according to database "connection" class API so it
      * could return 1D-array with field names and keys and its values
      * @param string $query SQL query string
-     * @return array Query result
+     * @return array|null Query result
      */
-    abstract static protected function makeSelectRowQuery(string $query): array;
+    abstract static protected function makeSelectRowQuery(string $query): ?array;
 
     /**
      * @memberof VTgDBAuth
@@ -143,7 +143,7 @@ trait VTgDBAuth
         $fields = self::$fields;
         $fields[self::$tgIdFieldName] = $tgId;
         $dbFields = self::makeSelectRowQuery(self::getSelectQueryString($tgId));
-        if (empty($dbFields)) {
+        if (!$dbFields or empty($dbFields)) {
             self::makeInsertRowQuery(self::getInsertQueryString($tgId));
             return new VTgAuthUser(true, $fields, $user);
         }
