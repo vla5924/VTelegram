@@ -1,14 +1,17 @@
 <?php
 
+/**
+ * @brief Base class for handlers
+ */
 abstract class VTgHandler
 {
     /**
      * @var callable|null $handler
-     * @brief Function
+     * @brief Handler function
      */
     protected $handler = null;
 
-    const TYPE = 0;
+    const TYPE = 0; ///< Code of handler type
 
     const UNDEFINED = 0;
     const CALLBACK_QUERY = 1;
@@ -23,21 +26,38 @@ abstract class VTgHandler
 
     /**
      * @var array $preHandlers
-     * @brief Calls before handling
+     * @brief Array of callables, will be called before main handler
      */
     static protected $preHandlers = [];
 
+    /**
+     * @brief Adds pre-handler
+     * @param string $name Name of pre-handler
+     * @param callable $preHandler Pre-handler function
+     */
     static public function addPreHandler(string $name, callable $preHandler): void
     {
         self::$preHandlers[$name] = $preHandler;
     }
 
+    /**
+     * @brief Removes pre-handler
+     * @param string $name Name of pre-handler
+     */
     static public function removePreHandler(string $name): void
     {
         if (isset(self::$preHandlers[$name]))
             unset(self::$preHandlers[$name]);
     }
 
+    /**
+     * @brief Calls pre-handlers
+     * @details Each handler will be passed integer code of type and all parameters that
+     * will be then passed to main handlers (e.g. for callback query handler it will be 
+     * VTgBotController and VTgCallbackQuery)
+     * @param mixed ...$args Arguments for pre-handler functions
+     * @return array Array of return values of pre-handlers (keys are pre-handlers' names)
+     */
     protected function preHandle(...$args): array
     {
         $result = [];

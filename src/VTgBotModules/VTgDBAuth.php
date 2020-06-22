@@ -152,11 +152,34 @@ trait VTgDBAuth
         return new VTgAuthUser(false, $fields, $user);
     }
 
+    /**
+     * @brief Returns the name of pre-handler for auto authorization
+     * @return string 'DBAuth_autoAuth'
+     */
     static public function getPreHandlerAutoAuthName(): string
     {
         return 'DBAuth_autoAuth';
     }
 
+    /**
+     * @brief Adds pre-handler for auto authorization
+     * @details It means that before executing of each handler this pre-handler
+     * will be passed the same parameters, then it will get VTgUser object for
+     * current user and call authorizeUser() for this object. VTgAuthUser result
+     * object will be passed as additional parameter in all your regular handlers.
+     * For example, this is how you can register a message handler:
+     * @code
+     * VTgBot::enableAutoAuthorization();
+     * VTgBot::registerStandardMessageHandler(function (VTgBotController $bot, VTgMessage $message, array $preHandling) {
+     *   $user = $preHandling[VTgBot::getPreHandlerAutoAuthName()];
+     *   if ($user->isNew)
+     *     $answer = 'Hello, ' . $user->u->firstName . '!';
+     *   else
+     *     $answer = 'Nice to meet you, ' . $user->u->firstName . '.';
+     *   $bot->execute($message->reply($answer));
+     * });
+     * @endcode
+     */
     static public function enableAutoAuthorization(): void
     {
         VTgHandler::addPreHandler(self::getPreHandlerAutoAuthName(), function (int $handlerType, ...$args) {
