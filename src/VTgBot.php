@@ -1,11 +1,20 @@
 <?php
 
 require_once __DIR__ . '/VTgRequestor.php';
+
 require_once __DIR__ . '/VTgMetaObjects/VTgAction.php';
+
 require_once __DIR__ . '/VTgObjects/VTgUpdate.php';
 require_once __DIR__ . '/VTgObjects/VTgCallbackQuery.php';
 require_once __DIR__ . '/VTgObjects/VTgMessage.php';
 require_once __DIR__ . '/VTgBotController.php';
+
+require_once __DIR__ . '/VTgHandlers/VTgCallbackQueryHandler.php';
+require_once __DIR__ . '/VTgHandlers/VTgChosenInlineResultHandler.php';
+require_once __DIR__ . '/VTgHandlers/VTgCommandFallbackHandler.php';
+require_once __DIR__ . '/VTgHandlers/VTgCommandHandler.php';
+require_once __DIR__ . '/VTgHandlers/VTgInlineQueryHandler.php';
+require_once __DIR__ . '/VTgHandlers/VTgStandardMessageHandler.php';
 
 /**
  * @brief Complex solution for creating a Telegram bot
@@ -131,7 +140,7 @@ class VTgBot
      */
     static public function registerStandardMessageHandler(callable $handler): void
     {
-        static::$standardMessageHadler = $handler;
+        static::$standardMessageHadler = new VTgStandardMessageHandler($handler);
     }
 
     /**
@@ -150,7 +159,7 @@ class VTgBot
      */
     static public function registerCommandHandler(string $command, callable $handler): void
     {
-        static::$commands[$command] = $handler;
+        static::$commands[$command] = new VTgCommandHandler($handler);
     }
 
     /**
@@ -168,7 +177,7 @@ class VTgBot
      */
     static public function registerCommandFallbackHandler(callable $handler): void
     {
-        static::$commandFallbackHandler = $handler;
+        static::$commandFallbackHandler = new VTgCommandFallbackHandler($handler);
     }
 
     /**
@@ -185,7 +194,7 @@ class VTgBot
      */
     static public function registerCallbackQueryHandler(callable $handler): void
     {
-        static::$callbackQueryHandler = $handler;
+        static::$callbackQueryHandler = new VTgCallbackQueryHandler($handler);
     }
 
     /**
@@ -195,7 +204,7 @@ class VTgBot
      */
     static public function registerInlineQueryHandler(callable $handler): void
     {
-        static::$inlineQueryHandler = $handler;
+        static::$inlineQueryHandler = new VTgInlineQueryHandler($handler);
     }
 
     /**
@@ -205,7 +214,7 @@ class VTgBot
      */
     static public function registerInlineResultHandler(callable $handler): void
     {
-        static::$inlineResultHandler = $handler;
+        static::$inlineResultHandler = new VTgChosenInlineResultHandler($handler);
     }
 
     /**

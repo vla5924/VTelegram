@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../VTgBot.php';
 require_once __DIR__ . '/../VTgMetaObjects/VTgAuthUser.php';
+require_once __DIR__ . '/../VTgHandlers/VTgHandler.php';
 
 /**
  * @class VTgDBAuth
@@ -149,5 +150,28 @@ trait VTgDBAuth
         }
         $fields = array_merge($fields, $dbFields);
         return new VTgAuthUser(false, $fields, $user);
+    }
+
+    static public function enableAutoAuthorize(): void
+    {
+        VTgHandler::addPreHandler('DBAuth_authorize', function (int $handlerType, ...$args) {
+            switch ($handlerType):
+                case VTgHandler::CALLBACK_QUERY:
+                case VTgHandler::CHOSEN_INLINE_RESULT:
+                case VTgHandler::DYNAMIC_CALLBACK_QUERY:
+                case VTgHandler::INLINE_QUERY:
+                    $user = $args[1]->from->id;
+                    break;
+                case VTgHandler::COMMAND_FALLBACK:
+                case VTgHandler::COMMAND:
+                case VTgHandler::DYNAMIC_COMMAND:
+                case VTgHandler::SIMPLE_COMMAND:
+                case VTgHandler::STANDARD_MESSAGE:
+                    $user = $args[1]->from ? $args[1]->from->id : $args[1]->chat->id;
+                    break;
+            endswitch;
+            $c = VTgBot::class;
+            return $c::authorizeUser($user);
+        });
     }
 }

@@ -2,6 +2,8 @@
 
 require_once __DIR__ . '/../VTgBot.php';
 require_once __DIR__ . '/VTgPatternChecker.php';
+require_once __DIR__ . '/../VTgHandlers/VTgCallbackQueryHandler.php';
+require_once __DIR__ . '/../VTgHandlers/VTgDynamicCQHandler.php';
 
 /**
  * @class VTgCQHandlers
@@ -14,7 +16,7 @@ require_once __DIR__ . '/VTgPatternChecker.php';
 trait VTgCQHandlers
 {
     /**
-     * @var callable|null $callbackQueryHandler
+     * @var VTgCallbackQueryHandler|null $callbackQueryHandler
      * @brief Function for handling callback queries if needed
      * @details Handler must have a special header format, see registerCallbackQueryHandler()
      */
@@ -38,24 +40,24 @@ trait VTgCQHandlers
      * @var bool $dynamicCallbackQueriesEnabled
      * @brief True if handlers for dynamic callback queries must be used
      */
-    static protected $dynamicCallbackQueriesEnabled = true;
+    static protected $dynamicCQHandlersEnabled = false;
 
     use VTgPatternChecker;
 
     /**
      * @brief Enables dynamic callback queries handling
      */
-    static public function enableDynamic(): void
+    static public function enableDynamicCQHandlers(): void
     {
-        static::$dynamicCallbackQueriesEnabled = true;
+        static::$dynamicCQHandlersEnabled = true;
     }
 
     /**
      * @brief Disables dynamic callback queries handling
      */
-    static public function disableDynamic(): void
+    static public function disableDynamicCQHandlers(): void
     {
-        static::$dynamicCallbackQueriesEnabled = false;
+        static::$dynamicCQHandlersEnabled = false;
     }
 
     /**
@@ -74,7 +76,7 @@ trait VTgCQHandlers
      */
     static public function registerStaticCQHandler(string $query, callable $handler): void
     {
-        static::$callbackQueries[$query] = $handler;
+        static::$callbackQueries[$query] = new VTgCallbackQueryHandler($handler);
     }
 
     /**
@@ -101,7 +103,7 @@ trait VTgCQHandlers
      */
     static public function registerDynamicCQHandler(string $queryPattern, callable $handler): void
     {
-        static::$dynamicCallbackQueries[$queryPattern] = $handler;
+        static::$dynamicCallbackQueries[$queryPattern] = new VTgDynamicCQHandler($handler);
     }
 
     /**
@@ -112,7 +114,7 @@ trait VTgCQHandlers
     static protected function handleCallbackQuery(VTgCallbackQuery $callbackQuery): void
     {
         $query = $callbackQuery->data;
-        if (static::$dynamicCallbackQueriesEnabled and !empty(static::$dynamicCallbackQueries)) {
+        if (static::$dynamicCQHandlersEnabled and !empty(static::$dynamicCallbackQueries)) {
             foreach (static::$dynamicCallbackQueries as $pattern => $handler) {
                 $parameters = [];
                 if (self::checkMatch($pattern, $query, $parameters)) {
