@@ -57,6 +57,13 @@ class VTgAction
     public $extraParameters = [];
 
     /**
+     * @var string|null $methodName
+     * @brief Method name to call
+     * @details Needed for "Call API method via VTgRequestor" action
+     */
+    public $methodName = null;
+
+    /**
      * @var callable|null $handler
      * @brief Handler function
      * @details Needed for "Call function" action
@@ -77,6 +84,7 @@ class VTgAction
     const ACTION__EDIT_MESSAGE_REPLY_MARKUP = 4; ///< Code for "Edit reply markup of message" action
     const ACTION__EDIT_IMESSAGE_REPLY_MARKUP = 5; ///< Code for "Edit reply markup of inline message" action
     const ACTION__ANSWER_CALLBACK_QUERY = 6; ///< Code for "Answer callback query" action
+    const ACTION__CALL_API_METHOD = 98; ///< Code for "Call API method via VTgRequestor" action
     const ACTION__CALL_FUNCTION = 99; ///< Code for "Call function" action
     const ACTION__MULTIPLE = 100; ///< Code for "Multiple" action (see multiple())
 
@@ -118,32 +126,26 @@ class VTgAction
                 $this->callbackQueryId = $parameters[0];
                 $this->extraParameters = $parameters[1] ?? [];
                 break;
+            case self::ACTION__CALL_API_METHOD:
+                $this->methodName = $parameters[0];
+                unset($parameters[0]);
+                $this->extraParameters = $parameters;
+                break;
             case self::ACTION__CALL_FUNCTION:
                 $this->handler = $parameters[0];
+                unset($parameters[0]);
+                $this->extraParameters = $parameters;
                 break;
             case self::ACTION__MULTIPLE:
                 foreach ($parameters as $parameter)
                     if ($parameter instanceof self)
                         $this->actions[] = $parameter;
                 break;
-            case self::ACTION__DO_NOTHING:
             default:
                 $action = self::ACTION__DO_NOTHING;
                 break;
         endswitch;
         $this->action = $action;
-    }
-
-    /**
-     * @brief Inititates function call
-     * @param mixed|null $args Arguments to be passed to handler function
-     * @todo Examples of usage
-     */
-    public function callFunctionHandler(...$args)
-    {
-        if ($this->action == self::ACTION__CALL_FUNCTION) {
-            ($this->handler)(...$args);
-        }
     }
 
     /**
@@ -156,25 +158,31 @@ class VTgAction
     {
         $data = false;
         switch ($this->action):
-            case VTgAction::ACTION__SEND_MESSAGE:
+            case self::ACTION__SEND_MESSAGE:
                 $data = $tg->sendMessage($this->chatId, $this->text, $this->extraParameters);
                 break;
-            case VTgAction::ACTION__EDIT_MESSAGE_TEXT:
+            case self::ACTION__EDIT_MESSAGE_TEXT:
                 $data = $tg->editMessageText($this->chatId, $this->messageId, $this->text, $this->extraParameters);
                 break;
-            case VTgAction::ACTION__EDIT_MESSAGE_REPLY_MARKUP:
+            case self::ACTION__EDIT_MESSAGE_REPLY_MARKUP:
                 $data = $tg->editMessageReplyMarkup($this->chatId, $this->messageId, $this->extraParameters['reply_markup']);
                 break;
-            case VTgAction::ACTION__EDIT_IMESSAGE_TEXT:
+            case self::ACTION__EDIT_IMESSAGE_TEXT:
                 $data = $tg->editIMessageText($this->inlineMessageId, $this->text, $this->extraParameters);
                 break;
-            case VTgAction::ACTION__EDIT_IMESSAGE_REPLY_MARKUP:
+            case self::ACTION__EDIT_IMESSAGE_REPLY_MARKUP:
                 $data = $tg->editIMessageReplyMarkup($this->inlineMessageId, $this->extraParameters['reply_markup']);
                 break;
-            case VTgAction::ACTION__CALL_FUNCTION:
-                $this->callFunctionHandler();
+            case self::ACTION__ANSWER_CALLBACK_QUERY:
+                $data = $tg->answerCallbackQuery($this->callbackQueryId, $this->extraParameters);
                 break;
-            case VTgAction::ACTION__MULTIPLE:
+            case self::ACTION__CALL_API_METHOD:
+                $data = $tg->{$this->methodName}(...$this->extraParameters);
+                break;
+            case self::ACTION__CALL_FUNCTION:
+                ($this->handler)(...$this->extraParameters);
+                break;
+            case self::ACTION__MULTIPLE:
                 $data = [];
                 foreach ($this->actions as $action)
                     $data[] = $action->execute($tg);
@@ -187,7 +195,7 @@ class VTgAction
      * @brief Creates "Do nothing" action
      * @return VTgAction Action
      */
-    static public function doNothing(): VTgAction
+    static public function doNothing(): self
     {
         return new self(self::ACTION__DO_NOTHING);
     }
@@ -199,7 +207,7 @@ class VTgAction
      * @param array $extraParameters Extra parameters for API request if needed
      * @return VTgAction Action
      */
-    static public function sendMessage($chatId, string $text, array $extraParameters = []): VTgAction
+    static public function sendMessage($chatId, string $text, array $extraParameters = []): self
     {
         return new self(self::ACTION__SEND_MESSAGE, $chatId, $text, $extraParameters);
     }
@@ -212,7 +220,7 @@ class VTgAction
      * @param array $extraParameters Extra parameters for API request if needed
      * @return VTgAction Action
      */
-    static public function editMessageText($chatId, int $messageId, string $text, array $extraParameters = []): VTgAction
+    static public function editMessageText($chatId, int $messageId, string $text, array $extraParameters = []): self
     {
         return new self(self::ACTION__EDIT_MESSAGE_TEXT, $chatId, $messageId, $text, $extraParameters);
     }
@@ -224,7 +232,7 @@ class VTgAction
      * @param array $extraParameters Extra parameters for API request if needed
      * @return VTgAction Action
      */
-    static public function editIMessageText(string $inlineMessageId, string $text, array $extraParameters = []): VTgAction
+    static public function editIMessageText(string $inlineMessageId, string $text, array $extraParameters = []): self
     {
         return new self(self::ACTION__EDIT_IMESSAGE_TEXT, $inlineMessageId, $text, $extraParameters);
     }
@@ -236,7 +244,7 @@ class VTgAction
      * @param string|false $replyMarkup New reply_markup value
      * @return VTgAction Action
      */
-    static public function editMessageReplyMarkup($chatId, int $messageId, $replyMarkup = false): VTgAction
+    static public function editMessageReplyMarkup($chatId, int $messageId, $replyMarkup = false): self
     {
         return new self(self::ACTION__EDIT_MESSAGE_REPLY_MARKUP, $chatId, $messageId, $replyMarkup);
     }
@@ -247,7 +255,7 @@ class VTgAction
      * @param string|false $replyMarkup New reply_markup value
      * @return VTgAction Action
      */
-    static public function editIMessageReplyMarkup(string $inlineMessageId, $replyMarkup = false): VTgAction
+    static public function editIMessageReplyMarkup(string $inlineMessageId, $replyMarkup = false): self
     {
         return new self(self::ACTION__EDIT_IMESSAGE_REPLY_MARKUP, $inlineMessageId, $replyMarkup);
     }
@@ -258,19 +266,31 @@ class VTgAction
      * @param array $extraParameters Extra parameters for API request if needed
      * @return VTgAction Action
      */
-    static public function answerCallbackQuery(string $callbackQueryId, array $extraParameters = []): VTgAction
+    static public function answerCallbackQuery(string $callbackQueryId, array $extraParameters = []): self
     {
         return new self(self::ACTION__ANSWER_CALLBACK_QUERY, $callbackQueryId, $extraParameters);
     }
 
     /**
-     * @brief Creates "Call function" action
-     * @param callable $handler Handler function
+     * @brief Creates "Call API method via VTgRequestor" action
+     * @param string $methodName Method name (in VTgRequestor class)
+     * @param array $parameters Any parameters
      * @return VTgAction Action
      */
-    static public function callFunction(callable $handler): VTgAction
+    static public function callAPIMethod(string $methodName, ...$parameters): self
     {
-        return new self(self::ACTION__CALL_FUNCTION, $handler);
+        return new self(self::ACTION__CALL_API_METHOD, $methodName, ...$parameters);
+    }
+
+    /**
+     * @brief Creates "Call function" action
+     * @param callable $handler Handler function
+     * @param mixed|null ...$args Arguments for function
+     * @return VTgAction Action
+     */
+    static public function callFunction(callable $handler, ...$args): self
+    {
+        return new self(self::ACTION__CALL_FUNCTION, $handler, ...$args);
     }
 
     /**
@@ -279,7 +299,7 @@ class VTgAction
      * @param VTgAction $actions Actions to be executed
      * @return VTgAction Action
      */
-    static public function multiple(VTgAction ...$actions): VTgAction
+    static public function multiple(VTgAction ...$actions): self
     {
         return new self(self::ACTION__MULTIPLE, ...$actions);
     }

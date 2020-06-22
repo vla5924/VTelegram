@@ -21,20 +21,21 @@ class VTgAuthUser
     public $fields = [];
 
     /**
-     * @var VTgUser|null $object
+     * @var VTgUser|null $u
      * @brief Telegram user object
      */
-    public $object = null;
+    public $u = null;
 
     /**
      * @brief Constructor-initializer
      * @param bool $isNew True if user writes to bot for a first time
      * @param array $fields Info about user stored in database
-     * @param VTgUser|null $object Telegram user object
+     * @param VTgUser|null $user Telegram user object
      */
-    public function __construct(bool $isNew, array $fields, VTgUser $object = null) {
+    public function __construct(bool $isNew, array $fields, VTgUser $user = null)
+    {
         $this->isNew = $isNew;
         $this->fields = $fields;
-        $this->object = $object;
+        $this->u = $user;
     }
 }

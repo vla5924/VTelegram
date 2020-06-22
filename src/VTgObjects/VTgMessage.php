@@ -132,10 +132,14 @@ class VTgMessage extends VTgObject
     }
 
     /**
-     * @todo Implementation
+     * @brief Creates an action to reply this message
+     * @param string $text Message text
+     * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
+     * @param bool $disableNotification If true, message will be forwarded silently (without a notification for users)
+     * @return VTgAction "Forward message" action (ready to execute)
      */
-    public function forward(string $chatId, bool $disableNotification = false)
+    public function forward(string $chatId, bool $disableNotification = false): VTgAction
     {
-        return VTgAction::doNothing();
+        return VTgAction::callAPIMethod('forwardMessage', $chatId, $this->chat->id, $this->id, $disableNotification);
     }
 }
