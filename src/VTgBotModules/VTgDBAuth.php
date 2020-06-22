@@ -152,9 +152,14 @@ trait VTgDBAuth
         return new VTgAuthUser(false, $fields, $user);
     }
 
-    static public function enableAutoAuthorize(): void
+    static public function getPreHandlerAutoAuthName(): string
     {
-        VTgHandler::addPreHandler('DBAuth_authorize', function (int $handlerType, ...$args) {
+        return 'DBAuth_autoAuth';
+    }
+
+    static public function enableAutoAuthorization(): void
+    {
+        VTgHandler::addPreHandler(self::getPreHandlerAutoAuthName(), function (int $handlerType, ...$args) {
             switch ($handlerType):
                 case VTgHandler::CALLBACK_QUERY:
                 case VTgHandler::CHOSEN_INLINE_RESULT:
