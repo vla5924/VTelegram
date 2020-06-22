@@ -160,18 +160,17 @@ trait VTgDBAuth
                 case VTgHandler::CHOSEN_INLINE_RESULT:
                 case VTgHandler::DYNAMIC_CALLBACK_QUERY:
                 case VTgHandler::INLINE_QUERY:
-                    $user = $args[1]->from->id;
+                    $user = $args[1]->from;
                     break;
                 case VTgHandler::COMMAND_FALLBACK:
                 case VTgHandler::COMMAND:
                 case VTgHandler::DYNAMIC_COMMAND:
                 case VTgHandler::SIMPLE_COMMAND:
                 case VTgHandler::STANDARD_MESSAGE:
-                    $user = $args[1]->from ? $args[1]->from->id : $args[1]->chat->id;
+                    $user = $args[1]->from;
                     break;
             endswitch;
-            $c = VTgBot::class;
-            return $c::authorizeUser($user);
+            return static::authorizeUser($user);
         });
     }
 }

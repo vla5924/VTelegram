@@ -15,6 +15,6 @@ class VTgCommandFallbackHandler extends VTgHandler
 
     public function __invoke(VTgBotController $bot, VTgMessage $message, string $command, string $data)
     {
-        ($this->handler)($bot, $message, $command, $data, self::preHandle(func_get_args()));
+        ($this->handler)($bot, $message, $command, $data, self::preHandle($bot, $message, $command, $data));
     }
 }

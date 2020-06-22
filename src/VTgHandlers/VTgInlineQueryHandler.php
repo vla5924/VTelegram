@@ -15,6 +15,6 @@ class VTgInlineQueryHandler extends VTgHandler
 
     public function __invoke(VTgBotController $bot, VTgInlineQuery $inlineQuery)
     {
-        ($this->handler)($bot, $inlineQuery, self::preHandle(func_get_args()));
+        ($this->handler)($bot, $inlineQuery, self::preHandle($bot, $inlineQuery));
     }
 }

@@ -15,6 +15,6 @@ class VTgDynamicCQHandler extends VTgHandler
 
     public function __invoke(VTgBotController $bot, VTgCallbackQuery $callbackQuery, array $parameters)
     {
-        ($this->handler)($bot, $callbackQuery, $parameters, self::preHandle(func_get_args()));
+        ($this->handler)($bot, $callbackQuery, $parameters, self::preHandle($bot, $callbackQuery, $parameters));
     }
 }

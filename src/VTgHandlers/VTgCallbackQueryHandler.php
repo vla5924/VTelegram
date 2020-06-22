@@ -15,6 +15,6 @@ class VTgCallbackQueryHandler extends VTgHandler
 
     public function __invoke(VTgBotController $bot, VTgCallbackQuery $callbackQuery)
     {
-        ($this->handler)($bot, $callbackQuery, self::preHandle(func_get_args()));
+        ($this->handler)($bot, $callbackQuery, self::preHandle($bot, $callbackQuery));
     }
 }

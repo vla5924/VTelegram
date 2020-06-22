@@ -15,6 +15,6 @@ class VTgStandardMessageHandler extends VTgHandler
 
     public function __invoke(VTgBotController $bot, VTgMessage $message)
     {
-        ($this->handler)($bot, $message, self::preHandle(func_get_args()));
+        ($this->handler)($bot, $message, self::preHandle($bot, $message));
     }
 }

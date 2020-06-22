@@ -15,6 +15,6 @@ class VTgDynamicCommandHandler extends VTgHandler
 
     public function __invoke(VTgBotController $bot, VTgMessage $message, array $parameters, string $data)
     {
-        ($this->handler)($bot, $message, $parameters, $data, self::preHandle(func_get_args()));
+        ($this->handler)($bot, $message, $parameters, $data, self::preHandle($bot, $message, $parameters, $data));
     }
 }

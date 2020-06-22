@@ -15,6 +15,6 @@ class VTgChosenInlineResultHandler extends VTgHandler
 
     public function __invoke(VTgBotController $bot, VTgChosenInlineResult $inlineResult)
     {
-        ($this->handler)($bot, $inlineResult, self::preHandle(func_get_args()));
+        ($this->handler)($bot, $inlineResult, self::preHandle($bot, $inlineResult));
     }
 }
