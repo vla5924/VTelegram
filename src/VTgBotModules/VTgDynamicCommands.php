@@ -2,7 +2,6 @@
 
 require_once __DIR__ . '/../VTgBot.php';
 require_once __DIR__ . '/VTgPatternChecker.php';
-require_once __DIR__ . '/../VTgHandlers/VTgDynamicCommandHandler.php';
 
 /**
  * @class VTgDynamicCommands
@@ -29,7 +28,7 @@ trait VTgDynamicCommands
     static protected $dynamicCommands = [];
 
     /**
-     * @var VTgCommandFallbackHandler|null $commandFallbackHandler
+     * @var callable|null $commandFallbackHandler
      * @brief Function for handling messages if they don't contain /commands
      * @details See VTgBot::$commandFallbackHandler
      */
@@ -63,7 +62,7 @@ trait VTgDynamicCommands
     static public function registerDynamicCommandHandler(string $patternCommand, callable $handler): void
     {
         static::$commands['%DYNAMIC%'] = false;
-        static::$dynamicCommands[$patternCommand] = new VTgDynamicCommandHandler($handler);
+        static::$dynamicCommands[$patternCommand] = $handler;
     }
 
     /**

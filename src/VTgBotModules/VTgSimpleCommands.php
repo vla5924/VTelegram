@@ -1,7 +1,6 @@
 <?php
 
 require_once __DIR__ . '/../VTgBot.php';
-require_once __DIR__ . '/../VTgHandlers/VTgSimpleCommandHandler.php';
 
 /**
  * @class VTgSimpleCommands
@@ -28,6 +27,8 @@ trait VTgSimpleCommands
      */
     static public function registerSimpleCommandHandler(string $command, string $text, array $extraParameters = []): void
     {
-        static::$commands[$command] = new VTgSimpleCommandHandler($text, $extraParameters);
+        static::$commands[$command] = function (VTgBotController $bot, VTgMessage $message, string $data) use ($text, $extraParameters) {
+            $bot->execute($message->reply($text, false, $extraParameters));
+        };
     }
 }
