@@ -34,5 +34,5 @@ abstract class VTgIQRTemplate
      * @param bool $disableWebPagePreview Disable web page preview for input message content
      * @return array Array of VTgIQR objects
      */
-    abstract static public function make(array $entries, string $messageTemplate, string $parseMode, bool $disableWebPagePreview): array;
+    abstract static public function make(array $entries, string $messageTemplate = null, string $parseMode = null, bool $disableWebPagePreview = false): array;
 }
