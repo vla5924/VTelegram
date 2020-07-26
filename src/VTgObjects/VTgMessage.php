@@ -118,16 +118,25 @@ class VTgMessage extends VTgObject
     }
 
     /**
-     * @brief Creates an action to reply this message
+     * @brief Creates an action to answer this message
      * @param string $text Message text
-     * @param bool $explicitly If true, extra parameter reply_to_message_id will be provided automatically
      * @param array $extraParameters Extra parameters for request if needed
      * @return VTgAction "Send message" action (ready to execute)
      */
-    public function reply(string $text, bool $explicitly = false, array $extraParameters = []): VTgAction
+    public function answer(string $text, array $extraParameters = []): VTgAction
     {
-        if ($explicitly)
-            $extraParameters['reply_to_message_id'] = $this->id;
+        return VTgAction::sendMessage($this->chat->id, $text, $extraParameters);
+    }
+
+    /**
+     * @brief Creates an action to answer this message with reply
+     * @param string $text Message text
+     * @param array $extraParameters Extra parameters for request if needed
+     * @return VTgAction "Send message" action (ready to execute)
+     */
+    public function reply(string $text, array $extraParameters = []): VTgAction
+    {
+        $extraParameters['reply_to_message_id'] = $this->id;
         return VTgAction::sendMessage($this->chat->id, $text, $extraParameters);
     }
 

@@ -27,8 +27,8 @@ trait VTgSimpleCommands
      */
     static public function registerSimpleCommandHandler(string $command, string $text, array $extraParameters = []): void
     {
-        static::$commands[$command] = function (VTgBotController $bot, VTgMessage $message, string $data) use ($text, $extraParameters) {
-            $bot->execute($message->reply($text, false, $extraParameters));
+        static::$commands[$command] = function (VTgBotController $bot, VTgMessage $message) use ($text, $extraParameters) {
+            $bot->execute($message->answer($text, $extraParameters));
         };
     }
 }
