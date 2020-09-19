@@ -32,4 +32,14 @@ class VTgInlineQuery extends VTgObject implements VTgHandlable
     {
         return $this->from;
     }
+
+    public function getClass(): string
+    {
+        return "VTgInlineQuery";
+    }
+
+    public function getType(): string
+    {
+        return "inline_query";
+    }
 }

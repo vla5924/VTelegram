@@ -128,6 +128,16 @@ class VTgMessage extends VTgObject implements VTgHandlable
         return $this->chat;
     }
 
+    public function getClass(): string
+    {
+        return "VTgMessage";
+    }
+
+    public function getType(): string
+    {
+        return "message";
+    }
+
     /**
      * @brief Creates an action to answer this message
      * @param string $text Message text

@@ -34,6 +34,16 @@ class VTgChosenInlineResult extends VTgObject implements VTgHandlable
         return $this->from;
     }
 
+    public function getClass(): string
+    {
+        return "VTgChosenInlineResult";
+    }
+
+    public function getType(): string
+    {
+        return "chosen_inline_result";
+    }
+
     public function editMessageText(string $text, array $extraParameters = []): ?VTgAction
     {
         return $this->inlineMessageId ? VTgAction::editIMessageText($this->inlineMessageId, $text, $extraParameters) : null;

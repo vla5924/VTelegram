@@ -83,6 +83,16 @@ class VTgCallbackQuery extends VTgObject implements VTgHandlable
         return $this->from;
     }
 
+    public function getClass(): string
+    {
+        return "VTgCallbackQuery";
+    }
+
+    public function getType(): string
+    {
+        return "callback_query";
+    }
+
     /**
      * @brief Creates an action to answer this callback query
      * @param array $extraParameters Extra parameters for request if needed
