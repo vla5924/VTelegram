@@ -1,13 +1,14 @@
 <?php
 
 require_once __DIR__ . '/VTgObject.php';
+require_once __DIR__ . '/VTgHandlable.php';
 require_once __DIR__ . '/VTgUser.php';
 require_once __DIR__ . '/../VTgMetaObjects/VTgAction.php';
 
 /**
  * @brief Class to represent chosen inline result
  */
-class VTgChosenInlineResult extends VTgObject
+class VTgChosenInlineResult extends VTgObject implements VTgHandlable
 {
     public $id;
     public $from;
@@ -21,6 +22,16 @@ class VTgChosenInlineResult extends VTgObject
         $this->from = new VTgUser($data["from"]);
         $this->inlineMessageId = $data["inline_message_id"] ?? null;
         $this->query = $data["query"];
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getInstigator(): VTgUser
+    {
+        return $this->from;
     }
 
     public function editMessageText(string $text, array $extraParameters = []): ?VTgAction

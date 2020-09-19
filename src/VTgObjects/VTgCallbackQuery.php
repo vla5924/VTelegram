@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/VTgObject.php';
+require_once __DIR__ . '/VTgHandlable.php';
 require_once __DIR__ . '/VTgMessage.php';
 require_once __DIR__ . '/VTgUser.php';
 require_once __DIR__ . '/../VTgMetaObjects/VTgAction.php';
@@ -9,7 +10,7 @@ require_once __DIR__ . '/../VTgMetaObjects/VTgAction.php';
  * @brief Class to represent user callback query
  * @details Callback queries are usually send when push buttons on inline keyboard
  */
-class VTgCallbackQuery extends VTgObject
+class VTgCallbackQuery extends VTgObject implements VTgHandlable
 {
     /**
      * @var int|string $id
@@ -70,6 +71,16 @@ class VTgCallbackQuery extends VTgObject
             $this->fromInlineMode = false;
         }
         $this->chatInstance = $data['chat_instance'];
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getInstigator(): VTgUser
+    {
+        return $this->from;
     }
 
     /**

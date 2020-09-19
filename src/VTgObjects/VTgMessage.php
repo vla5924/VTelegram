@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/VTgObject.php';
+require_once __DIR__ . '/VTgHandlable.php';
 require_once __DIR__ . '/VTgUser.php';
 require_once __DIR__ . '/VTgChat.php';
 require_once __DIR__ . '/VTgMessageEntity.php';
@@ -10,7 +11,7 @@ require_once __DIR__ . '/../VTgMetaObjects/VTgAction.php';
  * @brief Class represents a message in Telegram
  * @todo Types for untyped member properties
  */
-class VTgMessage extends VTgObject
+class VTgMessage extends VTgObject implements VTgHandlable
 {
     /**
      * @var int $id
@@ -115,6 +116,16 @@ class VTgMessage extends VTgObject
             foreach ($data['entities'] as $entity)
                 $this->entities[] = new VTgMessageEntity($entity);
         }
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getInstigator(): VTgUser
+    {
+        return $this->chat;
     }
 
     /**

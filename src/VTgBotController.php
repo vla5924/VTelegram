@@ -14,13 +14,16 @@ class VTgBotController
      */
     public $tg;
 
+    public $preHandled = null;
+
     /**
      * @brief Constructor-initializer
      * @param VTgRequestor $tg Object for direct requests to Telegram API
      */
-    public function __construct(VTgRequestor $tg)
+    public function __construct(VTgRequestor $tg, $preHandled = null)
     {
         $this->tg = $tg;
+        $this->preHandled = $preHandled;
     }
 
     /**

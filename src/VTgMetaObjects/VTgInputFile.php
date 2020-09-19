@@ -55,7 +55,7 @@ class VTgInputFile
 
     /**
      * @brief Gets data in correct format if possible
-     * @return mixed String, CURLFile of false can be returned
+     * @return mixed String, CURLFile or false can be returned
      */
     public function get()
     {

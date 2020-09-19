@@ -17,7 +17,7 @@ trait VTgSimpleCommands
      * @brief Array with commands handlers
      * @details See VTgBot::$commands
      */
-    static protected $commands = [];
+    protected static $commands = [];
 
     /**
      * @memberof VTgSimpleCommands
@@ -25,7 +25,7 @@ trait VTgSimpleCommands
      * @param string $command Command you want to handle (don't mention '/', e.g. 'help', not '/help')
      * @param string $text Message text to answer to the command
      */
-    static public function registerSimpleCommandHandler(string $command, string $text, array $extraParameters = []): void
+    public static function registerSimpleCommandHandler(string $command, string $text, array $extraParameters = []): void
     {
         static::$commands[$command] = function (VTgBotController $bot, VTgMessage $message) use ($text, $extraParameters) {
             $bot->execute($message->answer($text, $extraParameters));

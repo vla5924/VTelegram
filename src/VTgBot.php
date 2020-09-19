@@ -5,8 +5,12 @@ require_once __DIR__ . '/VTgRequestor.php';
 require_once __DIR__ . '/VTgMetaObjects/VTgAction.php';
 
 require_once __DIR__ . '/VTgObjects/VTgUpdate.php';
+require_once __DIR__ . '/VTgObjects/VTgHandlable.php';
+require_once __DIR__ . '/VTgObjects/VTgChosenInlineResult.php';
 require_once __DIR__ . '/VTgObjects/VTgCallbackQuery.php';
+require_once __DIR__ . '/VTgObjects/VTgInlineQuery.php';
 require_once __DIR__ . '/VTgObjects/VTgMessage.php';
+
 require_once __DIR__ . '/VTgBotController.php';
 
 
@@ -24,54 +28,61 @@ class VTgBot
      * @brief VTgRequestor instance for accessing Bot API
      * @details If you want to use it in your methods, extend this class using inheritance
      */
-    static protected $tg = null;
+    protected static $tg = null;
+
+    /**
+     * @var callable|null $preHandler
+     * @brief Function for pre-handling (called before any other hander and can pass additional data for them)
+     * @details Handler must have a special header format, see registerPreHandler()
+     */
+    protected static $preHandler = null;
 
     /**
      * @var array $commands
      * @brief Array with commands handlers
      * @details Each handler (being a callable type) must have a special header format, see registerCommandHandler()
      */
-    static protected $commands = [];
+    protected static $commands = [];
 
     /**
      * @var callable|null $commandFallbackHandler
      * @brief Function for handling messages if they don't contain /commands
      * @details Handler must have a special header format, see registerCommandFallbackHandler()
      */
-    static protected $commandFallbackHandler = null;
+    protected static $commandFallbackHandler = null;
 
     /**
      * @var callable|null $standardMessageHadler
      * @brief Function for handling messages if they don't contain /commands
      * @details Handler must have a special header format, see registerStandardMessageHandler()
      */
-    static protected $standardMessageHadler = null;
+    protected static $standardMessageHadler = null;
 
     /**
      * @var callable|null $callbackQueryHandler
      * @brief Function for handling callback queries if needed
      * @details Handler must have a special header format, see registerCallbackQueryHandler()
      */
-    static protected $callbackQueryHandler = null;
+    protected static $callbackQueryHandler = null;
 
     /**
      * @var callable|null $inlineQueryHandler
      * @brief Function for handling inline queries if needed
      * @details Handler must have a special header format, see registerInlineQueryHandler()
      */
-    static protected $inlineQueryHandler = null;
+    protected static $inlineQueryHandler = null;
 
     /**
      * @var callable|null $inlineResultHandler
      * @brief Function for handling chosen inline results if needed
      * @details Handler must have a special header format, see registerInlineResultHandler()
      */
-    static protected $inlineResultHandler = null;
+    protected static $inlineResultHandler = null;
 
     /**
      * @brief Constructs static VTgRequestor instance if needed
      */
-    static protected function setUpRequestor(): void
+    protected static function setUpRequestor(): void
     {
         if (!static::$tg)
             static::$tg = new VTgRequestor();
@@ -81,7 +92,7 @@ class VTgBot
      * @brief Updates stored Bot API token for VTgRequestor instance
      * @param string $token New Bot API token
      */
-    static public function setToken(string $token): void
+    public static function setToken(string $token): void
     {
         static::setUpRequestor();
         static::$tg->updateToken($token);
@@ -95,7 +106,7 @@ class VTgBot
      * @param string $username Username for proxy authentication
      * @param string $password Password for proxy authentication
      */
-    static public function enableProxy(string $address, string $port, string $username, string $password): void
+    public static function enableProxy(string $address, string $port, string $username, string $password): void
     {
         static::setUpRequestor();
         static::$tg->enableProxy($address, $port, $username, $password);
@@ -104,19 +115,79 @@ class VTgBot
     /**
      * @brief Disables SOCKS5 proxy for VTgRequestor instance if enabled
      */
-    static public function disableProxy(): void
+    public static function disableProxy(): void
     {
         static::setUpRequestor();
         static::$tg->disableProxy();
     }
 
     /**
-     * @brief Makes bot controller object
+     * @brief Updates default parse mode
+     * @details Changes default parse mode to passed so it will be used when sending and editing messages
+     * @param string $parseMode New default parse mode name
+     */
+    public static function setParseMode(string $parseMode): void
+    {
+        static::$tg->setParseMode($parseMode);
+    }
+
+    /**
+     * @brief Updates default disabling web page preview state
+     * @param bool $value Parameter value
+     */
+    public static function setDisableWebPagePreview(bool $value = true): void
+    {
+        static::$tg->setDisableWebPagePreview($value);
+    }
+
+    /**
+     * @brief Adds or changes default parameter
+     * @param string $name Parameter name
+     * @param mixed $value Parameter value
+     */
+    public function setDefaultParameter(string $name, $value = true): void
+    {
+        static::$tg->setDefaultParameter($name, $value);
+    }
+
+    /**
+     * @brief Removes default parameter if set
+     * @param string $name Parameter name
+     */
+    public function unsetDefaultParameter(string $name): void
+    {
+        static::$tg->unsetDefaultParameter($name);
+    }
+
+    /**
+     * @brief Calls pre-handler and makes bot controller object for further handling
      * @return VTgBotController Bot controller object
      */
-    static protected function makeController(): VTgBotController
+    protected static function makeController(VTgHandlable $object): VTgBotController
     {
-        return new VTgBotController(static::$tg);
+        $basicController = new VTgBotController(static::$tg);
+        if (static::$preHandler)
+            return new VTgBotController(static::$tg, (static::$preHandler)($basicController, $object));
+        return $basicController;
+    }
+
+    /**
+     * @brief Registers a function as a pre-handler
+     * @details Registers a function to handle with object before any handler. 
+     * A pre-handler will be passed VtgBotController (with only $tg property) 
+     * and VTgHandlable object and its return value will be added to 
+     * $preHandled property of VTgBotController for further handlers.
+     * @code
+     * VTgBot::registerPreHandler(function (VTgBotController $bot, VTgHandlable $object) {
+     *   $user = $myDbController->authorizeUser($object->getInstigator()->id);
+     *   return $user;
+     * });
+     * @endcode
+     * @param callable $handler Pre-handler [function (VTgBotController, VTgHandlable)]
+     */
+    public static function registerPreHandler(callable $handler): void
+    {
+        static::$preHandler = $handler;
     }
 
     /**
@@ -132,7 +203,7 @@ class VTgBot
      * @endcode
      * @param callable $handler Standard message handler [function (VTgBotController, VTgMessage)]
      */
-    static public function registerStandardMessageHandler(callable $handler): void
+    public static function registerStandardMessageHandler(callable $handler): void
     {
         static::$standardMessageHadler = $handler;
     }
@@ -151,7 +222,7 @@ class VTgBot
      * @param string $command Command you want to handle (don't mention '/', e.g. 'help', not '/help')
      * @param callable $handler Command handler [function (VTgBotController, VTgMessage, string)]
      */
-    static public function registerCommandHandler(string $command, callable $handler): void
+    public static function registerCommandHandler(string $command, callable $handler): void
     {
         static::$commands[$command] = $handler;
     }
@@ -169,7 +240,7 @@ class VTgBot
      * @endcode
      * @param callable $handler Command handler [function (VTgBotController, VTgMessage, string)]
      */
-    static public function registerCommandFallbackHandler(callable $handler): void
+    public static function registerCommandFallbackHandler(callable $handler): void
     {
         static::$commandFallbackHandler = $handler;
     }
@@ -186,7 +257,7 @@ class VTgBot
      * @endcode
      * @param callable $handler Callback query handler [function (VTgBotController, VTgCallbackQuery)]
      */
-    static public function registerCallbackQueryHandler(callable $handler): void
+    public static function registerCallbackQueryHandler(callable $handler): void
     {
         static::$callbackQueryHandler = $handler;
     }
@@ -196,7 +267,7 @@ class VTgBot
      * @details A handler will be passed VTgBotController object and VTgInlineQuery object.
      * @param callable $handler Inline query handler [function (VTgBotController, VTgInlineQuery)]
      */
-    static public function registerInlineQueryHandler(callable $handler): void
+    public static function registerInlineQueryHandler(callable $handler): void
     {
         static::$inlineQueryHandler = $handler;
     }
@@ -206,7 +277,7 @@ class VTgBot
      * @details A handler will be passed VTgBotController object and VTgChosenInlineResult object.
      * @param callable $handler Inline result handler [function (VTgBotController, VTgChosenInlineResult)]
      */
-    static public function registerInlineResultHandler(callable $handler): void
+    public static function registerInlineResultHandler(callable $handler): void
     {
         static::$inlineResultHandler = $handler;
     }
@@ -223,7 +294,7 @@ class VTgBot
      * Or just use processUpdatePost() to achieve the same behavior.
      * @param array $data Array with JSON-decoded update data
      */
-    static public function processUpdateData(array $data): void
+    public static function processUpdateData(array $data): void
     {
         $update = new VTgUpdate($data);
         self::processUpdate($update);
@@ -233,7 +304,7 @@ class VTgBot
      * @brief Processes JSON-decoded update data received from Telegram in POST query
      * @details It simply wraps processUpdateData(), getting data from incoming POST query.
      */
-    static public function processUpdatePost(): void
+    public static function processUpdatePost(): void
     {
         $json = file_get_contents('php://input');
         $data = json_decode($json, true);
@@ -244,7 +315,7 @@ class VTgBot
      * @brief Processes an update from Telegram
      * @param VTgUpdate $update Object with data received from Telegram
      */
-    static public function processUpdate(VTgUpdate $update): void
+    public static function processUpdate(VTgUpdate $update): void
     {
         static::setUpRequestor();
         if ($update->type == VTgUpdate::TYPE__MESSAGE)
@@ -261,10 +332,10 @@ class VTgBot
      * @brief Handles message with standard message handler if defined
      * @param VTgMessage $message Message received from Telegram user
      */
-    static protected function handleMessageStandardly(VTgMessage $message): void
+    protected static function handleMessageStandardly(VTgMessage $message): void
     {
         if (static::$standardMessageHadler) {
-            (static::$standardMessageHadler)(self::makeController(), $message);
+            (static::$standardMessageHadler)(self::makeController($message), $message);
         }
     }
 
@@ -272,7 +343,7 @@ class VTgBot
      * @brief Hadles with a received message
      * @param VTgMessage $message Message data received from Telegram
      */
-    static protected function handleMessage(VTgMessage $message): void
+    protected static function handleMessage(VTgMessage $message): void
     {
         $containsCommand = ($message->text and $message->text[0] == '/');
         if ($containsCommand && !empty(static::$commands)) {
@@ -290,12 +361,12 @@ class VTgBot
      * @param string $command Command name to handle
      * @param string $data A part of message following the command
      */
-    static protected function handleCommand(VTgMessage $message, string $command, string $data = ""): void
+    protected static function handleCommand(VTgMessage $message, string $command, string $data = ""): void
     {
         if (isset(static::$commands[$command])) {
-            (static::$commands[$command])(self::makeController(), $message, $data);
+            (static::$commands[$command])(self::makeController($message), $message, $data);
         } elseif (static::$commandFallbackHandler) {
-            (static::$commandFallbackHandler)(self::makeController(), $message, $command, $data);
+            (static::$commandFallbackHandler)(self::makeController($message), $message, $command, $data);
         } else {
             static::handleMessageStandardly($message);
         }
@@ -305,10 +376,10 @@ class VTgBot
      * @brief Hadles with a callback query
      * @param VTgCallbackQuery $callbackQuery Callback query data received from Telegram
      */
-    static protected function handleCallbackQuery(VTgCallbackQuery $callbackQuery): void
+    protected static function handleCallbackQuery(VTgCallbackQuery $callbackQuery): void
     {
         if (self::$callbackQueryHandler) {
-            (self::$callbackQueryHandler)(self::makeController(), $callbackQuery);
+            (self::$callbackQueryHandler)(self::makeController($callbackQuery), $callbackQuery);
         }
     }
 
@@ -316,10 +387,10 @@ class VTgBot
      * @brief Hadles with an inline query
      * @param VTgInlineQuery $inlineQuery Inline query data received from Telegram
      */
-    static protected function handleInlineQuery(VTgInlineQuery $inlineQuery): void
+    protected static function handleInlineQuery(VTgInlineQuery $inlineQuery): void
     {
         if (self::$inlineQueryHandler) {
-            (self::$inlineQueryHandler)(self::makeController(), $inlineQuery);
+            (self::$inlineQueryHandler)(self::makeController($inlineQuery), $inlineQuery);
         }
     }
 
@@ -327,10 +398,10 @@ class VTgBot
      * @brief Hadles with a chosen inline result
      * @param VTgChosenInlineResult $inlineResult Inline result data received from Telegram
      */
-    static protected function handleInlineResult(VTgChosenInlineResult $inlineResult): void
+    protected static function handleInlineResult(VTgChosenInlineResult $inlineResult): void
     {
         if (self::$inlineResultHandler) {
-            (self::$inlineResultHandler)(self::makeController(), $inlineResult);
+            (self::$inlineResultHandler)(self::makeController($inlineResult), $inlineResult);
         }
     }
 }

@@ -18,34 +18,34 @@ trait VTgCQHandlers
      * @brief Function for handling callback queries if needed
      * @details Handler must have a special header format, see registerCallbackQueryHandler()
      */
-    static protected $callbackQueryHandler = null;
+    protected static $callbackQueryHandler = null;
 
     /**
      * @var array $callbackQueries
      * @brief Array with callback query handlers
      * @details Each handler (being a callable type) must have a special header format, see registerStaticCQHandler()
      */
-    static protected $callbackQueries = [];
+    protected static $callbackQueries = [];
 
     /**
      * @var array $dynamicCallbackQueries
      * @brief Array with dynamic callback query handlers
      * @details Each handler (being a callable type) must have a special header format, see registerDynamicCQHandler()
      */
-    static protected $dynamicCallbackQueries = [];
+    protected static $dynamicCallbackQueries = [];
 
     /**
      * @var bool $dynamicCallbackQueriesEnabled
      * @brief True if handlers for dynamic callback queries must be used
      */
-    static protected $dynamicCQHandlersEnabled = false;
+    protected static $dynamicCQHandlersEnabled = false;
 
     use VTgPatternChecker;
 
     /**
      * @brief Enables dynamic callback queries handling
      */
-    static public function enableDynamicCQHandlers(): void
+    public static function enableDynamicCQHandlers(): void
     {
         static::$dynamicCQHandlersEnabled = true;
     }
@@ -53,7 +53,7 @@ trait VTgCQHandlers
     /**
      * @brief Disables dynamic callback queries handling
      */
-    static public function disableDynamicCQHandlers(): void
+    public static function disableDynamicCQHandlers(): void
     {
         static::$dynamicCQHandlersEnabled = false;
     }
@@ -72,7 +72,7 @@ trait VTgCQHandlers
      * @param string $query Query data
      * @param callable $handler Callback query handler [function (VTgBotController, VTgCallbackQuery)]
      */
-    static public function registerStaticCQHandler(string $query, callable $handler): void
+    public static function registerStaticCQHandler(string $query, callable $handler): void
     {
         static::$callbackQueries[$query] = $handler;
     }
@@ -99,7 +99,7 @@ trait VTgCQHandlers
      * @param string $queryPattern Query data pattern
      * @param callable $handler Dynamic callback query handler [function (VTgBotController, VTgCallbackQuery, array)]
      */
-    static public function registerDynamicCQHandler(string $queryPattern, callable $handler): void
+    public static function registerDynamicCQHandler(string $queryPattern, callable $handler): void
     {
         static::$dynamicCallbackQueries[$queryPattern] = $handler;
     }
@@ -109,24 +109,24 @@ trait VTgCQHandlers
      * @brief Hadles with a callback query
      * @param VTgCallbackQuery $callbackQuery Callback query data received from Telegram
      */
-    static protected function handleCallbackQuery(VTgCallbackQuery $callbackQuery): void
+    protected static function handleCallbackQuery(VTgCallbackQuery $callbackQuery): void
     {
         $query = $callbackQuery->data;
         if (static::$dynamicCQHandlersEnabled and !empty(static::$dynamicCallbackQueries)) {
             foreach (static::$dynamicCallbackQueries as $pattern => $handler) {
                 $parameters = [];
                 if (self::checkMatch($pattern, $query, $parameters)) {
-                    ($handler)(static::makeController(), $callbackQuery, $parameters);
+                    ($handler)(static::makeController($callbackQuery), $callbackQuery, $parameters);
                     return;
                 }
             }
         }
         if (isset(static::$callbackQueries[$query])) {
-            (static::$callbackQueries[$query])(static::makeController(), $callbackQuery);
+            (static::$callbackQueries[$query])(static::makeController($callbackQuery), $callbackQuery);
             return;
         }
         if (static::$callbackQueryHandler) {
-            (static::$callbackQueryHandler)(static::makeController(), $callbackQuery);
+            (static::$callbackQueryHandler)(static::makeController($callbackQuery), $callbackQuery);
         }
     }
 }

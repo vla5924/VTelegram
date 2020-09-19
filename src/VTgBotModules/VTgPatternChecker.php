@@ -25,7 +25,7 @@ trait VTgPatternChecker
      * @param [out] array $matchParameters Array with control string itself and found %parameters
      * @return bool True if a constrol string matches a pattern
      */
-    static protected function checkMatch(string $pattern, string $control, array &$matchParameters = null): bool
+    protected static function checkMatch(string $pattern, string $control, array &$matchParameters = null): bool
     {
         $regExp = '/^' . str_replace(['%d', '%s', '%a'], ['([0-9]+)', '([A-Za-z]+)', '([0-9a-zA-Z]+)'], $pattern) . '$/';
         return preg_match($regExp, $control, $matchParameters) === 1;

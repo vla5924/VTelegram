@@ -18,21 +18,21 @@ trait VTgDynamicCommands
      * @brief Array with commands handlers
      * @details See VTgBot::$commands
      */
-    static protected $commands = [];
+    protected static $commands = [];
 
     /**
      * @var array $dynamicCommands
      * @brief Array with dynamic commands handlers
      * @details See VTgBot::$commands
      */
-    static protected $dynamicCommands = [];
+    protected static $dynamicCommands = [];
 
     /**
      * @var callable|null $commandFallbackHandler
      * @brief Function for handling messages if they don't contain /commands
      * @details See VTgBot::$commandFallbackHandler
      */
-    static protected $commandFallbackHandler = null;
+    protected static $commandFallbackHandler = null;
 
     use VTgPatternChecker;
 
@@ -59,7 +59,7 @@ trait VTgDynamicCommands
      * @param string $command Command you want to handle (don't mention '/', e.g. 'help', not '/help')
      * @param callable $handler Command handler [function (VTgBotController, VTgMessage, array, string)]
      */
-    static public function registerDynamicCommandHandler(string $patternCommand, callable $handler): void
+    public static function registerDynamicCommandHandler(string $patternCommand, callable $handler): void
     {
         static::$commands['%DYNAMIC%'] = false;
         static::$dynamicCommands[$patternCommand] = $handler;
@@ -74,19 +74,19 @@ trait VTgDynamicCommands
      * @param string $command Command to handle
      * @param string $data A part of message following the command
      */
-    static protected function handleCommand(VTgMessage $message, string $command, string $data = ""): void
+    protected static function handleCommand(VTgMessage $message, string $command, string $data = ""): void
     {
         foreach (static::$dynamicCommands as $patternCommand => $handler) {
             $parameters = [];
             if (self::checkMatch($patternCommand, $command, $parameters)) {
-                ($handler)(static::makeController(), $message, $parameters, $data);
+                ($handler)(static::makeController($message), $message, $parameters, $data);
                 return;
             }
         }
         if (isset(static::$commands[$command])) {
-            (static::$commands[$command])(static::makeController(), $message, $data);
+            (static::$commands[$command])(static::makeController($message), $message, $data);
         } elseif (static::$commandFallbackHandler) {
-            (static::$commandFallbackHandler)(static::makeController(), $message, $command, $data);
+            (static::$commandFallbackHandler)(static::makeController($message), $message, $command, $data);
         } else {
             static::handleMessageStandardly($message);
         }
