@@ -113,6 +113,51 @@ class VTgRequestor extends VTgRequestController
     }
 
     /**
+     * @brief Use this method to receive incoming updates using long polling
+     * @param array $parameters Parameters if needed
+     * @return VTgResult On success, VTgUpdatesArray returned
+     */
+    public function getUpdates(array $parameters = []): VTgResult
+    {
+        return VTgResult::fromData($this->callMethod('getUpdates', $parameters), 'VTgUpdatesArray');
+    }
+
+    /**
+     * @brief Use this method to specify a url and receive incoming updates via an outgoing webhook
+     * @details If you'd like to make sure that the Webhook request comes from Telegram, it is
+     * recommended using a secret path in the URL, e.g. https://www.example.com/<token>. Since
+     * nobody else knows your bot's token, you can be pretty sure it's Telegram.
+     * @param string $url HTTPS url to send updates to (use an empty string to remove webhook integration)
+     * @param array $extraParameters Other parameters if needed
+     * @return VTgResult On success, true is returned
+     */
+    public function setWebhook(string $url, array $extraParameters = []): VTgResult
+    {
+        $parameters = [
+            'url' => $url
+        ];
+        if (isset($extraParameters['allowed_updates']) and gettype($extraParameters['allowed_updates']) === "array")
+            $extraParameters['allowed_updates'] = json_encode($extraParameters['allowed_updates']);
+        $this->mergeExtraParameters($parameters, $extraParameters);
+        $result = $this->callMethod('setWebhook', $parameters);
+        if ($result['ok'])
+            return new VTgResult(true);
+        return VTgResult::fromData($result);
+    }
+
+    /**
+     * @brief Use this method to remove webhook integration if you decide to switch back to getUpdates()
+     * @return VTgResult On success, true is returned
+     */
+    public function deleteWebhook(): VTgResult
+    {
+        $result = $this->callMethod('deleteWebhook');
+        if ($result['ok'])
+            return new VTgResult(true);
+        return VTgResult::fromData($result);
+    }
+
+    /**
      * @brief A simple method for testing your bot's auth token
      * @return VTgResult Basic information about the bot as VTgUser object
      */

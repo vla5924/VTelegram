@@ -283,6 +283,47 @@ class VTgBot
     }
 
     /**
+     * @brief Starts polling to Telegram and wait for updates to handle them synchroniously
+     * @param int $timeout Timeout in seconds for long polling (positive number, e. g. 20)
+     * @param int $limit Limits the number of updates to be retrieved (values between 1-100 are accepted)
+     * @param array $allowedUpdates Array of strings - names of types of updates you want to receive (if needed)
+     */
+    public static function startPolling(int $timeout, int $limit = 100, array $allowedUpdates = []): VTgError
+    {
+        $parameters = [
+            'limit' => $limit,
+            'timeout' => $timeout
+        ];
+        if ($allowedUpdates)
+            $parameters['allowed_updates'] = json_encode($allowedUpdates);
+        $result = static::$tg->getUpdates($parameters);
+        $parameters['offset'] = 0;
+        do {
+            if ($result->ok) {
+                foreach ($result->object->array as $update) {
+                    static::processUpdate($update);
+                    if ($update->id >= $parameters['offset'])
+                    $parameters['offset'] = $update->id + 1;
+                }
+            } else {
+                return $result->error;
+            }
+            $result = static::$tg->getUpdates($parameters);
+        } while (true);
+    }
+
+    /**
+     * @brief Processes JSON-decoded update data received from Telegram in POST query
+     * @details It simply wraps processUpdateData(), getting data from incoming POST query.
+     */
+    public static function processUpdatePost(): void
+    {
+        $json = file_get_contents('php://input');
+        $data = json_decode($json, true);
+        self::processUpdateData($data);
+    }
+
+    /**
      * @brief Processes JSON-decoded update data from Telegram
      * @details You should pass an associative array with data received from Telegram (with Webhook or Long-poll).
      * For example, you can use it like this:
@@ -298,17 +339,6 @@ class VTgBot
     {
         $update = new VTgUpdate($data);
         self::processUpdate($update);
-    }
-
-    /**
-     * @brief Processes JSON-decoded update data received from Telegram in POST query
-     * @details It simply wraps processUpdateData(), getting data from incoming POST query.
-     */
-    public static function processUpdatePost(): void
-    {
-        $json = file_get_contents('php://input');
-        $data = json_decode($json, true);
-        self::processUpdateData($data);
     }
 
     /**

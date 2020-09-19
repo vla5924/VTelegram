@@ -8,6 +8,7 @@ require_once __DIR__ . '/../VTgObjects/VTgInlineQuery.php';
 require_once __DIR__ . '/../VTgObjects/VTgMessage.php';
 require_once __DIR__ . '/../VTgObjects/VTgMessageEntity.php';
 require_once __DIR__ . '/../VTgObjects/VTgUpdate.php';
+require_once __DIR__ . '/../VTgObjects/VTgUpdatesArray.php';
 require_once __DIR__ . '/../VTgObjects/VTgUser.php';
 
 require_once __DIR__ . '/../VTgObjects/VTgInputMessageContents/VTgIMC.php';
