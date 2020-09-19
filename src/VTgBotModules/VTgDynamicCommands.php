@@ -56,7 +56,7 @@ trait VTgDynamicCommands
      * %s - letters string (set of a-z, A-Z symbols, e.g. hello), 
      * %a - letters and numbers string (set of 0-9, a-z, A-Z symbols, e.g. h1ello23)
      * @endcode
-     * @param string $command Command you want to handle (don't mention '/', e.g. 'help', not '/help')
+     * @param string $patternCommand Command you want to handle (don't mention '/', e.g. 'help', not '/help')
      * @param callable $handler Command handler [function (VTgBotController, VTgMessage, array, string)]
      */
     public static function registerDynamicCommandHandler(string $patternCommand, callable $handler): void

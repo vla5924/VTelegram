@@ -99,7 +99,8 @@ class VTgRequestController
      * @brief Calls Bot API method
      * @details Makes a request to Bot API with specified method
      * @param string $method Name of method to be called
-     * @param string $parameters Array of method parameters if needed
+     * @param array $parameters Array of method parameters if needed
+     * @param array $fileFields Names of fields with files to be encoded (todo)
      * @return array JSON-decoded array with result of request from Telegram
      * @todo Less bulky cURL usage in this method (maybe some wrappers will be added in the future)
      */

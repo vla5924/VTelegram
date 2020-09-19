@@ -13,7 +13,7 @@ abstract class VTgIQR extends VTgObject
      */
     public $id;
     
-    const IMC_PARAM = 'input_message_content'; /// < Input message content parameter
+    const IMC_PARAM = 'input_message_content'; ///< Input message content parameter
     const NO_EXTRA_PARAMETERS = []; ///< "No extra parameters" array
 
     /**

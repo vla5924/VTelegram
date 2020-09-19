@@ -73,21 +73,37 @@ class VTgCallbackQuery extends VTgObject implements VTgHandlable
         $this->chatInstance = $data['chat_instance'];
     }
 
+    /**
+     * @brief Returns callback query ID
+     * @return int|string Query unique identifier
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @brief Returns query instigator (user who initiated this query)
+     * @return VTgUser Query instigator
+     */
     public function getInstigator(): VTgUser
     {
         return $this->from;
     }
 
+    /**
+     * @brief Returns class name
+     * @return string "VTgCallbackQuery"
+     */
     public function getClass(): string
     {
         return "VTgCallbackQuery";
     }
 
+    /**
+     * @brief Returns Telegram type name
+     * @return string "callback_query"
+     */
     public function getType(): string
     {
         return "callback_query";

@@ -125,7 +125,7 @@ class VTgRequestor extends VTgRequestController
     /**
      * @brief Use this method to specify a url and receive incoming updates via an outgoing webhook
      * @details If you'd like to make sure that the Webhook request comes from Telegram, it is
-     * recommended using a secret path in the URL, e.g. https://www.example.com/<token>. Since
+     * recommended using a secret path in the URL, e.g. https://www.example.com/[TOKEN]. Since
      * nobody else knows your bot's token, you can be pretty sure it's Telegram.
      * @param string $url HTTPS url to send updates to (use an empty string to remove webhook integration)
      * @param array $extraParameters Other parameters if needed

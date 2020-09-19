@@ -118,21 +118,37 @@ class VTgMessage extends VTgObject implements VTgHandlable
         }
     }
 
+    /**
+     * @brief Returns message ID
+     * @return int Message unique identifier
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @brief Returns message instigator (user who sent this message)
+     * @return VTgUser Message instigator
+     */
     public function getInstigator(): VTgUser
     {
         return $this->chat;
     }
 
+    /**
+     * @brief Returns class name
+     * @return string "VTgMessage"
+     */
     public function getClass(): string
     {
         return "VTgMessage";
     }
 
+    /**
+     * @brief Returns Telegram type name
+     * @return string "message"
+     */
     public function getType(): string
     {
         return "message";

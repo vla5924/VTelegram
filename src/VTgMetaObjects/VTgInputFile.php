@@ -88,7 +88,7 @@ class VTgInputFile
 
     /**
      * @brief Creates object which contains local path
-     * @param string $fileId Local path to file
+     * @param string $localFile Local path to file
      * @return VTgInputFile Input file meta object
      */
     static public function localFile(string $localFile): self

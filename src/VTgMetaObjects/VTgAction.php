@@ -285,7 +285,7 @@ class VTgAction
     /**
      * @brief Creates "Call function" action
      * @param callable $handler Handler function
-     * @param mixed|null ...$args Arguments for function
+     * @param mixed|null $args Arguments for function
      * @return VTgAction Action
      */
     static public function callFunction(callable $handler, ...$args): self

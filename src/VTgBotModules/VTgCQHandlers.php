@@ -35,7 +35,7 @@ trait VTgCQHandlers
     protected static $dynamicCallbackQueries = [];
 
     /**
-     * @var bool $dynamicCallbackQueriesEnabled
+     * @var bool $dynamicCQHandlersEnabled
      * @brief True if handlers for dynamic callback queries must be used
      */
     protected static $dynamicCQHandlersEnabled = false;

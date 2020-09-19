@@ -37,7 +37,7 @@ class VTgUpdate extends VTgObject
     public $inlineQuery = null;
 
     /**
-     * @var VTgChosenInlineResult|null
+     * @var VTgChosenInlineResult|null $chosenInlineResult
      * @brief Chosen inline result (if update type is "chosen inline result")
      */
     public $chosenInlineResult = null;

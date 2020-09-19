@@ -24,6 +24,7 @@ trait VTgSimpleCommands
      * @brief Registers a simple handler for messages containing /commands
      * @param string $command Command you want to handle (don't mention '/', e.g. 'help', not '/help')
      * @param string $text Message text to answer to the command
+     * @param array $extraParameters Other parameters for sending message if needed
      */
     public static function registerSimpleCommandHandler(string $command, string $text, array $extraParameters = []): void
     {

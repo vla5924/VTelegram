@@ -2,4 +2,4 @@
 Doxyfile
 DoxygenLayout.xml
 src/docs.php
-docs
+doxygen

@@ -14,11 +14,16 @@ class VTgBotController
      */
     public $tg;
 
+    /**
+     * @var mixed|null $preHandled
+     * @brief Return value of pre-handler function (if presented)
+     */
     public $preHandled = null;
 
     /**
      * @brief Constructor-initializer
      * @param VTgRequestor $tg Object for direct requests to Telegram API
+     * @param mixed|null $preHandled Return value of pre-handler function (if presented)
      */
     public function __construct(VTgRequestor $tg, $preHandled = null)
     {
