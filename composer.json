@@ -11,9 +11,11 @@
     "authors": [
         {
             "name": "Maksim Vlasov",
+            "email": "contact@mvla.ru",
             "homepage": "https://mvla.ru"
         }
     ],
+    "minimum-stability": "stable",
     "require": {
         "php": ">=7.3"
     },
