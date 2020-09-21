@@ -2,7 +2,7 @@
 
 namespace VTg\MetaObjects;
 
-use VTg\Objects\Object;
+use VTg\Objects\BaseObject;
 use VTg\MetaObjects\Error;
 
 /**
@@ -64,12 +64,12 @@ class Result
     }
 
     /**
-     * @brief Constructs VTgResult from JSON-decoded array received from Telegram
+     * @brief Constructs Result from JSON-decoded array received from Telegram
      * @param array $data Data received from Telegram as a result of making a request
-     * @param string $typename Classname of expected resulting object (generally one of VTgObject children, e.g. VTgMessage)
+     * @param string $typename Classname of expected resulting object (generally one of BaseObject children, e.g. Message)
      * @return Result Result object
      */
-    static public function fromData(array $data, string $typename = "VTgObject") : Result
+    static public function fromData(array $data, string $typename = "\VTg\Objects\BaseObject") : Result
     {
         $ok = $data['ok'] ?? false;
         if ($ok)
