@@ -140,11 +140,11 @@ class Message extends BaseObject implements Handlable
 
     /**
      * @brief Returns class name
-     * @return string "VTgMessage"
+     * @return string "\VTg\Objects\Message"
      */
     public function getClass(): string
     {
-        return "VTgMessage";
+        return "\VTg\Objects\Message";
     }
 
     /**

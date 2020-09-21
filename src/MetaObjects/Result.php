@@ -2,7 +2,6 @@
 
 namespace VTg\MetaObjects;
 
-use VTg\Objects\BaseObject;
 use VTg\MetaObjects\Error;
 
 /**
@@ -18,7 +17,7 @@ class Result
     public $ok;
 
     /**
-     * @var Object|null $object
+     * @var BaseObject|null $object
      * @brief Object with something that API can return
      * @details See Objects\Object children
      */
@@ -34,7 +33,7 @@ class Result
     /**
      * @brief Construstor-initializer
      * @param bool $ok Flag if request was successful
-     * @param Object|Error $result Result of API call
+     * @param BaseObject|Error $result Result of API call
      */
     public function __construct(bool $ok, $result = null)
     {

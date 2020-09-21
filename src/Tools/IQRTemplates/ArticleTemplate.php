@@ -39,7 +39,7 @@ class ArticleTemplate extends BaseTemplate
      * @param string $messageTemplate Message template (with placeholders if needed)
      * @param string|null $parseMode Parse mode for input message content
      * @param bool $disableWebPagePreview Disable web page preview for input message content
-     * @return array Array of VTgIQRArticle objects
+     * @return array Array of Article objects
      */
     static public function make(array $entries, string $messageTemplate = null, string $parseMode = null, bool $disableWebPagePreview = false): array
     {

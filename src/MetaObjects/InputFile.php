@@ -81,7 +81,7 @@ class InputFile
     /**
      * @brief Creates object which contains web url
      * @param string $url HTTP URL
-     * @return VTgInputFile Input file meta object
+     * @return InputFile Input file meta object
      */
     static public function url(string $url): self
     {
@@ -91,7 +91,7 @@ class InputFile
     /**
      * @brief Creates object which contains local path
      * @param string $localFile Local path to file
-     * @return VTgInputFile Input file meta object
+     * @return InputFile Input file meta object
      */
     static public function localFile(string $localFile): self
     {

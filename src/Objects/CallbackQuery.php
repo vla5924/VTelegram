@@ -95,11 +95,11 @@ class CallbackQuery extends BaseObject implements Handlable
 
     /**
      * @brief Returns class name
-     * @return string "VTgCallbackQuery"
+     * @return string "\VTg\Objects\CallbackQuery"
      */
     public function getClass(): string
     {
-        return "VTgCallbackQuery";
+        return "\VTg\Objects\CallbackQuery";
     }
 
     /**

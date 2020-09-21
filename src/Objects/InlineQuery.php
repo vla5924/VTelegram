@@ -68,11 +68,11 @@ class InlineQuery extends BaseObject implements Handlable
 
     /**
      * @brief Returns class name
-     * @return string "VTgInlineQuery"
+     * @return string "\VTg\Objects\InlineQuery"
      */
     public function getClass(): string
     {
-        return "VTgInlineQuery";
+        return "\VTg\Objects\InlineQuery";
     }
 
     /**

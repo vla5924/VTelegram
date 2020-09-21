@@ -45,6 +45,7 @@ class Icon
     const bomb = '💣'; ///< Bomb
     const trash = '🗑'; ///< Trash (recycle bin)
     const globe = '🌐'; ///< Globe (earth sign)
+    const box = '📦'; ///< Box (archive)
     ///@}
 
     /**
@@ -78,5 +79,7 @@ class Icon
     const writing = '✍️'; ///< Hand writing
     const clip = '📎'; ///< Clip (attach)
     const link = '🔗'; ///< Link (chain)
+    const file = '📄'; ///< File (list)
+    const folder = '📁'; ///< Folder
     ///@}
 }

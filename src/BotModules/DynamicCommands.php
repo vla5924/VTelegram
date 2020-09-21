@@ -7,7 +7,7 @@ use VTg\Objects\Message;
 
 /**
  * @class DynamicCommands
- * @extends VTgBot
+ * @extends Bot
  * @brief Trait for dynamic commands mechanism
  * @details It can be useful e.g. if you want to use command to transfer identifiers or other data.
  * @warning This is a trait, not a class (unfortunately, Doxygen does not

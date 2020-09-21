@@ -7,7 +7,7 @@ use VTg\Objects\Message;
 
 /**
  * @class SimpleCommands
- * @extends VTgBot
+ * @extends Bot
  * @brief Trait for simple commands mechanism
  * @details It can be useful if you want just to send text messages to some commands (without other actions)
  * @warning This is a trait, not a class (unfortunately, Doxygen does not

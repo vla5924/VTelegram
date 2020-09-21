@@ -4,7 +4,7 @@ namespace VTg\BotModules;
 
 /**
  * @class PatternChecker
- * @extends VTgBot
+ * @extends Bot
  * @brief Trait for checking pattern with placeholders
  * @details ...
  * @warning This is a trait, not a class (unfortunately, Doxygen does not

@@ -35,7 +35,7 @@ class Photo extends BaseIQR
     public $extraParameters = [];
 
     /**
-     * @var VTgIMC|null $inputMessageContent
+     * @var BaseIMC|null $inputMessageContent
      * @brief Content of the message to be sent
      */
     public $inputMessageContent = null;

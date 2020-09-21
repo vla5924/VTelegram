@@ -76,11 +76,11 @@ class ChosenInlineResult extends BaseObject implements Handlable
 
     /**
      * @brief Returns class name
-     * @return string "VTgChosenInlineResult"
+     * @return string "\VTg\Objects\ChosenInlineResult"
      */
     public function getClass(): string
     {
-        return "VTgChosenInlineResult";
+        return "\VTg\Objects\ChosenInlineResult";
     }
 
     /**

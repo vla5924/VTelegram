@@ -197,7 +197,7 @@ class Action
 
     /**
      * @brief Creates "Do nothing" action
-     * @return VTgAction Action
+     * @return Action Action
      */
     static public function doNothing(): self
     {
@@ -209,7 +209,7 @@ class Action
      * @param int|string $chatId Chat identifier
      * @param string $text Message body text
      * @param array $extraParameters Extra parameters for API request if needed
-     * @return VTgAction Action
+     * @return Action Action
      */
     static public function sendMessage($chatId, string $text, array $extraParameters = []): self
     {
@@ -222,7 +222,7 @@ class Action
      * @param int $messageId Message identifier
      * @param string $text New message body text
      * @param array $extraParameters Extra parameters for API request if needed
-     * @return VTgAction Action
+     * @return Action Action
      */
     static public function editMessageText($chatId, int $messageId, string $text, array $extraParameters = []): self
     {
@@ -234,7 +234,7 @@ class Action
      * @param string $inlineMessageId Message identifier
      * @param string $text New message body text
      * @param array $extraParameters Extra parameters for API request if needed
-     * @return VTgAction Action
+     * @return Action Action
      */
     static public function editIMessageText(string $inlineMessageId, string $text, array $extraParameters = []): self
     {
@@ -246,7 +246,7 @@ class Action
      * @param int|string $chatId Chat identifier
      * @param int $messageId Message identifier
      * @param string|false $replyMarkup New reply_markup value
-     * @return VTgAction Action
+     * @return Action Action
      */
     static public function editMessageReplyMarkup($chatId, int $messageId, $replyMarkup = false): self
     {
@@ -257,7 +257,7 @@ class Action
      * @brief Creates "Edit reply markup of inline message" action
      * @param string $inlineMessageId Inline message identifier
      * @param string|false $replyMarkup New reply_markup value
-     * @return VTgAction Action
+     * @return Action Action
      */
     static public function editIMessageReplyMarkup(string $inlineMessageId, $replyMarkup = false): self
     {
@@ -268,7 +268,7 @@ class Action
      * @brief Creates "Answer callback query" action
      * @param string $callbackQueryId Callback query identifier
      * @param array $extraParameters Extra parameters for API request if needed
-     * @return VTgAction Action
+     * @return Action Action
      */
     static public function answerCallbackQuery(string $callbackQueryId, array $extraParameters = []): self
     {
@@ -279,7 +279,7 @@ class Action
      * @brief Creates "Call API method via VTgRequestor" action
      * @param string $methodName Method name (in VTgRequestor class)
      * @param array $parameters Any parameters
-     * @return VTgAction Action
+     * @return Action Action
      */
     static public function callAPIMethod(string $methodName, ...$parameters): self
     {
@@ -290,7 +290,7 @@ class Action
      * @brief Creates "Call function" action
      * @param callable $handler Handler function
      * @param mixed|null $args Arguments for function
-     * @return VTgAction Action
+     * @return Action Action
      */
     static public function callFunction(callable $handler, ...$args): self
     {
@@ -300,8 +300,8 @@ class Action
     /**
      * @brief Creates "Multiple" action
      * @details "Multiple" action is an action with array of actions which must have been executed one-by-one
-     * @param VTgAction $actions Actions to be executed
-     * @return VTgAction Action
+     * @param Action $actions Actions to be executed
+     * @return Action Action
      */
     static public function multiple(Action ...$actions): self
     {

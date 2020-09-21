@@ -173,16 +173,16 @@ class Bot
     /**
      * @brief Registers a function as a pre-handler
      * @details Registers a function to handle with object before any handler. 
-     * A pre-handler will be passed VtgBotController (with only $tg property) 
-     * and VTgHandlable object and its return value will be added to 
-     * $preHandled property of VTgBotController for further handlers.
+     * A pre-handler will be passed BotController (with only $tg property) 
+     * and Handlable object and its return value will be added to 
+     * $preHandled property of BotController for further handlers.
      * @code
-     * VTgBot::registerPreHandler(function (VTgBotController $bot, VTgHandlable $object) {
+     * Bot::registerPreHandler(function (BotController $bot, Handlable $object) {
      *   $user = $myDbController->authorizeUser($object->getInstigator()->id);
      *   return $user;
      * });
      * @endcode
-     * @param callable $handler Pre-handler [function (VTgBotController, VTgHandlable)]
+     * @param callable $handler Pre-handler [function (BotController, Handlable)]
      */
     public static function registerPreHandler(callable $handler): void
     {
@@ -192,15 +192,15 @@ class Bot
     /**
      * @brief Registers a function as a regular message handler
      * @details Registers a function to handle with any messages or (if command handlers were set) 
-     * with messages without commands. A handler will be passed VTgBotController and
-     * VTgMessage object. So you can use it like this:
+     * with messages without commands. A handler will be passed BotController and
+     * Message object. So you can use it like this:
      * @code
-     * VTgBot::registerStandardMessageHandler(function (VTgBotController $bot, VTgMessage $message) {
+     * Bot::registerStandardMessageHandler(function (BotController $bot, Message $message) {
      *   $answer = 'You sent me: ' . $message->text;
-     *   $bot->execute(VTgAction::sendMessage($message->chat->id, $answer));
+     *   $bot->execute(Action::sendMessage($message->chat->id, $answer));
      * });
      * @endcode
-     * @param callable $handler Standard message handler [function (VTgBotController, VTgMessage)]
+     * @param callable $handler Standard message handler [function (BotController, Message)]
      */
     public static function registerStandardMessageHandler(callable $handler): void
     {
@@ -209,17 +209,17 @@ class Bot
 
     /**
      * @brief Registers a function as a handler for messages containing /commands
-     * @details A handler will be passed: VTgBotController object as first parameter,
-     * VTgMessage object as second parameter,  string (part of message following the 
+     * @details A handler will be passed: BotController object as first parameter,
+     * Message object as second parameter,  string (part of message following the 
      * command) as third parameter. So you can use it like this:
      * @code
-     * VTgBot::registerCommandHandler('hello', function (VTgBotController $bot, VTgMessage $message, string $data) {
+     * Bot::registerCommandHandler('hello', function (BotController $bot, Message $message, string $data) {
      *   $answer = 'Hello, ' . $message->chat->id;
-     *   $bot->execute(VTgAction::sendMessage($message->chat->id, $answer));
+     *   $bot->execute(Action::sendMessage($message->chat->id, $answer));
      * });
      * @endcode
      * @param string $command Command you want to handle (don't mention '/', e.g. 'help', not '/help')
-     * @param callable $handler Command handler [function (VTgBotController, VTgMessage, string)]
+     * @param callable $handler Command handler [function (BotController, Message, string)]
      */
     public static function registerCommandHandler(string $command, callable $handler): void
     {
@@ -228,16 +228,16 @@ class Bot
 
     /**
      * @brief Registers a function as a handler for messages containing undefined /commands
-     * @details A handler will be passed: VTgBotController object as first parameter,
-     * VTgMessage object as second parameter,  string with command as third parameter,
+     * @details A handler will be passed: BotController object as first parameter,
+     * Message object as second parameter,  string with command as third parameter,
      * string (part of message following the command) as fourth parameter.
      * So you can use it like this:
      * @code
-     * VTgBot::registerCommandFallbackHandler(function (VTgBotController $bot, VTgMessage $message, string $command, string $data) {
-     *   $bot->execute(VTgAction::sendMessage($message->chat->id, "I don't know this command: " . $command));
+     * VTgBot::registerCommandFallbackHandler(function (BotController $bot, Message $message, string $command, string $data) {
+     *   $bot->execute(Action::sendMessage($message->chat->id, "I don't know this command: " . $command));
      * });
      * @endcode
-     * @param callable $handler Command handler [function (VTgBotController, VTgMessage, string)]
+     * @param callable $handler Command handler [function (BotController, Message, string)]
      */
     public static function registerCommandFallbackHandler(callable $handler): void
     {
@@ -246,15 +246,15 @@ class Bot
 
     /**
      * @brief Registers a function as a callback query handler
-     * @details A handler will be passed VTgBotController object and VTgCallbackQuery object.
+     * @details A handler will be passed BotController object and CallbackQuery object.
      * So you can use it like this:
      * @code
-     * VTgBot::registerCallbackQueryHandler(function (VTgBotController $bot, VTgCallbackQuery $callbackQuery) {
+     * Bot::registerCallbackQueryHandler(function (BotController $bot, CallbackQuery $callbackQuery) {
      *   $newText = 'Callback data: ' . $callbackQuery->data;
-     *   $bot->execute(VTgAction::editMessageText($callbackQuery->message->chat->id, $callbackQuery->message->id, $newText));
+     *   $bot->execute(Action::editMessageText($callbackQuery->message->chat->id, $callbackQuery->message->id, $newText));
      * });
      * @endcode
-     * @param callable $handler Callback query handler [function (VTgBotController, VTgCallbackQuery)]
+     * @param callable $handler Callback query handler [function (BotController, CallbackQuery)]
      */
     public static function registerCallbackQueryHandler(callable $handler): void
     {
@@ -263,8 +263,8 @@ class Bot
 
     /**
      * @brief Registers a function as a inline query handler
-     * @details A handler will be passed VTgBotController object and VTgInlineQuery object.
-     * @param callable $handler Inline query handler [function (VTgBotController, VTgInlineQuery)]
+     * @details A handler will be passed BotController object and InlineQuery object.
+     * @param callable $handler Inline query handler [function (BotController, InlineQuery)]
      */
     public static function registerInlineQueryHandler(callable $handler): void
     {
@@ -273,8 +273,8 @@ class Bot
 
     /**
      * @brief Registers a function as a chosen inline result handler
-     * @details A handler will be passed VTgBotController object and VTgChosenInlineResult object.
-     * @param callable $handler Inline result handler [function (VTgBotController, VTgChosenInlineResult)]
+     * @details A handler will be passed BotController object and ChosenInlineResult object.
+     * @param callable $handler Inline result handler [function (BotController, ChosenInlineResult)]
      */
     public static function registerInlineResultHandler(callable $handler): void
     {
@@ -342,7 +342,7 @@ class Bot
 
     /**
      * @brief Processes an update from Telegram
-     * @param VTgUpdate $update Object with data received from Telegram
+     * @param Update $update Object with data received from Telegram
      */
     public static function processUpdate(Update $update): void
     {
@@ -359,7 +359,7 @@ class Bot
 
     /**
      * @brief Handles message with standard message handler if defined
-     * @param VTgMessage $message Message received from Telegram user
+     * @param Message $message Message received from Telegram user
      */
     protected static function handleMessageStandardly(Message $message): void
     {
@@ -370,7 +370,7 @@ class Bot
 
     /**
      * @brief Hadles with a received message
-     * @param VTgMessage $message Message data received from Telegram
+     * @param Message $message Message data received from Telegram
      */
     protected static function handleMessage(Message $message): void
     {
@@ -386,7 +386,7 @@ class Bot
 
     /**
      * @brief Hadles with a command if found in message
-     * @param VTgMessage $message Message data received from Telegram
+     * @param Message $message Message data received from Telegram
      * @param string $command Command name to handle
      * @param string $data A part of message following the command
      */
@@ -403,7 +403,7 @@ class Bot
 
     /**
      * @brief Hadles with a callback query
-     * @param VTgCallbackQuery $callbackQuery Callback query data received from Telegram
+     * @param CallbackQuery $callbackQuery Callback query data received from Telegram
      */
     protected static function handleCallbackQuery(CallbackQuery $callbackQuery): void
     {
@@ -414,7 +414,7 @@ class Bot
 
     /**
      * @brief Hadles with an inline query
-     * @param VTgInlineQuery $inlineQuery Inline query data received from Telegram
+     * @param InlineQuery $inlineQuery Inline query data received from Telegram
      */
     protected static function handleInlineQuery(InlineQuery $inlineQuery): void
     {
@@ -425,7 +425,7 @@ class Bot
 
     /**
      * @brief Hadles with a chosen inline result
-     * @param VTgChosenInlineResult $inlineResult Inline result data received from Telegram
+     * @param ChosenInlineResult $inlineResult Inline result data received from Telegram
      */
     protected static function handleInlineResult(ChosenInlineResult $inlineResult): void
     {

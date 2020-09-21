@@ -20,7 +20,7 @@ class Article extends BaseIQR
     public $title;
 
     /**
-     * @var VTgIMC $inputMessageContent
+     * @var BaseIMC $inputMessageContent
      * @brief Content of the message to be sent
      */
     public $inputMessageContent;

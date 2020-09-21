@@ -12,7 +12,7 @@ use VTg\MetaObjects\InputFile;
  * to functions, all optional parameters may be passed in additional array. In duet with
  * detailed documentaion recognized by IDEs this makes code wrote with VTgRequestor more
  * concise without loss of clarity.
- * @todo Wrappers for all methods of Telegram Bot API, including media and inline
+ * @todo Wrappers for all methods of Telegram Bot API
  */
 class Requestor extends RequestController
 {
@@ -117,11 +117,11 @@ class Requestor extends RequestController
     /**
      * @brief Use this method to receive incoming updates using long polling
      * @param array $parameters Parameters if needed
-     * @return Result On success, VTgUpdatesArray returned
+     * @return Result On success, UpdatesArray returned
      */
     public function getUpdates(array $parameters = []): Result
     {
-        return Result::fromData($this->callMethod('getUpdates', $parameters), 'VTg\Objects\UpdatesArray');
+        return Result::fromData($this->callMethod('getUpdates', $parameters), '\VTg\Objects\UpdatesArray');
     }
 
     /**
@@ -161,11 +161,11 @@ class Requestor extends RequestController
 
     /**
      * @brief A simple method for testing your bot's auth token
-     * @return Result Basic information about the bot as VTgUser object
+     * @return Result Basic information about the bot as User object
      */
     public function getMe(): Result
     {
-        return Result::fromData($this->callMethod('getMe'), 'VTg\Objects\User');
+        return Result::fromData($this->callMethod('getMe'), '\VTg\Objects\User');
     }
 
     /**
@@ -174,7 +174,7 @@ class Requestor extends RequestController
      * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
      * @param string $text Message body
      * @param array $extraParameters Other parameters if needed
-     * @return Result Sent message as VTgMessage on success
+     * @return Result Sent message as Message on success
      */
     public function sendMessage(string $chatId, string $text, array $extraParameters = []): Result
     {
@@ -184,7 +184,7 @@ class Requestor extends RequestController
         ];
         $this->applyDefaultParameters($parameters, self::PARSE_MODE__PARAM, self::DISABLE_WEB_PAGE_PREVIEW__PARAM);
         $this->mergeExtraParameters($parameters, $extraParameters);
-        return Result::fromData($this->callMethod('sendMessage', $parameters), 'VTg\Objects\Message');
+        return Result::fromData($this->callMethod('sendMessage', $parameters), '\VTg\Objects\Message');
     }
 
     /**
@@ -193,7 +193,7 @@ class Requestor extends RequestController
      * @param string $fromChatId Unique identifier for the chat where the original message was sent (or channel @username)
      * @param int $messageId Message identifier in the chat specified in $fromChatId
      * @param bool $disableNotification If true, message will be forwarded silently (without a notification for users)
-     * @return Result Sent message as VTgMessage on success
+     * @return Result Sent message as Message on success
      */
     public function forwardMessage(string $chatId, string $fromChatId, int $messageId, bool $disableNotification = false): Result
     {
@@ -203,7 +203,7 @@ class Requestor extends RequestController
             'message_id' => $messageId,
             'disable_notification' => $disableNotification
         ];
-        return Result::fromData($this->callMethod('forwardMessage', $parameters), 'VTg\Objects\Message');
+        return Result::fromData($this->callMethod('forwardMessage', $parameters), '\VTg\Objects\Message');
     }
 
     /**
@@ -211,7 +211,7 @@ class Requestor extends RequestController
      * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
      * @param InputFile $photo Photo to send
      * @param array $extraParameters Other parameters if needed
-     * @return Result Sent message as VTgMessage on success
+     * @return Result Sent message as Message on success
      */
     public function sendPhoto(string $chatId, InputFile $photo, array $extraParameters = []): Result
     {
@@ -221,7 +221,7 @@ class Requestor extends RequestController
         ];
         $this->applyDefaultParameters($parameters, self::PARSE_MODE__PARAM);
         $this->mergeExtraParameters($parameters, $extraParameters);
-        return Result::fromData($this->callMethod('sendPhoto', $parameters), 'VTg\Objects\Message');
+        return Result::fromData($this->callMethod('sendPhoto', $parameters), '\VTg\Objects\Message');
     }
 
     /**
@@ -232,7 +232,7 @@ class Requestor extends RequestController
      * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
      * @param InputFile $audio Audio to send
      * @param array $extraParameters Other parameters if needed
-     * @return Result Sent message as VTgMessage on success
+     * @return Result Sent message as Message on success
      */
     public function sendAudio(string $chatId, InputFile $audio, array $extraParameters = []): Result
     {
@@ -242,7 +242,7 @@ class Requestor extends RequestController
         ];
         $this->applyDefaultParameters($parameters, self::PARSE_MODE__PARAM);
         $this->mergeExtraParameters($parameters, $extraParameters);
-        return Result::fromData($this->callMethod('sendAudio', $parameters), 'VTg\Objects\Message');
+        return Result::fromData($this->callMethod('sendAudio', $parameters), '\VTg\Objects\Message');
     }
 
     /**
@@ -252,7 +252,7 @@ class Requestor extends RequestController
      * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
      * @param InputFile $document Document to send
      * @param array $extraParameters Other parameters if needed
-     * @return Result Sent message as VTgMessage on success
+     * @return Result Sent message as Message on success
      */
     public function sendDocument(string $chatId, InputFile $document, array $extraParameters = []): Result
     {
@@ -262,7 +262,7 @@ class Requestor extends RequestController
         ];
         $this->applyDefaultParameters($parameters, self::PARSE_MODE__PARAM);
         $this->mergeExtraParameters($parameters, $extraParameters);
-        return Result::fromData($this->callMethod('sendDocument', $parameters), 'VTg\Objects\Message');
+        return Result::fromData($this->callMethod('sendDocument', $parameters), '\VTg\Objects\Message');
     }
 
     /**
@@ -270,7 +270,7 @@ class Requestor extends RequestController
      * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
      * @param InputFile $video Video to send
      * @param array $extraParameters Other parameters if needed
-     * @return Result Sent message as VTgMessage on success
+     * @return Result Sent message as Message on success
      */
     public function sendVideo(string $chatId, InputFile $video, array $extraParameters = []): Result
     {
@@ -280,7 +280,7 @@ class Requestor extends RequestController
         ];
         $this->applyDefaultParameters($parameters, self::PARSE_MODE__PARAM);
         $this->mergeExtraParameters($parameters, $extraParameters);
-        return Result::fromData($this->callMethod('sendVideo', $parameters), 'VTg\Objects\Message');
+        return Result::fromData($this->callMethod('sendVideo', $parameters), '\VTg\Objects\Message');
     }
 
     /**
@@ -288,7 +288,7 @@ class Requestor extends RequestController
      * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
      * @param InputFile $animation Animation file to send
      * @param array $extraParameters Other parameters if needed
-     * @return Result Sent message as VTgMessage on success
+     * @return Result Sent message as Message on success
      */
     public function sendAnimation(string $chatId, InputFile $animation, array $extraParameters = []): Result
     {
@@ -298,7 +298,7 @@ class Requestor extends RequestController
         ];
         $this->applyDefaultParameters($parameters, self::PARSE_MODE__PARAM);
         $this->mergeExtraParameters($parameters, $extraParameters);
-        return Result::fromData($this->callMethod('sendAnimation', $parameters), 'VTg\Objects\Message');
+        return Result::fromData($this->callMethod('sendAnimation', $parameters), '\VTg\Objects\Message');
     }
 
     /**
@@ -308,7 +308,7 @@ class Requestor extends RequestController
      * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
      * @param InputFile $voice Audio file to send
      * @param array $extraParameters Other parameters if needed
-     * @return Result Sent message as VTgMessage on success
+     * @return Result Sent message as Message on success
      */
     public function sendVoice(string $chatId, InputFile $voice, array $extraParameters = []): Result
     {
@@ -318,7 +318,7 @@ class Requestor extends RequestController
         ];
         $this->applyDefaultParameters($parameters, self::PARSE_MODE__PARAM);
         $this->mergeExtraParameters($parameters, $extraParameters);
-        return Result::fromData($this->callMethod('sendVoice', $parameters), 'VTg\Objects\Message');
+        return Result::fromData($this->callMethod('sendVoice', $parameters), '\VTg\Objects\Message');
     }
 
     /**
@@ -327,7 +327,7 @@ class Requestor extends RequestController
      * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
      * @param InputFile $videoNote Video file to send
      * @param array $extraParameters Other parameters if needed
-     * @return Result Sent message as VTgMessage on success
+     * @return Result Sent message as Message on success
      */
     public function sendVideoNote(string $chatId, InputFile $videoNote, array $extraParameters = []): Result
     {
@@ -336,7 +336,7 @@ class Requestor extends RequestController
             'video_note' => $videoNote->get()
         ];
         $this->mergeExtraParameters($parameters, $extraParameters);
-        return Result::fromData($this->callMethod('sendVideoNote', $parameters), 'VTg\Objects\Message');
+        return Result::fromData($this->callMethod('sendVideoNote', $parameters), '\VTg\Objects\Message');
     }
 
     /**
@@ -345,7 +345,7 @@ class Requestor extends RequestController
      * @param float $latitude Latitude of the location
      * @param float $longitude Longitude of the location
      * @param array $extraParameters Other parameters if needed
-     * @return Result Sent message as VTgMessage on success
+     * @return Result Sent message as Message on success
      */
     public function sendLocation(string $chatId, float $latitude, float $longitude, array $extraParameters = []): Result
     {
@@ -355,7 +355,7 @@ class Requestor extends RequestController
             'longitude' => $longitude
         ];
         $this->mergeExtraParameters($parameters, $extraParameters);
-        return Result::fromData($this->callMethod('sendLocation', $parameters), 'VTg\Objects\Message');
+        return Result::fromData($this->callMethod('sendLocation', $parameters), '\VTg\Objects\Message');
     }
 
     /**
@@ -364,7 +364,7 @@ class Requestor extends RequestController
      * @note The status is set for 5 seconds or less (when a message arrives from your bot, Telegram clients clear its typing status).
      * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
      * @param string $action Type of action to broadcast
-     * @return Result Sent message as VTgMessage on success
+     * @return Result Sent message as Message on success
      */
     public function sendChatAction(string $chatId, string $action): Result
     {
@@ -372,7 +372,7 @@ class Requestor extends RequestController
             'chat_id' => $chatId,
             'action' => $action
         ];
-        return Result::fromData($this->callMethod('sendChatAction', $parameters), 'VTg\Objects\Message');
+        return Result::fromData($this->callMethod('sendChatAction', $parameters), '\VTg\Objects\Message');
     }
 
     /**
@@ -381,16 +381,16 @@ class Requestor extends RequestController
      * @warning It is guaranteed that the link will be valid for at least 1 hour. 
      * When the link expires, a new one can be requested by calling getFile() again.
      * @note This function may not preserve the original file name and MIME type. 
-     * You should save the file's MIME type and name (if available) when the VTgFile object is received..
+     * You should save the file's MIME type and name (if available) when the File object is received.
      * @param string $fileId file_id of file stored on Telegram servers
-     * @return Result Sent message as VTgMessage on success
+     * @return Result Sent message as Message on success
      */
     public function getFile(string $fileId): Result
     {
         $parameters = [
             'file_id' => $fileId
         ];
-        return Result::fromData($this->callMethod('getFile', $parameters), 'VTg\Objects\File');
+        return Result::fromData($this->callMethod('getFile', $parameters), '\VTg\Objects\File');
     }
 
     /**
@@ -419,7 +419,7 @@ class Requestor extends RequestController
      * See wrappers for this method like editMessageText() etc. for more convenience.
      * @param string $text New text of the message
      * @param array $extraParameters Other parameters if needed
-     * @return Result If edited message is sent by the bot, VTgMessage is returned, otherwise true
+     * @return Result If edited message is sent by the bot, Message is returned, otherwise true
      */
     public function editMessageTextStd(string $text, array $extraParameters = []): Result
     {
@@ -428,7 +428,7 @@ class Requestor extends RequestController
         ];
         $this->applyDefaultParameters($parameters, self::PARSE_MODE__PARAM, self::DISABLE_WEB_PAGE_PREVIEW__PARAM);
         $this->mergeExtraParameters($parameters, $extraParameters);
-        return Result::fromData($this->callMethod('editMessageText', $parameters), 'VTg\Objects\Message');
+        return Result::fromData($this->callMethod('editMessageText', $parameters), '\VTg\Objects\Message');
     }
 
     /**
@@ -438,7 +438,7 @@ class Requestor extends RequestController
      * @param int $messageId Identifier of the message to edit
      * @param string $text New text of the message
      * @param array $extraParameters Other parameters if needed
-     * @return Result If edited message is sent by the bot, VTgMessage is returned, otherwise true
+     * @return Result If edited message is sent by the bot, Message is returned, otherwise true
      */
     public function editMessageText(string $chatId, int $messageId, string $text, array $extraParameters = []): Result
     {
@@ -456,7 +456,7 @@ class Requestor extends RequestController
      * @param string $inlineMessageId Identifier of the inline message
      * @param string $text New text of the message
      * @param array $extraParameters Other parameters if needed
-     * @return Result If edited message is sent by the bot, VTgMessage is returned, otherwise true
+     * @return Result If edited message is sent by the bot, Message is returned, otherwise true
      */
     public function editIMessageText(string $inlineMessageId, string $text, array $extraParameters = []): Result
     {
@@ -473,11 +473,11 @@ class Requestor extends RequestController
      * @note This method corresponds to 'optionality' as declared in Telegram API documentation.
      * See wrappers for this method like editMessageReplyMarkup() etc. for more convenience.
      * @param array $parameters Parameters if needed
-     * @return Result If edited message is sent by the bot, VTgMessage is returned, otherwise true
+     * @return Result If edited message is sent by the bot, Message is returned, otherwise true
      */
     public function editMessageReplyMarkupStd(array $parameters = []): Result
     {
-        return Result::fromData($this->callMethod('editMessageReplyMarkup', $parameters), 'VTg\Objects\Message');
+        return Result::fromData($this->callMethod('editMessageReplyMarkup', $parameters), '\VTg\Objects\Message');
     }
 
     /**
@@ -486,7 +486,7 @@ class Requestor extends RequestController
      * @param int|string $chatId Unique identifier for the target chat or @username of the target channel
      * @param int $messageId Identifier of the message to edit
      * @param string|bool $replyMarkup New reply markup or false to remove it
-     * @return Result If edited message is sent by the bot, VTgMessage is returned, otherwise true
+     * @return Result If edited message is sent by the bot, Message is returned, otherwise true
      */
     public function editMessageReplyMarkup(string $chatId, int $messageId, $replyMarkup = false): Result
     {
@@ -504,7 +504,7 @@ class Requestor extends RequestController
      * @details This is a wrapper for editMessageReplyMarkupStd()
      * @param string $inlineMessageId Identifier of the inline message
      * @param string|bool $replyMarkup New reply markup or false to remove it
-     * @return Result If edited message is sent by the bot, VTgMessage is returned, otherwise true
+     * @return Result If edited message is sent by the bot, Message is returned, otherwise true
      */
     public function editIMessageReplyMarkup(string $inlineMessageId, $replyMarkup = false): Result
     {
@@ -520,7 +520,7 @@ class Requestor extends RequestController
      * @brief Use this method to send answers to an inline query
      * @details No more than 50 results per query are allowed.
      * @param string $inlineQueryId Unique identifier for the answered query
-     * @param array $results Array of results - VTgIQR objects - for the inline query
+     * @param array $results Array of results - BaseIQR or children objects - for the inline query
      * @param array $extraParameters Other parameters if needed
      * @return Result On success, true is returned
      */

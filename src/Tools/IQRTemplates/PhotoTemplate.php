@@ -3,8 +3,8 @@
 namespace VTg\Tools\IQRTemplates;
 
 use VTg\Tools\IQRTemplates\BaseTemplate;
-use VTg\Objects\IQR\Photo;
 use VTg\Objects\IMC\Text;
+use VTg\Objects\IQR\Photo;
 
 /**
  * @brief Generator for arrays of inline query photo results
@@ -51,7 +51,7 @@ class PhotoTemplate extends BaseTemplate
      * @param string|null $messageTemplate Message template if needed (with placeholders)
      * @param string|null $parseMode Parse mode for input message content
      * @param bool $disableWebPagePreview Disable web page preview for input message content
-     * @return array Array of VTgIQRArticle objects
+     * @return array Array of Photo objects
      */
     static public function make(array $entries, string $messageTemplate = null, string $parseMode = null, bool $disableWebPagePreview = false): array
     {
