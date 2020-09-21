@@ -1,0 +1,25 @@
+{
+    "name": "vla5924/vtelegram",
+    "homepage": "https://github.com/vla5924/VTelegram",
+    "type": "library",
+    "description": "Simple yet powerful PHP library for Telegram Bots API",
+    "keywords": [
+        "telegram",
+        "bot"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Maksim Vlasov",
+            "homepage": "https://mvla.ru"
+        }
+    ],
+    "require": {
+        "php": ">=7.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "VTg\\": "src/"
+        }
+    }
+}
