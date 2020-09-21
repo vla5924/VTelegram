@@ -12,10 +12,11 @@
         {
             "name": "Maksim Vlasov",
             "email": "contact@mvla.ru",
-            "homepage": "https://mvla.ru"
+            "homepage": "https://mvla.ru",
+            "role": "Developer"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "require": {
         "php": ">=7.3"
     },

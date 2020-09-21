@@ -1,8 +1,8 @@
 <?php
 
-namespace VTg\Tools;
+namespace VTg\Tools\IQRTemplates;
 
-use VTg\Tools\BaseTemplate;
+use VTg\Tools\IQRTemplates\BaseTemplate;
 use VTg\Objects\IQR\Photo;
 use VTg\Objects\IMC\Text;
 

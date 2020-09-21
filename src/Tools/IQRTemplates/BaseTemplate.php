@@ -1,6 +1,6 @@
 <?php
 
-namespace VTg\Tools;
+namespace VTg\Tools\IQRTemplates;
 
 /**
  * @brief Base for generator of arrays of inline query results
